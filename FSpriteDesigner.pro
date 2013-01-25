@@ -11,3 +11,6 @@ RESOURCES += \
     resource/res.qrc
 
 OTHER_FILES +=
+
+FORMS += \
+    resource/about.ui

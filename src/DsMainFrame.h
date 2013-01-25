@@ -18,27 +18,55 @@ class DsMainFrame:public QMainWindow
 	public slots:
 		/* file */
         void onNew(){}
+        void onOpen(){}
         void onSave(){}
         void onSaveAs(){}
         void onClose(){}
+        void onExport(){}
         void onQuit(){}
 
 		/* edit */
         void onPaste(){}
         void onCopy(){}
+        void onUndo(){}
+        void onRedo(){}
+        void onRotate(){}
+        void onScale(){}
+        void onPosition(){}
+
+        /* animation */
+        void onPlay(){}
+        void onStop(){}
+        void onAddAnimation(){}
+        void onSetFrame(){}
 
 		/* view */
-        void onShowGrid(bool show){}
-        void onShowAxis(bool show){}
+        void onStatusAxis();
+        void onStatusGrid();
 
 		/* about */
         void onAbout(){}
         void onHelp(){}
-		void onToggleStatusBar();
+        void onToggleStatusBar(){}
+
+        /* change size */
+        void onZoomIn(){}
+        void onZoomOut(){}
+        void onResize(){}
+
+     public:
+
+        /* set */
+        void setGrid(bool show){}
+        void setAxis(bool show){}
+
+
+
 
 	private:
 		/* status bar */
-        QAction* m_viewStatus;
+        QAction* m_gridStatus;
+        QAction* m_axisStatus;
         QToolBar* m_toolBar;
 };
 
