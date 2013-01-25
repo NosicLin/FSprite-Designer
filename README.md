@@ -1,0 +1,4 @@
+FSpriteDesigner
+===============
+
+Faeris Sprite Designer
