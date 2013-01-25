@@ -8,6 +8,7 @@ DsMainFrame::DsMainFrame(QWidget* parent)
 	:QMainWindow(parent)
 {
 	createMenuBar();
+	createStatusBar();
 }
 void DsMainFrame::createMenuBar()
 {
@@ -35,5 +36,42 @@ void DsMainFrame::createMenuBar()
 		connect(ms_paste,SIGNAL(triggered()),this,SLOT(onPaste()));
 	}
 
-
+	/* view */
+	QMenu* mn_view=menuBar()->addMenu("&View");
+	{
+		QAction* ms_view_status=new QAction(QAction(DS_MS_STATUS),"&View Status",this);
+		ms_status->setCheckable(true);
+		ms_status->setChecked(true);
+		mn_view->addAction(ms_view_status);
+		connect(ms_view_status,SIGNAL(triggered()),this,SLOT(onToggleStatusBar()));
+	}
 }
+
+void DsMainFrame::createStatusBar()
+{
+	statusBar();
+}
+
+
+
+
+/* slot */
+
+void DsMainFrame::onToggleStatusBar()
+{
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
