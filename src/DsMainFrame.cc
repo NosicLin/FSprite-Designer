@@ -20,6 +20,7 @@ void DsMainFrame::createMenuBar()
 		mn_file->addAction(ms_new);
 		connect(ms_new,SIGNAL(triggered()),this,SLOT(onNew()));
 
+
 		/* open */
 		QAction* ms_open=new QAction(QPixmap(DS_MS_OPEN),"&Open",this);
 		mn_file->addAction(ms_open);
