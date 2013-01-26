@@ -1,13 +1,8 @@
 #ifndef MAIN_CC
 #define MAIN_CC
 #include <QApplication>
-<<<<<<< HEAD
 #include "ui/DsMainFrame.h"
 #include "ui/DsQrcMacros.h"
-=======
-#include "DsMainFrame.h"
-#include "DsQrcMacros.h"
->>>>>>> a28b1041518d7c00038c1ba311e74126e353c757
 
 int main(int argc, char *argv[])
 {
