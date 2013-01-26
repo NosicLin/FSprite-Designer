@@ -6,31 +6,31 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>586</width>
-    <height>435</height>
+    <width>600</width>
+    <height>365</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QLabel" name="label">
+  <widget class="QLabel" name="about">
    <property name="geometry">
     <rect>
-     <x>0</x>
-     <y>10</y>
-     <width>561</width>
-     <height>301</height>
+     <x>20</x>
+     <y>140</y>
+     <width>541</width>
+     <height>201</height>
     </rect>
    </property>
    <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;飞士精灵（FSprite Designer）是我们飞士团队针对手机游戏精心打造的一款2D动画编辑器。它简洁实用，使用方便，性能稳定，拥有飞士精灵，程序编码工作可以大大减少！&lt;/p&gt;&lt;p&gt;Email：contact@faeris.com&lt;/p&gt;&lt;p&gt;主页：&lt;a href=&quot;www.faeris.com&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;www.faeris.com&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p&gt;论坛：&lt;a href=&quot;www.faeris.com/dz&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;www.faeris.com/dz&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p&gt;腾讯微博：&lt;a href=&quot;http://t.qq.com/faerisGame&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;http://t.qq.com/faerisGame&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p&gt;如需定制，请联系我们！&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButton">
    <property name="geometry">
     <rect>
      <x>500</x>
-     <y>400</y>
+     <y>320</y>
      <width>75</width>
      <height>23</height>
     </rect>
@@ -39,25 +39,25 @@
     <string>Close</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_2">
+  <widget class="QLabel" name="logo_label">
    <property name="geometry">
     <rect>
-     <x>0</x>
+     <x>10</x>
      <y>0</y>
-     <width>191</width>
-     <height>101</height>
+     <width>341</width>
+     <height>121</height>
     </rect>
    </property>
    <property name="text">
     <string/>
    </property>
    <property name="pixmap">
-    <pixmap resource="../res.qrc">:/images/FAERIS_LOGO.png</pixmap>
+    <pixmap resource="../images/res.qrc">:/images/FAERIS_LOGO.png</pixmap>
    </property>
   </widget>
  </widget>
  <resources>
-  <include location="../res.qrc"/>
+  <include location="../images/res.qrc"/>
  </resources>
  <connections/>
 </ui>
