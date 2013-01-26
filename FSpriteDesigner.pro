@@ -28,7 +28,7 @@ HEADERS += \
     src/model/DsAnimation.h
 
 RESOURCES += \
-    resource/res.qrc
+    resource/images/res.qrc
 
 OTHER_FILES +=
 
