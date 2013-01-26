@@ -1,34 +1,25 @@
 SOURCES += \
-    src/DsMainFrame.cc \
-    src/DsSpriteDisplay.cc \
-    src/DsResourceDisplay.cc \
-    src/DsMainFrame.cc \
-    src/DsEditSpace.cc \
-    src/main.cc \
-    src/DsSpriteDisplay.cc \
-    src/DsResourceDisplay.cc \
-    src/DsPropertyDisplay.cc \
-    src/DsMainFrame.cc \
-    src/DsEditView.cc \
-    src/DsEditSpace.cc
+    src/ui/DsSpriteDisplay.cc \
+    src/ui/DsResourceDisplay.cc \
+    src/ui/DsPropertyDisplay.cc \
+    src/ui/DsMainFrame.cc \
+    src/ui/DsEditView.cc \
+    src/ui/DsEditSpace.cc \
+    src/main.cc
 
 HEADERS += \
-    src/DsMainFrame.h \
-    src/DsQrcMacros.h \
-    src/DsSpriteDisplay.h \
-    src/DsResourceDisplay.h \
-    src/DsQrcMacros.h \
-    src/DsMainFrame.h \
-    src/DsEditSpace.h \
-    src/DsSpriteDisplay.h \
-    src/DsResourceDisplay.h \
-    src/DsQrcMacros.h \
-    src/DsPropertyDisplay.h \
-    src/DsMainFrame.h \
-    src/DsEditView.h \
-    src/DsEditSpace.h
+    src/ui/DsSpriteDisplay.h \
+    src/ui/DsResourceDisplay.h \
+    src/ui/DsQrcMacros.h \
+    src/ui/DsPropertyDisplay.h \
+    src/ui/DsMainFrame.h \
+    src/ui/DsEditView.h \
+    src/ui/DsEditSpace.h
 
 RESOURCES += \
     resource/res.qrc
 
 OTHER_FILES +=
+
+FORMS += \
+    resource/about.ui
