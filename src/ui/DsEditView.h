@@ -12,6 +12,17 @@
 class DsEditView:public QGLWidget
 {
 	Q_OBJECT
+	public:
+		enum
+		{
+			ST_IDEL,
+			ST_ADD_IMAGE,
+			ST_SELECT,
+			ST_SCALE,
+			ST_MOVE,
+			ST_ROTATE,
+		};
+
 	public:	
         DsEditView(QWidget* parent);
         void draw();
@@ -65,7 +76,35 @@ class DsEditView:public QGLWidget
 
 		/* gl infomation */
 		float m_r,m_g,m_b,m_a;
+
+		/* state info*/
+
+		bool m_state;
+
+		/* st_add_image */
+		DsImage* m_addImage;
+
+		/* st_scale */
+		float mst_sx,mst_sy;
+
+
+
+
+
+
 };
 
 #endif /*_DS_EDIT_VIEW_H_*/
+
+
+
+
+
+
+
+
+
+
+
+
 
