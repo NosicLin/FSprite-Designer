@@ -19,5 +19,5 @@ DsEditSpace::DsEditSpace(QWidget* parent)
     vlayout->addWidget(m_editView);
 
     setLayout(vlayout);
-
 }
+

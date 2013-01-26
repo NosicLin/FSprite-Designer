@@ -10,6 +10,7 @@ class DsFrame
 		typedef std::vector<DsFrameImage*>::iterator Iterator;
 	public:
 		DsFrame(const std::string& name);
+		DsFrame();
 		~DsFrame();
 	public:
 

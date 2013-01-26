@@ -3,10 +3,12 @@
 #include <QPixmap>
 #include <string>
 
+#include "DsData.h"
+
 class DsResourceMgr
 {
 	public:
-		static QPixmap* loadImage(const std::string& name);
+        static DsImage* loadImage(const std::string& name);
 		static int loadTexture(const std::string& name);
 };
 

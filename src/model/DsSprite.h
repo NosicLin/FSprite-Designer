@@ -21,6 +21,7 @@ class DsSprite
 		DsAnimation* getAnimation(const std::string& name);
 		int getAnimationNu(){return m_animations.size();}
 
+
 		Iterator begin(){return m_animations.begin();}
         Iterator end(){return m_animations.end();}
 

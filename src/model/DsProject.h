@@ -25,12 +25,12 @@ class DsProject
 			m_sprite=sprite;
 		}
 	public:
-		DsSprite* getSprite();
+        DsSprite* getSprite(){return m_sprite;}
 		std::string getName(){return m_name;}
 
 		/* animation */
         DsAnimation* getCurAniamtion(){return m_curAnimation;}
-		void setCurAnimation(const std::string& anim);
+        void setCurAnimation(const std::string& anim);
 
 		/* Frame */
 		DsFrame* getCurFrame(){return m_curFrame;}

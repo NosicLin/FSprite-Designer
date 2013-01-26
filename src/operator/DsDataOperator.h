@@ -47,7 +47,7 @@ class DataOperator
 	private:
 		DsData* m_data;
 
-}
+};
 #endif /*_DS_DATA_OPERATOR_H_*/
 
 
