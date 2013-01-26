@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>905</width>
+    <height>110</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QWidget" name="horizontalLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>-1</x>
+     <y>19</y>
+     <width>901</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QLabel" name="name">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="text">
+       <string>name</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="fps_2">
+      <property name="text">
+       <string>fps</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QDoubleSpinBox" name="edit_fps"/>
+    </item>
+    <item>
+     <widget class="QLabel" name="cur_frame">
+      <property name="text">
+       <string>cur_fame</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+   <zorder>edit_fps</zorder>
+   <zorder>name</zorder>
+   <zorder>fps_2</zorder>
+   <zorder>cur_frame</zorder>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
