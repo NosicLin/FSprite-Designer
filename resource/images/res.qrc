@@ -1,0 +1,36 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>FAERIS_LOGO.png</file>
+        <file>icon.png</file>
+        <file>IDC_HAND.png</file>
+        <file>IDI_ADD.ico</file>
+        <file>IDI_AXIS.ico</file>
+        <file>IDI_COPY.ico</file>
+        <file>IDI_CUT.ico</file>
+        <file>IDI_DELETE.ico</file>
+        <file>IDI_EXIT.ico</file>
+        <file>IDI_EXPORT.ico</file>
+        <file>IDI_FOWARD.ico</file>
+        <file>IDI_FRAMES.ico</file>
+        <file>IDI_GRID.ico</file>
+        <file>IDI_HELP.ico</file>
+        <file>IDI_NEW.ico</file>
+        <file>IDI_OPEN.ico</file>
+        <file>IDI_PAST.ico</file>
+        <file>IDI_PERSITION.ico</file>
+        <file>IDI_PLAY.ico</file>
+        <file>IDI_ROTATE.ico</file>
+        <file>IDI_SAVE.ico</file>
+        <file>IDI_SAVE_AS.ico</file>
+        <file>IDI_SCALE.ico</file>
+        <file>IDI_SOFTWARE.ico</file>
+        <file>IDI_STOP.ico</file>
+        <file>IDI_TEAM_LOGO.ico</file>
+        <file>IDI_UNDO.ico</file>
+        <file>IDI_ZOOM_IN.ico</file>
+        <file>IDI_ZOOM_OUT.ico</file>
+        <file>res.qrc</file>
+        <file>IDI_CLOSE.ico</file>
+        <file>IDI_RESIZE.ico</file>
+    </qresource>
+</RCC>

@@ -61,27 +61,27 @@ void DsMainFrame::createMenuBar()
 		connect(ms_open,SIGNAL(triggered()),this,SLOT(onOpen()));
 
         /* save */
-        QAction* ms_save=new QAction(QPixmap(DS_MS_OPEN),"&Save",this);
+        QAction* ms_save=new QAction(QPixmap(DS_MS_SAVE),"&Save",this);
         mn_file->addAction(ms_save);
         connect(ms_save,SIGNAL(triggered()),this,SLOT(onSave()));
 
         /* save as */
-        QAction* ms_save_as=new QAction(QPixmap(DS_MS_OPEN),"&Save As...",this);
+        QAction* ms_save_as=new QAction(QPixmap(DS_MS_SAVE_AS),"&Save As...",this);
         mn_file->addAction(ms_save_as);
         connect(ms_save_as,SIGNAL(triggered()),this,SLOT(onSaveAs()));
 
         /* close */
-        QAction* ms_close=new QAction(QPixmap(DS_MS_OPEN),"&Close",this);
+        QAction* ms_close=new QAction(QPixmap(DS_MS_CLOSE),"&Close",this);
         mn_file->addAction(ms_close);
         connect(ms_close,SIGNAL(triggered()),this,SLOT(onClose()));
 
         /* export  */
-        QAction* ms_export=new QAction(QPixmap(DS_MS_OPEN),"&Export...",this);
+        QAction* ms_export=new QAction(QPixmap(DS_MS_EXPORT),"&Export...",this);
         mn_file->addAction(ms_export);
         connect(ms_export,SIGNAL(triggered()),this,SLOT(onExport()));
 
         /* quit */
-        QAction* ms_quit=new QAction(QPixmap(DS_MS_OPEN),"&Quit",this);
+        QAction* ms_quit=new QAction(QPixmap(DS_MS_QUIT),"&Quit",this);
         mn_file->addAction(ms_quit);
         connect(ms_quit,SIGNAL(triggered()),this,SLOT(onQuit()));
 
@@ -124,7 +124,7 @@ void DsMainFrame::createMenuBar()
        connect(ms_scale,SIGNAL(triggered()),this,SLOT(onScale()));
 
        /* position */
-       QAction* ms_position=new QAction(QPixmap(DS_MS_POSITION),"&Redo",this);
+       QAction* ms_position=new QAction(QPixmap(DS_MS_POSITION),"&Position",this);
        mn_edit->addAction(ms_position);
        connect(ms_position,SIGNAL(triggered()),this,SLOT(onPosition()));
 
@@ -207,7 +207,7 @@ void DsMainFrame::createToolBar()
 	connect(tl_new,SIGNAL(triggered()),this,SLOT(onNew()));
 
     /* Open File */
-	QAction* tl_open=m_toolBar->addAction(QIcon(DS_TL_OPEN),"Qpen File");
+    QAction* tl_open=m_toolBar->addAction(QIcon(DS_TL_OPEN),"Open File");
 	connect(tl_open,SIGNAL(triggered()),this,SLOT(onOpen()));
 
     /* Save file */
@@ -227,7 +227,7 @@ void DsMainFrame::createToolBar()
     m_toolBar->addSeparator();
 
     /* Undo */
-    QAction* tl_undo=m_toolBar->addAction(QIcon(DS_TL_SAVE),"Undo");
+    QAction* tl_undo=m_toolBar->addAction(QIcon(DS_TL_UNDO),"Undo");
     connect(tl_undo,SIGNAL(triggered()),this,SLOT(onUndo()));
     /*Redo */
     QAction* tl_redo=m_toolBar->addAction(QIcon(DS_TL_REDO),"Redo");

@@ -35,7 +35,7 @@ HEADERS += \
 INCLUDEPATH +=src/
 
 RESOURCES += \
-    resource/res.qrc
+    resource/images/res.qrc
 
 OTHER_FILES +=
 
