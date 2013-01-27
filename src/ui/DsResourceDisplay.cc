@@ -10,16 +10,17 @@ DsResourceDisplay::DsResourceDisplay(QWidget* p)
 {
 
 
-    QLabel* infoLabel = new QLabel(tr("<i>Choose a menu option"),this);
-    QLabel* infoLabel2 = new QLabel(tr("<i>Choose a menu optio"),this);
+    /* TODO(use real tree widget here */
+    QLabel* tree= new QLabel(tr("Tree Control List\n  Folder1\n    File1.jpe\n    File2.png\n  Folder2\n    File1.bmp\n    File2.tga\n"),this);
 
-    QLabel* infoLabel3 = new QLabel(tr("<i>Choose a menu optio"),this);
+    /* TODO(use your control here)*/
+    QLabel* controlbar= new QLabel(tr("<add> <delete>"),this);
+
 
     QVBoxLayout* hbox=new QVBoxLayout(this);
 
-    hbox->addWidget(infoLabel,1);
-    hbox->addWidget(infoLabel2,1);
-    hbox->addWidget(infoLabel3,1);
+    hbox->addWidget(tree,1,Qt::AlignTop);
+    hbox->addWidget(controlbar,0);
 
     setLayout(hbox);
 

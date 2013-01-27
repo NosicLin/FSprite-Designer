@@ -6,8 +6,20 @@ class DsResourceDisplay:public QWidget
 {
 	Q_OBJECT
 	public:
-		DsResourceDisplay(QWidget* p);
+        DsResourceDisplay(QWidget* p);
+    public:
+        void addResFolder(const std::string& folder);
+        void addAcceptFileType(const std::string& ext);
+
+    signals:
+        void resFolderDelete(const std::string& folder);
+        void resFolderAdd(const std::string& floader);
+        void resFileSelect(const std::string& name);
 };
 
+
 #endif 
+
+
+
 
