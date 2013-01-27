@@ -5,15 +5,19 @@
 DsFrame::DsFrame()
 {
 	m_name="Frame";
+	m_frameId=0;
 }
-DsFrame::DsFrame(const std::string& name)
+DsFrame::DsFrame(int id)
 {
-	m_name=name;
+    m_frameId=id;
+    m_name="Frame";
 }
+
 
 DsFrame::~DsFrame()
 {
 }
+
 
 
 
@@ -31,10 +35,59 @@ DsFrameImage* DsFrame::getFrameImage(const std::string& name)
 	return  NULL;
 }
 
+
+
+DsFrameImage* DsFrame::getFrameImage(int index)
+{
+	assert(index<m_images.size());
+    return m_images[index];
+}
+
+
 void DsFrame::pushFrameImage(DsFrameImage* image)
 {
 	m_images.push_back(image);
 }
+
+
+DsFrame* DsFrame::clone()
+{
+	DsFrame* ret=new DsFrame;
+
+	Iterator iter=m_images.begin();
+	for(;iter!=m_images.end();++iter)
+	{
+		DsFrameImage* frameImage=(*iter)->clone();
+        ret->m_images.push_back(frameImage);
+	}
+	return ret;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

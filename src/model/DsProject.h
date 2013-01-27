@@ -31,14 +31,17 @@ class DsProject
 		/* animation */
         DsAnimation* getCurAniamtion(){return m_curAnimation;}
         void setCurAnimation(const std::string& anim);
+		void dropCurAnimation();
 
 		/* Frame */
 		DsFrame* getCurFrame(){return m_curFrame;}
 		void setCurFrame(int framenu);
+		void dropCurFrame();
 		
 		/* Frame image */
 		DsFrameImage* getCurFrameImage(){return m_curFrameImage;}
 		void setCurFrameImage(const std::string& name);
+		void dropCurFrameImage();
 
 	private:
 		std::string m_name;

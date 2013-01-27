@@ -200,7 +200,8 @@ void DsMainFrame::createStatusBar()
 
 void DsMainFrame::createToolBar()
 {
-    QToolBar* m_toolBar=addToolBar("MainToolBar");
+    QToolBar* m_toolBar=new QToolBar;
+    addToolBar(Qt::RightToolBarArea,m_toolBar);
 
     /* New File */
 	QAction* tl_new=m_toolBar->addAction(QIcon(DS_TL_NEW),"New File");
@@ -282,21 +283,32 @@ void DsMainFrame::initLayout()
 
     QSplitter* hsplitter = new QSplitter(Qt::Horizontal, m_clientArea);
 
- 	QTabWidget* twid=new QTabWidget();
-    twid->setElideMode(Qt::ElideRight);
-    twid->setMovable(1);
-    twid->setDocumentMode(1);
-    twid->addTab(m_resDisplay,QString("Resource"));
-    twid->addTab(m_propertyDisplay,QString("Property"));
+    QTabWidget* left=new QTabWidget();
+    left->setElideMode(Qt::ElideRight);
+    left->setMovable(1);
+    left->setDocumentMode(1);
+    left->addTab(m_resDisplay,QString("Resource"));
+    left->addTab(m_propertyDisplay,QString("Property"));
 
     //twid->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Expanding);
 
  //   twid->resize(200,200);
 
-    hsplitter->addWidget(twid);
+    hsplitter->addWidget(left);
     hsplitter->addWidget(m_editSpace);
     hsplitter->setStretchFactor(1,1);
-    hsplitter->addWidget(m_spriteDisplay);
+
+    QTabWidget* right=new QTabWidget();
+    right->setElideMode(Qt::ElideRight);
+    right->setMovable(1);
+    right->setDocumentMode(1);
+    right->addTab(m_spriteDisplay,QString("Sprite"));
+
+    QWidget* m_animationDisplay=new QWidget(this);
+    right->addTab(m_animationDisplay,QString("Animation"));
+
+
+    hsplitter->addWidget(right);
 
 
     QHBoxLayout* hbox=new QHBoxLayout(m_clientArea);

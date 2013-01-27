@@ -9,54 +9,84 @@ DsAnimation::DsAnimation(const std::string& name)
 {
 	m_name=name;
 	m_fps=m_defaulFps;
+
+	DsFrame* frame=new DsFrame();
+	frame->setFrameId(0);
+	m_keyFrames.push_back(frame);
+
 }
+
 
 DsAnimation::~DsAnimation()
 {
 	Iterator iter;
-	for(iter=m_frames.begin();iter!=m_frames.end();++iter)
+    for(iter=m_keyFrames.begin();iter!=m_keyFrames.end();++iter)
 	{
 		delete *iter;
 	}
-	m_frames.clear();
+    m_keyFrames.clear();
 }
-
-void DsAnimation::pushFrame(DsFrame* anim)
-{
-    m_frames.push_back(anim);
-}
-
 
 DsFrame* DsAnimation::getFrame(int index)
 {
-	assert(index<m_frames.size());
-	return m_frames[index];
+	int keyid=toKeyFramePos(index);
+	return m_keyFrames[keyid];
 }
 
-void DsAnimation::removeFrame(int index)
+void DsAnimation::insertFrame(DsFrame* frame)
 {
-	assert(index<m_frames.size());
-	DsFrame* frame=m_frames[index];
-	delete frame;
-//	m_frames.erase(index);
+	int frameid=frame->getFrameId();
+    int keyid=toKeyFramePos(frameid);
+    if(m_keyFrames[keyid]->getFrameId()==frameid)
+    {
+        assert(m_keyFrames[keyid]!=frame);
+
+        delete m_keyFrames[keyid];
+        m_keyFrames[keyid]=frame;
+    }
+    else
+    {
+        m_keyFrames.insert(m_keyFrames.begin()+keyid+1,frame);
+    }
 }
 
-void DsAnimation::insertFrame(DsFrame* anim,int index)
+void DsAnimation::removeKeyFrame(int index)
 {
-    //m_frames.insert(index,anim);
+	int keyid=toKeyFramePos(index);
+	assert(m_keyFrames[keyid]->getFrameId()==index);
+	m_keyFrames.erase(m_keyFrames.begin()+keyid);
 }
-void DsAnimation::swapFrame(int l,int r)
+void DsAnimation::insertKeyFrame(int index)
 {
-	DsFrame* temp=m_frames[l];
-	m_frames[l]=m_frames[r];
-	m_frames[r]=temp;
+	DsFrame* orign=getFrame(index);
+	DsFrame* now=orign->clone();
+	insertFrame(now);
 }
 
 
+int DsAnimation::toKeyFramePos(int index)
+{
+    assert(m_keyFrames.size()>=1);
+	for(int i=0;i<m_keyFrames.size();i++)
+	{
+		int frameid=m_keyFrames[i]->getFrameId();
+		if(frameid==index)
+		{
+			return i;
+		}
+		if(frameid>index)
+		{
+			assert(i>=1);
+			return i-1;
+		}
+	}
+    return m_keyFrames.size()-1;
+}
 
-
-
-
+int DsAnimation::getFrameNu()
+{
+    return m_keyFrames[m_keyFrames.size()-1]->getFrameId()+1;
+}
 
 
 

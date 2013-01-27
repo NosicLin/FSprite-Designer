@@ -2,23 +2,24 @@
 #define _DS_DATA_OPERATOR_H_
 
 #include <string>
-#include "model/DsData.h"
-#include "model/DsSprite.h"
-#include "model/DsAnimation.h"
-#include "model/DsFrame.h"
-#include "model/DsFrameImage.h"
+#include "model/DsModel.h"
 
-class DataOperator
+class DsDataOperator
 {
 	public:
-		DataOperator();
+        DsDataOperator();
 	
 	public:
 		/* change cur information */
 		void setCurProject(DsProject* proj);
-		void setCurAnimation(const std::string& anim);
-		void setCurFrame(int frame);
-		void setCurFrameImage(const std::string& anim);
+        void setCurAnimation(const std::string& anim);
+        void dropCurAnimation();
+
+        void setCurFrame(int frame);
+        void dropCurFrame();
+
+        void setCurFrameImage(const std::string& anim);
+        void dropCurFrameImage();
 
 		/* sprite operator */
 		void addAnimation(const std::string& anim);

@@ -4,13 +4,8 @@
 #include "ui/DsMainFrame.h"
 #include "ui/DsQrcMacros.h"
 
-#include "model/DsData.h"
-#include "model/DsProject.h"
-#include "model/DsSprite.h"
-#include "model/DsAnimation.h"
-#include "model/DsFrame.h"
-#include "model/DsFrameImage.h"
-#include "operator/DsDataOperator.h"
+#include "model/DsModel.h"
+#include "operator/DsOperator.h"
 
 
 void initProject(DsProject* proj);
@@ -38,7 +33,7 @@ int main(int argc, char *argv[])
 
 void initProject(DsProject* proj)
 {
-    DataOperator op;
+    DsDataOperator& op=DsOperator::data;
     op.setCurProject(proj);
     op.setCurAnimation("jump");
     op.setCurFrame(0);
@@ -51,7 +46,11 @@ DsProject* createTestProject()
 
     DsAnimation* anim=new DsAnimation("jump");
 
-    DsFrame* frame1=new DsFrame("Frame");
+    DsFrame* frame1=new DsFrame(0);
+
+    DsFrame* frame10=new DsFrame(10);
+    DsFrame* frame15=new DsFrame(15);
+    DsFrame* frame20=new DsFrame(20);
 
     DsFrameImage* img_head=DsFrameImage::create("head.png");
     img_head->setPos(0,120);
@@ -67,11 +66,16 @@ DsProject* createTestProject()
     img_rarm->setPos(200,0);
 
     frame1->pushFrameImage(img_head);
-    frame1->pushFrameImage(img_body);
-    frame1->pushFrameImage(img_larm);
-    frame1->pushFrameImage(img_rarm);
+    frame10->pushFrameImage(img_body);
+    frame15->pushFrameImage(img_larm);
+    frame20->pushFrameImage(img_rarm);
 
-    anim->pushFrame(frame1);
+    anim->insertFrame(frame1);
+    anim->insertFrame(frame15);
+    anim->insertFrame(frame10);
+    anim->insertFrame(frame20);
+
+
     sp->addAnimation(anim);
     DsProject* project=new DsProject(sp);
     return project;

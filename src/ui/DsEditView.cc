@@ -5,7 +5,7 @@
 #include <vector>
 
 
-QTextStream out(stdout) ;
+
 
 DsEditView::DsEditView(QWidget* parent)
     :QGLWidget(parent)
@@ -21,6 +21,16 @@ DsEditView::DsEditView(QWidget* parent)
     m_a=1;
     setFocusPolicy(Qt::StrongFocus);
     setMouseTracking(true);
+    m_curState=&m_stateIdel;
+
+    m_stateIdel.setEditView(this);
+    m_stateAddImage.setEditView(this);
+    m_stateTranslate.setEditView(this);
+    m_stateScale.setEditView(this);
+    m_stateRotate.setEditView(this);
+    m_stateSelect.setEditView(this);
+    m_statePlay.setEditView(this);
+    m_stateMoveCoord.setEditView(this);
 }
 
 void DsEditView::initializeGL()
@@ -44,6 +54,7 @@ void DsEditView::resizeGL(int width,int height)
     glLoadIdentity();
     glOrtho(-width/2,width/2,-height/2,height/2,0,100);
     glMatrixMode(GL_MODELVIEW);
+    update();
 }
 
 void DsEditView::paintGL()
@@ -56,12 +67,14 @@ void DsEditView::mousePressEvent(QMouseEvent* event)
 {
     setFocus();
 	m_lastpos=event->pos();
+    m_curState->mousePressEvent(event);
+    draw();
 }
 
 void DsEditView::mouseMoveEvent(QMouseEvent* event)
 {
     float dx=event->x()-m_lastpos.x();
-    float dy=event->y()-m_lastpos.y();
+    float dy=-(event->y()-m_lastpos.y());
 
 
     if(event->buttons()&Qt::LeftButton)
@@ -69,23 +82,18 @@ void DsEditView::mouseMoveEvent(QMouseEvent* event)
         if(m_space_down)
         {
             setTranslate(m_tx+dx,m_ty+dy);
+    		m_lastpos=event->pos();
+			return ;
         }
-     //   handleLeftButtonDown();
+    }
 
-    }
-    else if(event->buttons()&Qt::RightButton)
-    {
-    }
-    else if(event->buttons()&Qt::MiddleButton)
-    {
-    }
-    m_lastpos=event->pos();
+    m_curState->mouseMoveEvent(event);
+    draw();
 }
 
 void DsEditView::mouseReleaseEvent(QMouseEvent* event)
 {
-
-
+    m_curState->mouseReleaseEvent(event);
 }
 void DsEditView::wheelEvent(QWheelEvent* event)
 {
@@ -125,6 +133,8 @@ void DsEditView::keyPressEvent(QKeyEvent* event)
     default:
         break;
     }
+    m_curState->keyPressEvent(event);
+    draw();
 }
 
 void DsEditView::keyReleaseEvent(QKeyEvent* event)
@@ -137,6 +147,8 @@ void DsEditView::keyReleaseEvent(QKeyEvent* event)
     default:
         break;
     }
+    m_curState->keyReleaseEvent(event);
+    draw();
 }
 
 void DsEditView::focusInEvent(QFocusEvent* event)
@@ -166,58 +178,13 @@ void DsEditView::setShowAxis(bool enable)
     draw();
 }
 
-
-void DsEditView::drawAnimation()
-{
-    DsData* data=DsData::shareData();
-    DsAnimation* animation=data->getCurAnimation();
-    if(animation==NULL)
-    {
-        return;
-    }
-
-    DsFrame* frame=data->getCurFrame();
-    if(frame==NULL)
-    {
-        return;
-    }
-
-    std::vector<DsFrameImage*> images;
-    DsFrame::Iterator iter=frame->begin();
-
-    DsFrameImage* select_image=data->getCurFrameImage();
-
-
-    for(;iter!=frame->end();++iter)
-    {
-        images.push_back(*iter);
-    }
-
-    for(int i=images.size()-1;i>=0;i--)
-    {
-        DsFrameImage* cur_image=images[i];
-        if(cur_image==select_image)
-        {
-            drawFrameImageDecorate(cur_image);
-        }
-		else 
-		{
-			drawFrameImage(cur_image);
-		}
-    }
-
-
-
-
-}
-
 void DsEditView::draw()
 {
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
     /* move editor area */
-    glTranslatef(m_tx,-m_ty,0);
+    glTranslatef(m_tx,m_ty,0);
 
 
     /* draw Axis */
@@ -237,8 +204,8 @@ void DsEditView::draw()
     }
 
 
-    /* draw animation */
-    drawAnimation();
+	/* draw to clientarea */
+	m_curState->draw();
 
 
 	setLineColor(0.0,0.0,1.0);
@@ -293,11 +260,13 @@ void DsEditView::drawFrameImage(DsFrameImage* image)
         ds_img->texture=bindTexture(*ds_img->image);
     }
 
+    /*
     out<<"wdith:"<<ds_img->image->width()<<" height:"<<ds_img->image->height()<<endl;
 
     out<<"DrawImage:"<<image->getName().c_str()<<" x:"<<x<<" y:"<<y<<" width:"<<width<<" height:"<<height;
     out<<" sx:"<<sx<<" sy:"<<sy;
     out<<" tex:"<<ds_img->texture<<" tx0:"<<cx0<<" cy0:"<<cy0<<" cx1:"<<cx1<<" cy1:"<<cy1<<endl;
+    */
 
     glColor3f(1.0,1.0,1.0);
     glBindTexture(GL_TEXTURE_2D,ds_img->texture);
@@ -354,14 +323,30 @@ void DsEditView::drawFrameImageDecorate(DsFrameImage* image)
 {
 }
 
-void handleLeftButtonDown()
+
+
+
+void DsEditView::transformToRealCoord(float* x,float* y)
 {
+    float rx=*x;
+    float ry=*y;
+
+    QSize wsize=size();
+
+    rx=rx-wsize.width()/2;
+    ry=wsize.height()/2-ry;
+
+
+    *x=(rx-m_tx)/m_scale;
+    *y=(ry-m_ty)/m_scale;
 }
 
-
-
-
-
+void DsEditView::changeToState(DsEditState* target)
+{
+    m_curState->onExit(target);
+    target->onEnter(m_curState);
+    m_curState=target;
+}
 
 
 

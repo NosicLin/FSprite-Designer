@@ -52,60 +52,19 @@ public:
 public:
     DsProject* getCurProject(){return m_curProject;}
     void setCurProject(DsProject* proj){m_curProject=proj;}
+    DsSprite* getCurSprite();
 
-    DsSprite* getCurSprite()
-    {
-        return m_curProject->getSprite();
-    }
+    DsAnimation* getCurAnimation();
+    void setCurAnimation(const std::string& anim);
+	void dropCurAnimation();
 
-    DsAnimation* getCurAnimation()
-    {
-        if(m_curProject)
-        {
-            return m_curProject->getCurAniamtion();
-        }
-        return NULL;
-    }
-    void setCurAnimation(const std::string& anim)
-    {
-        if(m_curProject)
-        {
-            m_curProject->setCurAnimation(anim);
-        }
-    }
+    DsFrame* getCurFrame();
+    void setCurFrame(int framenu);
+	void dropCurFrame();
 
-    DsFrame* getCurFrame()
-    {
-        if(m_curProject)
-        {
-            return m_curProject->getCurFrame();
-        }
-        return NULL;
-    }
-
-    void setCurFrame(int framenu)
-    {
-        if(m_curProject)
-        {
-            return m_curProject->setCurFrame(framenu);
-        }
-    }
-
-    DsFrameImage* getCurFrameImage()
-    {
-        if(m_curProject)
-        {
-            return m_curProject->getCurFrameImage();
-        }
-        return NULL;
-    }
-    void  setCurFrameImage(const std::string& name)
-    {
-        if(m_curProject)
-        {
-            m_curProject->setCurFrameImage(name);
-        }
-    }
+    DsFrameImage* getCurFrameImage();
+    void  setCurFrameImage(const std::string& name);
+	void dropCurFrameImage();
 
     void emitSignal(int type);
 

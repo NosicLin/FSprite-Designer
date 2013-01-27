@@ -13,10 +13,18 @@ DsEditSpace::DsEditSpace(QWidget* parent)
     m_tabbar->insertTab(0,"Jump");
     m_tabbar->insertTab(1,"Run");
     m_tabbar->setExpanding(false);
+
     m_editView=new DsEditView(this);
+    m_animationEdit=new DsAnimationEdit(this);
+
+    /*
+    m_animationEdit->setSizePolicy(QSizePolicy::Expanding,
+                                    QSizePolicy::Preferred );
+                                    */
 
     vlayout->addWidget(m_tabbar);
-    vlayout->addWidget(m_editView);
+    vlayout->addWidget(m_editView,1);
+    vlayout->addWidget(m_animationEdit,0,Qt::AlignBottom);
 
     setLayout(vlayout);
 }

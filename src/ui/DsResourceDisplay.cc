@@ -14,7 +14,7 @@ DsResourceDisplay::DsResourceDisplay(QWidget* p)
     QLabel* tree= new QLabel(tr("Tree Control List\n  Folder1\n    File1.jpe\n    File2.png\n  Folder2\n    File1.bmp\n    File2.tga\n"),this);
 
     /* TODO(use your control here)*/
-    QLabel* controlbar= new QLabel(tr("<add> <delete>"),this);
+    QLabel* controlbar= new QLabel(tr(" ----------------\n|<add>| <delete> |\n ----------------"),this);
 
 
     QVBoxLayout* hbox=new QVBoxLayout(this);

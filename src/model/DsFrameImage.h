@@ -23,7 +23,10 @@ class DsFrameImage
 
 		float getAngle(){return m_angle;}
 		float getScaleX(){return m_sx;}
-		float getScaleY(){return m_sy;}
+        float getScaleY(){return m_sy;}
+
+        bool hit(float x,float y);
+		DsFrameImage* clone();
 
 		void getTextureArea(float* x0,float* y0, float* x1,float* y1)
 		{
