@@ -1,7 +1,7 @@
 #ifndef _DS_RESOURCE_DISPLAY_H_
 #define _DS_RESOURCE_DISPLAY_H_
-#include<QWidget>
-
+#include <QWidget>
+#include <string>
 class DsResourceDisplay:public QWidget 
 {
 	Q_OBJECT
