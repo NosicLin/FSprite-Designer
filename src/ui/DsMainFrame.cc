@@ -152,6 +152,11 @@ void DsMainFrame::createMenuBar()
         connect(ms_view_grid,SIGNAL(triggered()),this,SLOT(onStatusGrid()));
         m_gridStatus=ms_view_grid;
 
+        QAction* ms_add_backgroud=new QAction(QPixmap(DS_MS_BACKGROUND),"&Add Background Image",this);
+        mn_view->addAction(ms_add_backgroud);
+        connect(ms_add_backgroud,SIGNAL(triggered()),this,SLOT(onAddBackground()));
+
+
     }
     /* animation */
     QMenu* mn_animation=menuBar()->addMenu("Animation");
@@ -217,6 +222,15 @@ void DsMainFrame::createToolBar()
 
      m_toolBar->addSeparator();
 
+     /* Undo */
+     QAction* tl_undo=m_toolBar->addAction(QIcon(DS_TL_UNDO),"Undo");
+     connect(tl_undo,SIGNAL(triggered()),this,SLOT(onUndo()));
+     /*Redo */
+     QAction* tl_redo=m_toolBar->addAction(QIcon(DS_TL_REDO),"Redo");
+     connect(tl_redo,SIGNAL(triggered()),this,SLOT(onRedo()));
+
+     m_toolBar->addSeparator();
+
     /* Play animation*/
     QAction* tl_play=m_toolBar->addAction(QIcon(DS_TL_PLAY),"Play Animation");
     connect(tl_play,SIGNAL(triggered()),this,SLOT(onPlay()));
@@ -227,14 +241,6 @@ void DsMainFrame::createToolBar()
 
     m_toolBar->addSeparator();
 
-    /* Undo */
-    QAction* tl_undo=m_toolBar->addAction(QIcon(DS_TL_UNDO),"Undo");
-    connect(tl_undo,SIGNAL(triggered()),this,SLOT(onUndo()));
-    /*Redo */
-    QAction* tl_redo=m_toolBar->addAction(QIcon(DS_TL_REDO),"Redo");
-    connect(tl_redo,SIGNAL(triggered()),this,SLOT(onRedo()));
-
-    m_toolBar->addSeparator();
 
     /* Zoom in */
     QAction* tl_zoom_in=m_toolBar->addAction(QIcon(DS_TL_ZOOM_IN),"Zoom In");
@@ -250,6 +256,13 @@ void DsMainFrame::createToolBar()
     connect(tl_resize,SIGNAL(triggered()),this,SLOT(onResize()));
 
     m_toolBar->addSeparator();
+
+    /* Add background image */
+    QAction* tl_background=m_toolBar->addAction(QIcon(DS_TL_BACKGROUND),"Add Background Image");
+    connect(tl_background,SIGNAL(triggered()),this,SLOT(onAddBackground()));
+
+    m_toolBar->addSeparator();
+
 
     /* Help */
     QAction* tl_help=m_toolBar->addAction(QIcon(DS_TL_HELP),"Help");

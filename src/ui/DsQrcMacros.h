@@ -30,6 +30,8 @@
 #define DS_MS_VIEW_STATUS ":/images/icon.png"
 #define DS_MS_SHOW_COOR ":/images/IDI_AXIS.ico"
 #define DS_MS_SHOW_GRID ":/images/IDI_GRID.ico"
+#define DS_MS_BACKGROUND ":/images/icon.png"
+
 /* About */
 #define DS_MS_HELP ":/images/IDI_HELP.ico"
 #define DS_MS_ABOUT_US ":/images/IDI_TEAM_LOGO.ico"
@@ -45,6 +47,7 @@
 #define DS_TL_ZOOM_IN ":/images/IDI_ZOOM_IN.ico"
 #define DS_TL_ZOOM_OUT ":/images/IDI_ZOOM_OUT.ico"
 #define DS_TL_RESIZE ":/images/IDI_RESIZE.ico"
+#define DS_TL_BACKGROUND ":/images/icon.png"
 #define DS_TL_HELP ":/images/IDI_HELP.ico"
 
 #endif /*_DS_QRC_MACROS_H_*/
