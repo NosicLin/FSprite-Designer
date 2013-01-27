@@ -42,6 +42,8 @@ OTHER_FILES +=
 FORMS += \
     resource/ui/animation_info.ui \
     resource/ui/about.ui \
-    resource/ui/scale.ui
+    resource/ui/scale.ui \
+    resource/ui/pisition.ui \
+    resource/ui/frame.ui
 
 QT+=opengl
