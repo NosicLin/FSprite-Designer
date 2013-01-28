@@ -34,12 +34,13 @@ void DsProject::setCurFrame(int frame)
 
 void DsProject::setCurFrameImage(const std::string& name)
 {
-	if(!m_curFrame)
-	{
-		return;
-	}
-	m_curFrameImage=m_curFrame->getFrameImage(name);
-	assert(m_curFrameImage);
+    if(!m_curFrame)
+    {
+        return;
+    }
+    assert(m_curFrame->getType()==DsFrame::FRAME_KEY);
+    m_curFrameImage=((DsKeyFrame*)m_curFrame)->getFrameImage(name);
+    assert(m_curFrameImage);
 }
 
 

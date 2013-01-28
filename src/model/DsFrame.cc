@@ -2,26 +2,31 @@
 #include "DsFrame.h"
 #include "DsFrameImage.h"
 
-DsFrame::DsFrame()
+
+DsTweenFrame::DsTweenFrame(DsKeyFrame* from,DsKeyFrame* to,int id)
+	:DsFrame(id)
 {
-	m_name="Frame";
-	m_frameId=0;
-}
-DsFrame::DsFrame(int id)
-{
-    m_frameId=id;
-    m_name="Frame";
+	m_from=from;
+	m_to=to;
 }
 
-
-DsFrame::~DsFrame()
+void DsTweenFrame::setFromKeyFrame(DsKeyFrame* from)
 {
+	m_from=from;
+}
+void DsTweenFrame::setToKeyFrame(DsKeyFrame* to)
+{
+	m_to=to;
+}
+
+DsKeyFrame* DsTweenFrame::slerpToKeyFrame(int index)
+{
+    return NULL;
 }
 
 
 
-
-DsFrameImage* DsFrame::getFrameImage(const std::string& name)
+DsFrameImage* DsKeyFrame::getFrameImage(const std::string& name)
 {
 	Iterator iter=m_images.begin();
 	for(;iter!=m_images.end();++iter)
@@ -36,23 +41,30 @@ DsFrameImage* DsFrame::getFrameImage(const std::string& name)
 }
 
 
+DsKeyFrame::DsKeyFrame(int id)
+	:DsFrame(id)
+{
+}
 
-DsFrameImage* DsFrame::getFrameImage(int index)
+
+
+
+DsFrameImage* DsKeyFrame::getFrameImage(int index)
 {
 	assert(index<m_images.size());
     return m_images[index];
 }
 
 
-void DsFrame::pushFrameImage(DsFrameImage* image)
+void DsKeyFrame::pushFrameImage(DsFrameImage* image)
 {
 	m_images.push_back(image);
 }
 
 
-DsFrame* DsFrame::clone()
+DsKeyFrame* DsKeyFrame::clone()
 {
-	DsFrame* ret=new DsFrame;
+    DsKeyFrame* ret=new DsKeyFrame(0);
 
 	Iterator iter=m_images.begin();
 	for(;iter!=m_images.end();++iter)

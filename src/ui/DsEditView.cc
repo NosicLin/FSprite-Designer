@@ -68,7 +68,7 @@ void DsEditView::mousePressEvent(QMouseEvent* event)
     setFocus();
 	m_lastpos=event->pos();
     m_curState->mousePressEvent(event);
-    draw();
+    update();
 }
 
 void DsEditView::mouseMoveEvent(QMouseEvent* event)
@@ -88,12 +88,13 @@ void DsEditView::mouseMoveEvent(QMouseEvent* event)
     }
 
     m_curState->mouseMoveEvent(event);
-    draw();
+    update();
 }
 
 void DsEditView::mouseReleaseEvent(QMouseEvent* event)
 {
     m_curState->mouseReleaseEvent(event);
+    update();
 }
 void DsEditView::wheelEvent(QWheelEvent* event)
 {
@@ -119,7 +120,7 @@ void DsEditView::wheelEvent(QWheelEvent* event)
 
     m_tx=x-rx*m_scale;
     m_ty=y-ry*m_scale;
-    draw();
+    update();
 }
 
 void DsEditView::keyPressEvent(QKeyEvent* event)
@@ -134,7 +135,7 @@ void DsEditView::keyPressEvent(QKeyEvent* event)
         break;
     }
     m_curState->keyPressEvent(event);
-    draw();
+    update();
 }
 
 void DsEditView::keyReleaseEvent(QKeyEvent* event)
@@ -148,7 +149,7 @@ void DsEditView::keyReleaseEvent(QKeyEvent* event)
         break;
     }
     m_curState->keyReleaseEvent(event);
-    draw();
+    update();
 }
 
 void DsEditView::focusInEvent(QFocusEvent* event)
@@ -164,18 +165,18 @@ void DsEditView::setTranslate(float x,float y)
 {
     m_tx=x;
     m_ty=y;
-    draw();
+    update();
 }
 void DsEditView::setScale(float scale)
 {
     m_scale=scale;
-    draw();
+    update();
 }
 
 void DsEditView::setShowAxis(bool enable)
 {
     m_showAxis=enable;
-    draw();
+    update();
 }
 
 void DsEditView::draw()
@@ -211,7 +212,6 @@ void DsEditView::draw()
 	setLineColor(0.0,0.0,1.0);
 	drawLine(100,100,-100,-100);
 
-    swapBuffers();
 }
 
 void DsEditView::drawAxis()

@@ -2,6 +2,7 @@
 #include <QtGui>
 #include "DsAnimationEdit.h"
 #include "DsEditView.h"
+#include "model/DsData.h"
 
 DsAnimationEdit::DsAnimationEdit(QWidget* parent)
     :QWidget(parent)
@@ -34,6 +35,7 @@ void DsAnimationEdit::paintEvent(QPaintEvent* event)
     painter.drawRect(rect);
 
     drawRuler(painter);
+    drawKeyFrames(painter);
 
 }
 
@@ -97,9 +99,28 @@ void DsAnimationEdit::drawRuler(QPainter& painter)
 
 
 }
-void DsAnimationEdit::drawKeyFrame(QPainter& painter)
+void DsAnimationEdit::drawKeyFrames(QPainter& painter)
 {
+	DsAnimation* cur_anmation=DsData::shareData()->getCurAnimation();
+	if(!cur_anmation)
+	{
+		return;
+	}
+	DsAnimation::Iterator  iter=cur_anmation->begin();
+
+    painter.setPen(QPen(QColor(50,50,50)));
+    painter.setBrush(QBrush(QColor(255,255,255)));
+
+	for(;iter!=cur_anmation->end();++iter)
+	{
+		int frameid = (*iter)->getFrameId();
+		int frame_pos=frameid*m_ruler_unit;
+		frame_pos-=m_move;
+        painter.drawEllipse(frame_pos+1,32,m_ruler_unit-2,6);
+
+	}
 }
+
 
 void DsAnimationEdit::mousePressEvent(QMouseEvent* event)
 {

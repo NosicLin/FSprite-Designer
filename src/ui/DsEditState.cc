@@ -4,10 +4,11 @@
 #include "DsEditView.h"
 #include "operator/DsOperator.h"
 
+
 void DsEditState::onEnter(DsEditState* prev)
 {
-
 }
+
 void DsEditState::onExit(DsEditState* next)
 {
 }
@@ -46,7 +47,7 @@ void DsEditStateIdel::mousePressEvent(QMouseEvent* event)
 	if(event->buttons()&Qt::LeftButton)
 	{
 		DsData* data=DsData::shareData();
-		DsFrame* cur_frame=data->getCurFrame();
+        DsKeyFrame* cur_frame=(DsKeyFrame*)data->getCurFrame();
 		if(cur_frame==NULL)
 		{
 			return;
@@ -59,7 +60,7 @@ void DsEditStateIdel::mousePressEvent(QMouseEvent* event)
 		DsFrameImage* cur_frameImg=data->getCurFrameImage();
 		assert(cur_frameImg==NULL);
 
-		DsFrame::Iterator iter=cur_frame->begin();
+        DsKeyFrame::Iterator iter=cur_frame->begin();
 		for(;iter!=cur_frame->end();++iter)
 		{
 			if((*iter)->hit(x,y))
@@ -75,7 +76,7 @@ void DsEditStateIdel::mousePressEvent(QMouseEvent* event)
 void DsEditStateIdel::draw()
 {
 	DsData* data=DsData::shareData();
-	DsFrame* cur_frame=data->getCurFrame();
+    DsKeyFrame* cur_frame=(DsKeyFrame*)data->getCurFrame();
 	if(!cur_frame)
 	{
 		out<<"cur_frame not finde"<<endl;
@@ -100,7 +101,7 @@ void DsEditStateSelect::mousePressEvent(QMouseEvent* event)
 		float y=event->y();
 		m_editView->transformToRealCoord(&x,&y);
 		DsData* data=DsData::shareData();
-		DsFrame* cur_frame=data->getCurFrame();
+        DsKeyFrame* cur_frame=(DsKeyFrame*)data->getCurFrame();
 		assert(cur_frame!=NULL);
 
 		DsFrameImage* cur_frameImg=data->getCurFrameImage();
@@ -111,7 +112,7 @@ void DsEditStateSelect::mousePressEvent(QMouseEvent* event)
 			return;
 		}
 
-		DsFrame::Iterator iter=cur_frame->begin();
+        DsKeyFrame::Iterator iter=cur_frame->begin();
 		for(;iter!=cur_frame->end();++iter)
 		{
 			if((*iter)->hit(x,y))
@@ -130,7 +131,7 @@ void DsEditStateSelect::mousePressEvent(QMouseEvent* event)
 void DsEditStateSelect::draw()
 {
 	DsData* data=DsData::shareData();
-	DsFrame* cur_frame=data->getCurFrame();
+    DsKeyFrame* cur_frame=(DsKeyFrame*)data->getCurFrame();
 	assert(cur_frame);
 
 	DsFrameImage* cur_frameImg=data->getCurFrameImage();

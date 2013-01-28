@@ -124,13 +124,15 @@ DsFrameImage* DsData::getCurFrameImage()
 	}
 	return NULL;
 }
+
 void  DsData::setCurFrameImage(const std::string& name)
 {
-	if(m_curProject)
-	{
-		m_curProject->setCurFrameImage(name);
-	}
+    if(m_curProject)
+    {
+        m_curProject->setCurFrameImage(name);
+    }
 }
+
 void DsData::dropCurFrameImage()
 {
 	if(m_curProject)

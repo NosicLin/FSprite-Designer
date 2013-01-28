@@ -46,11 +46,12 @@ DsProject* createTestProject()
 
     DsAnimation* anim=new DsAnimation("jump");
 
-    DsFrame* frame1=new DsFrame(0);
+    DsKeyFrame* frame1=new DsKeyFrame(0);
 
-    DsFrame* frame10=new DsFrame(10);
-    DsFrame* frame15=new DsFrame(15);
-    DsFrame* frame20=new DsFrame(20);
+    DsKeyFrame* frame10=new DsKeyFrame(10);
+    DsKeyFrame* frame15=new DsKeyFrame(15);
+    DsKeyFrame* frame20=new DsKeyFrame(20);
+    DsKeyFrame* frame40=new DsKeyFrame(40);
 
     DsFrameImage* img_head=DsFrameImage::create("head.png");
     img_head->setPos(0,120);
@@ -70,10 +71,11 @@ DsProject* createTestProject()
     frame15->pushFrameImage(img_larm);
     frame20->pushFrameImage(img_rarm);
 
-    anim->insertFrame(frame1);
-    anim->insertFrame(frame15);
-    anim->insertFrame(frame10);
-    anim->insertFrame(frame20);
+    anim->pushFrame(frame1);
+    anim->pushFrame(frame15);
+    anim->pushFrame(frame10);
+    anim->pushFrame(frame20);
+    anim->pushFrame(frame40);
 
 
     sp->addAnimation(anim);

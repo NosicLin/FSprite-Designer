@@ -17,10 +17,6 @@ DsEditSpace::DsEditSpace(QWidget* parent)
     m_editView=new DsEditView(this);
     m_animationEdit=new DsAnimationEdit(this);
 
-    /*
-    m_animationEdit->setSizePolicy(QSizePolicy::Expanding,
-                                    QSizePolicy::Preferred );
-                                    */
 
     vlayout->addWidget(m_tabbar);
     vlayout->addWidget(m_editView,1);

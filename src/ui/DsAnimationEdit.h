@@ -14,7 +14,7 @@ class DsAnimationEdit:public QWidget
 	protected:
 		void drawRuler(QPainter& painter);
 		void drawFrame(QPainter& painter);
-		void drawKeyFrame(QPainter& painter);
+		void drawKeyFrames(QPainter& painter);
 		void drawSelectFrame(QPainter& painter);
 
 	private:

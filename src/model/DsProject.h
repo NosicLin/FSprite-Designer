@@ -40,7 +40,7 @@ class DsProject
 		
 		/* Frame image */
 		DsFrameImage* getCurFrameImage(){return m_curFrameImage;}
-		void setCurFrameImage(const std::string& name);
+        void setCurFrameImage(const std::string& name);
 		void dropCurFrameImage();
 
 	private:
