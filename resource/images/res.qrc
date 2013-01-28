@@ -32,5 +32,6 @@
         <file>IDI_CLOSE.ico</file>
         <file>IDI_RESIZE.ico</file>
         <file>IDI_TURN.ico</file>
+        <file>IDI_AD_BKGND.ico</file>
     </qresource>
 </RCC>
