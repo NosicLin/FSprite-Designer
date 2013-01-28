@@ -19,7 +19,6 @@
         <file>IDI_PAST.ico</file>
         <file>IDI_PERSITION.ico</file>
         <file>IDI_PLAY.ico</file>
-        <file>IDI_ROTATE.ico</file>
         <file>IDI_SAVE.ico</file>
         <file>IDI_SAVE_AS.ico</file>
         <file>IDI_SCALE.ico</file>
@@ -32,5 +31,6 @@
         <file>res.qrc</file>
         <file>IDI_CLOSE.ico</file>
         <file>IDI_RESIZE.ico</file>
+        <file>IDI_TURN.ico</file>
     </qresource>
 </RCC>

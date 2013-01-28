@@ -18,7 +18,7 @@
 #define DS_MS_COPY ":/images/IDI_COPY.ico"
 #define DS_MS_UNDO ":/images/IDI_UNDO.ico"
 #define DS_MS_REDO ":/images/IDI_FOWARD.ico"
-#define DS_MS_ROTATE ":/images/IDI_ROTATE.ico"
+#define DS_MS_ROTATE ":/images/IDI_TURN.ico"
 #define DS_MS_SCALE ":/images/IDI_SCALE.ico"
 #define DS_MS_POSITION ":/images/IDI_PERSITION.ico"
 /*Animation*/
