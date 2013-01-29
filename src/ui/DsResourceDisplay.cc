@@ -1,6 +1,6 @@
 #include <QLabel>
 #include <QVBoxLayout>
-
+#include "DsQrcMacros.h"
 #include "DsResourceDisplay.h"
 
 DsResourceDisplay::DsResourceDisplay(QWidget* p)
@@ -73,7 +73,7 @@ void DsResourceDisplay::addResFolder(const std::string &folder)
         }
         QTreeWidgetItem *noteTemp = new QTreeWidgetItem();
         noteTemp->setText(0, strpath);
-        //noteTemp->setIcon(0, QIcon(DS_FB_FILE));
+        noteTemp->setIcon(0, QIcon(DS_FB_FILE));
         m_tree->addTopLevelItem(noteTemp);
         AddFileItem(strpath, noteTemp);
     }
@@ -164,7 +164,7 @@ void DsResourceDisplay::openSomething()
         }
         QTreeWidgetItem *noteTemp = new QTreeWidgetItem();
         noteTemp->setText(0, m_dir);
-        //noteTemp->setIcon(0, QIcon(DS_FB_FILE));
+        noteTemp->setIcon(0, QIcon(DS_FB_FILE));
         m_tree->addTopLevelItem(noteTemp);
         AddFileItem(m_dir, noteTemp);
 
@@ -318,7 +318,7 @@ int DsResourceDisplay::AddFileItem(QString strDir, QTreeWidgetItem *currentItem)
 
                     if (ffile.attrib == _A_SUBDIR)
                     {
-                        //noteTemp->setIcon(0, QIcon(DS_FB_FILE));
+                        noteTemp->setIcon(0, QIcon(DS_FB_FILE));
                     }
                     else
                     {

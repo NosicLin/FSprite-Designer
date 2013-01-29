@@ -50,7 +50,7 @@
 #define DS_TL_BACKGROUND ":/images/IDI_AD_BKGND.ico"
 #define DS_TL_HELP ":/images/IDI_HELP.ico"
 
-#define DS_FB_FILE ":images/IDI_FILE.ico"
+#define DS_FB_FILE ":images/IDI_FILE_OPEN.ico"
 
 #endif /*_DS_QRC_MACROS_H_*/
 
