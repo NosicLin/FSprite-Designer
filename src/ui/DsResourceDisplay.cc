@@ -12,6 +12,8 @@ DsResourceDisplay::DsResourceDisplay(QWidget* p)
     /* TODO(use your control here)*/
     //QLabel* controlbar= new QLabel(tr("<add> <delete>"), this);
 
+    //QLabel* controlbar= new QLabel(tr(" ----------------\n|<add>| <delete> |\n ----------------"),this);
+
     /*
     QVBoxLayout* hbox=new QVBoxLayout(this);
 

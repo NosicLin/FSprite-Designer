@@ -1,47 +1,46 @@
 #include "DsDataOperator.h"
 
-DataOperator::DataOperator()
+DsDataOperator::DsDataOperator()
 {
 	m_data=DsData::shareData();
 }
 
-void DataOperator::setCurProject(DsProject* prog)
+void DsDataOperator::setCurProject(DsProject* prog)
 {
 	m_data->setCurProject(prog);
     m_data->emitSignal(DsData::SG_CUR_PROJECT_CHANGE);
 }
 
-void DataOperator::setCurAnimation(const std::string& anim)
+void DsDataOperator::setCurAnimation(const std::string& anim)
 {
 	m_data->setCurAnimation(anim);
     m_data->emitSignal(DsData::SG_CUR_ANIMATION_CHANGE);
 }
 
-void DataOperator::setCurFrame(int frame)
+void DsDataOperator::setCurFrame(int frame)
 {
 	m_data->setCurFrame(frame);
     m_data->emitSignal(DsData::SG_CUR_FRAME_CHANGE);
 }
 
-void DataOperator::setCurFrameImage(const std::string& anim)
+void DsDataOperator::setCurFrameImage(const std::string& anim)
 {
 	m_data->setCurFrameImage(anim);
     m_data->emitSignal(DsData::SG_CUR_FRAME_IMAGE_CHANGE);
 }
 
-void DataOperator::addAnimation(const std::string& name)
+void DsDataOperator::addAnimation(const std::string& name)
 {
 	DsSprite* sprite=m_data->getCurSprite();
 	if(sprite)
     {
         DsAnimation* anim=new DsAnimation(name);
-
 		sprite->addAnimation(anim);
         m_data->emitSignal(DsData::SG_SPRITE_PROPERTY_CHANGE);
 	}
 }
 
-void DataOperator::removeAnimation(const std::string& anim)
+void DsDataOperator::removeAnimation(const std::string& anim)
 {
 	DsSprite* sprite=m_data->getCurSprite();
 	if(sprite)
@@ -49,6 +48,26 @@ void DataOperator::removeAnimation(const std::string& anim)
 		/*TODO*/
 	}
 }
+
+
+void DsDataOperator::dropCurFrameImage()
+{
+    DsFrameImage* image=m_data->getCurFrameImage();
+    if(image!=NULL)
+    {
+        m_data->dropCurFrameImage();
+        m_data->emitSignal(DsData::SG_CUR_FRAME_IMAGE_CHANGE);
+    }
+}
+
+
+
+
+
+
+
+
+
 
 
 

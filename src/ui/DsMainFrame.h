@@ -74,6 +74,7 @@ public slots:
     /* view */
     void onStatusAxis();
     void onStatusGrid();
+    void onAddBackground(){}
 
     /* about */
     void onAbout(){}

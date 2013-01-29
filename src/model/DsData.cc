@@ -15,7 +15,7 @@ DsData* DsData::shareData()
 
 DsData::DsData()
 {
-    m_curProject=NULL;
+	m_curProject=NULL;
 }
 
 void DsData::emitSignal(int type)
@@ -23,7 +23,7 @@ void DsData::emitSignal(int type)
 
 	switch(type)
 	{
-        case SG_CUR_PROJECT_CHANGE:
+		case SG_CUR_PROJECT_CHANGE:
 			emit signalCurProjectChange();
 			break;
 		case SG_CUR_ANIMATION_CHANGE:
@@ -62,12 +62,84 @@ void DsData::emitSignal(int type)
 }
 
 
+DsSprite* DsData::getCurSprite()
+{
+	return m_curProject->getSprite();
+}
 
 
 
+DsAnimation* DsData::getCurAnimation()
+{
+	if(m_curProject)
+	{
+		return m_curProject->getCurAniamtion();
+	}
+	return NULL;
+}
+void DsData::setCurAnimation(const std::string& anim)
+{
+	if(m_curProject)
+	{
+		m_curProject->setCurAnimation(anim);
+	}
+}
+void DsData::dropCurAnimation()
+{
+	if(m_curProject)
+	{
+		m_curProject->dropCurAnimation();
+	}
+}
 
+DsFrame* DsData::getCurFrame()
+{
+	if(m_curProject)
+	{
+		return m_curProject->getCurFrame();
+	}
+	return NULL;
+}
 
+void DsData::setCurFrame(int framenu)
+{
+	if(m_curProject)
+	{
+		return m_curProject->setCurFrame(framenu);
+	}
+}
+void DsData::dropCurFrame()
+{
+	if(m_curProject)
+	{
+		m_curProject->dropCurFrame();
+	}
+}
 
+DsFrameImage* DsData::getCurFrameImage()
+{
+	if(m_curProject)
+	{
+		return m_curProject->getCurFrameImage();
+	}
+	return NULL;
+}
+
+void  DsData::setCurFrameImage(const std::string& name)
+{
+    if(m_curProject)
+    {
+        m_curProject->setCurFrameImage(name);
+    }
+}
+
+void DsData::dropCurFrameImage()
+{
+	if(m_curProject)
+	{
+		m_curProject->dropCurFrameImage();
+	}
+}
 
 
 

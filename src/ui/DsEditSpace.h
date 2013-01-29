@@ -5,6 +5,8 @@
 
 #include "DsEditView.h"
 
+#include "DsAnimationEdit.h"
+
 class DsEditSpace:public QWidget
 {
     Q_OBJECT
@@ -13,9 +15,7 @@ public:
 private:
     QTabBar* m_tabbar;
     DsEditView* m_editView;
-
-
-
+    DsAnimationEdit* m_animationEdit;
 };
 
 

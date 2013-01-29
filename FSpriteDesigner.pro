@@ -13,7 +13,11 @@ SOURCES += \
     src/model/DsData.cc \
     src/model/DsAnimation.cc \
     src/main.cc \
-    src/model/DsFrameImage.cc
+    src/model/DsFrameImage.cc \
+    src/ui/DsEditState.cc \
+    src/operator/DsDataOperator.cc \
+    src/operator/DsOperator.cc \
+    src/ui/DsAnmationEdit.cc
 
 HEADERS += \
     src/ui/DsSpriteDisplay.h \
@@ -30,7 +34,11 @@ HEADERS += \
     src/model/DsFrameImage.h \
     src/model/DsFrame.h \
     src/model/DsData.h \
-    src/model/DsAnimation.h
+    src/model/DsAnimation.h \
+    src/ui/DsEditState.h \
+    src/operator/DsOperator.h \
+    src/operator/DsDataOperator.h \
+    src/ui/DsAnimationEdit.h
 
 INCLUDEPATH +=src/
 
@@ -42,6 +50,8 @@ OTHER_FILES +=
 FORMS += \
     resource/ui/animation_info.ui \
     resource/ui/about.ui \
-    resource/ui/scale.ui
+    resource/ui/scale.ui \
+    resource/ui/pisition.ui \
+    resource/ui/frame.ui
 
 QT+=opengl

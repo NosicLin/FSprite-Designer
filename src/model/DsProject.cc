@@ -28,16 +28,36 @@ void DsProject::setCurFrame(int frame)
 	{
 		return;
 	}
-	assert(frame<m_curAnimation->getFrameNu());
 	m_curFrame=m_curAnimation->getFrame(frame);
 	m_curFrameImage=NULL;
 }
+
 void DsProject::setCurFrameImage(const std::string& name)
 {
-	if(!m_curFrame)
-	{
-		return;
-	}
-	m_curFrameImage=m_curFrame->getFrameImage(name);
-	assert(m_curFrameImage);
+    if(!m_curFrame)
+    {
+        return;
+    }
+    assert(m_curFrame->getType()==DsFrame::FRAME_KEY);
+    m_curFrameImage=((DsKeyFrame*)m_curFrame)->getFrameImage(name);
+    assert(m_curFrameImage);
 }
+
+
+void DsProject::dropCurAnimation()
+{
+	m_curAnimation=NULL;
+	m_curFrame=NULL;
+	m_curFrameImage=NULL;
+}
+void DsProject::dropCurFrame()
+{
+	m_curFrame=NULL;
+	m_curFrameImage=NULL;
+}
+void DsProject::dropCurFrameImage()
+{
+	m_curFrameImage=NULL;
+}
+
+

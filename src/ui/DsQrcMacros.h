@@ -18,7 +18,7 @@
 #define DS_MS_COPY ":/images/IDI_COPY.ico"
 #define DS_MS_UNDO ":/images/IDI_UNDO.ico"
 #define DS_MS_REDO ":/images/IDI_FOWARD.ico"
-#define DS_MS_ROTATE ":/images/IDI_ROTATE.ico"
+#define DS_MS_ROTATE ":/images/IDI_TURN.ico"
 #define DS_MS_SCALE ":/images/IDI_SCALE.ico"
 #define DS_MS_POSITION ":/images/IDI_PERSITION.ico"
 /*Animation*/
@@ -30,6 +30,8 @@
 #define DS_MS_VIEW_STATUS ":/images/icon.png"
 #define DS_MS_SHOW_COOR ":/images/IDI_AXIS.ico"
 #define DS_MS_SHOW_GRID ":/images/IDI_GRID.ico"
+#define DS_MS_BACKGROUND ":/images/IDI_AD_BKGND.ico"
+
 /* About */
 #define DS_MS_HELP ":/images/IDI_HELP.ico"
 #define DS_MS_ABOUT_US ":/images/IDI_TEAM_LOGO.ico"
@@ -45,6 +47,7 @@
 #define DS_TL_ZOOM_IN ":/images/IDI_ZOOM_IN.ico"
 #define DS_TL_ZOOM_OUT ":/images/IDI_ZOOM_OUT.ico"
 #define DS_TL_RESIZE ":/images/IDI_RESIZE.ico"
+#define DS_TL_BACKGROUND ":/images/IDI_AD_BKGND.ico"
 #define DS_TL_HELP ":/images/IDI_HELP.ico"
 
 #endif /*_DS_QRC_MACROS_H_*/

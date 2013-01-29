@@ -152,6 +152,11 @@ void DsMainFrame::createMenuBar()
         connect(ms_view_grid,SIGNAL(triggered()),this,SLOT(onStatusGrid()));
         m_gridStatus=ms_view_grid;
 
+        QAction* ms_add_backgroud=new QAction(QPixmap(DS_MS_BACKGROUND),"&Add Background Image",this);
+        mn_view->addAction(ms_add_backgroud);
+        connect(ms_add_backgroud,SIGNAL(triggered()),this,SLOT(onAddBackground()));
+
+
     }
     /* animation */
     QMenu* mn_animation=menuBar()->addMenu("Animation");
@@ -200,7 +205,8 @@ void DsMainFrame::createStatusBar()
 
 void DsMainFrame::createToolBar()
 {
-    QToolBar* m_toolBar=addToolBar("MainToolBar");
+    QToolBar* m_toolBar=new QToolBar;
+    addToolBar(Qt::RightToolBarArea,m_toolBar);
 
     /* New File */
 	QAction* tl_new=m_toolBar->addAction(QIcon(DS_TL_NEW),"New File");
@@ -216,6 +222,15 @@ void DsMainFrame::createToolBar()
 
      m_toolBar->addSeparator();
 
+     /* Undo */
+     QAction* tl_undo=m_toolBar->addAction(QIcon(DS_TL_UNDO),"Undo");
+     connect(tl_undo,SIGNAL(triggered()),this,SLOT(onUndo()));
+     /*Redo */
+     QAction* tl_redo=m_toolBar->addAction(QIcon(DS_TL_REDO),"Redo");
+     connect(tl_redo,SIGNAL(triggered()),this,SLOT(onRedo()));
+
+     m_toolBar->addSeparator();
+
     /* Play animation*/
     QAction* tl_play=m_toolBar->addAction(QIcon(DS_TL_PLAY),"Play Animation");
     connect(tl_play,SIGNAL(triggered()),this,SLOT(onPlay()));
@@ -226,14 +241,6 @@ void DsMainFrame::createToolBar()
 
     m_toolBar->addSeparator();
 
-    /* Undo */
-    QAction* tl_undo=m_toolBar->addAction(QIcon(DS_TL_UNDO),"Undo");
-    connect(tl_undo,SIGNAL(triggered()),this,SLOT(onUndo()));
-    /*Redo */
-    QAction* tl_redo=m_toolBar->addAction(QIcon(DS_TL_REDO),"Redo");
-    connect(tl_redo,SIGNAL(triggered()),this,SLOT(onRedo()));
-
-    m_toolBar->addSeparator();
 
     /* Zoom in */
     QAction* tl_zoom_in=m_toolBar->addAction(QIcon(DS_TL_ZOOM_IN),"Zoom In");
@@ -249,6 +256,13 @@ void DsMainFrame::createToolBar()
     connect(tl_resize,SIGNAL(triggered()),this,SLOT(onResize()));
 
     m_toolBar->addSeparator();
+
+    /* Add background image */
+    QAction* tl_background=m_toolBar->addAction(QIcon(DS_TL_BACKGROUND),"Add Background Image");
+    connect(tl_background,SIGNAL(triggered()),this,SLOT(onAddBackground()));
+
+    m_toolBar->addSeparator();
+
 
     /* Help */
     QAction* tl_help=m_toolBar->addAction(QIcon(DS_TL_HELP),"Help");
@@ -282,21 +296,32 @@ void DsMainFrame::initLayout()
 
     QSplitter* hsplitter = new QSplitter(Qt::Horizontal, m_clientArea);
 
- 	QTabWidget* twid=new QTabWidget();
-    twid->setElideMode(Qt::ElideRight);
-    twid->setMovable(1);
-    twid->setDocumentMode(1);
-    twid->addTab(m_resDisplay,QString("Resource"));
-    twid->addTab(m_propertyDisplay,QString("Property"));
+    QTabWidget* left=new QTabWidget();
+    left->setElideMode(Qt::ElideRight);
+    left->setMovable(1);
+    left->setDocumentMode(1);
+    left->addTab(m_resDisplay,QString("Resource"));
+    left->addTab(m_propertyDisplay,QString("Property"));
 
     //twid->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Expanding);
 
  //   twid->resize(200,200);
 
-    hsplitter->addWidget(twid);
+    hsplitter->addWidget(left);
     hsplitter->addWidget(m_editSpace);
     hsplitter->setStretchFactor(1,1);
-    hsplitter->addWidget(m_spriteDisplay);
+
+    QTabWidget* right=new QTabWidget();
+    right->setElideMode(Qt::ElideRight);
+    right->setMovable(1);
+    right->setDocumentMode(1);
+    right->addTab(m_spriteDisplay,QString("Sprite"));
+
+    QWidget* m_animationDisplay=new QWidget(this);
+    right->addTab(m_animationDisplay,QString("Animation"));
+
+
+    hsplitter->addWidget(right);
 
 
     QHBoxLayout* hbox=new QHBoxLayout(m_clientArea);
