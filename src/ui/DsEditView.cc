@@ -3,6 +3,7 @@
 #include "DsEditView.h"
 #include <QTextStream>
 #include <vector>
+#include "util/DsDebug.h"
 
 
 
@@ -21,8 +22,11 @@ DsEditView::DsEditView(QWidget* parent)
     m_a=1;
     setFocusPolicy(Qt::StrongFocus);
     setMouseTracking(true);
-    m_curState=&m_stateIdel;
-
+	initState();
+}
+void DsEditView::initState()
+{
+	m_stateNotEdit.setEditView(this);
     m_stateIdel.setEditView(this);
     m_stateAddImage.setEditView(this);
     m_stateTranslate.setEditView(this);
@@ -31,6 +35,44 @@ DsEditView::DsEditView(QWidget* parent)
     m_stateSelect.setEditView(this);
     m_statePlay.setEditView(this);
     m_stateMoveCoord.setEditView(this);
+
+	DsData* data=DsData::shareData();
+	DsFrame* frame=data->getCurFrame();
+	if(frame==NULL)
+	{
+		m_curState=&m_stateIdel;
+	}
+	else 
+	{
+		if(frame->getType()==DsFrame::FRAME_KEY)
+		{
+			m_curState=&m_stateIdel;
+		}
+		else 
+		{
+			m_curState=&m_stateNotEdit;
+		}
+	}
+}
+void DsEditView::slotCurFrameChange()
+{
+    DsData* data=DsData::shareData();
+    DsFrame* frame=data->getCurFrame();
+    if(frame==NULL)
+	{
+        changeToState(&m_stateIdel);
+	}
+	else 
+	{
+		if(frame->getType()==DsFrame::FRAME_KEY)
+		{
+            changeToState(&m_stateIdel);
+		}
+		else 
+		{
+            changeToState(&m_stateNotEdit);
+		}
+	}
 }
 
 void DsEditView::initializeGL()
@@ -154,11 +196,11 @@ void DsEditView::keyReleaseEvent(QKeyEvent* event)
 
 void DsEditView::focusInEvent(QFocusEvent* event)
 {
-    out<<"focus in"<<endl;
+    DsDebug<<"focus in"<<endl;
 }
 void DsEditView::focusOutEvent(QFocusEvent* event)
 {
-    out<<"foucs out"<<endl;
+    DsDebug<<"foucs out"<<endl;
 }
 
 void DsEditView::setTranslate(float x,float y)
@@ -247,11 +289,11 @@ void DsEditView::drawFrameImage(DsFrameImage* image)
 	width*=sx;
 	height*=sx;
 
-	image->getTextureArea(&cx0,&cy0,&cx1,&cy1);
+    image->getTextureArea(&cx0,&cy0,&cx1,&cy1);
 
 
     glTranslatef(x,y,0);
-	glRotatef(0,0,1,angle);
+    glRotatef(angle,0,0,1);
 
 
     DsImage* ds_img=image->getImage();

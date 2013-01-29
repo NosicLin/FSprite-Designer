@@ -26,7 +26,7 @@ class DsFrame
 
 class DsTweenFrame:public DsFrame 
 {
-	public:
+    public:
 		DsTweenFrame(DsKeyFrame* from,DsKeyFrame* to,int id);
 		virtual int getType()
 		{

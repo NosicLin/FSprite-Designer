@@ -5,7 +5,6 @@
 #include "DsSprite.h"
 
 
-
 void DsProject::setCurAnimation(const std::string& name)
 {
 	m_curAnimation=m_sprite->getAnimation(name);
@@ -13,33 +12,35 @@ void DsProject::setCurAnimation(const std::string& name)
 
 	if(m_curAnimation->getFrameNu()>0)
 	{
-		m_curFrame=m_curAnimation->getFrame(0);
+		m_curFrameIndex=0;
 	}
 	else 
 	{
-		m_curFrame=NULL;
+		m_curFrameIndex=-1;
 	}
 	m_curFrameImage=NULL;
 }
 
-void DsProject::setCurFrame(int frame)
+void DsProject::setCurFrameIndex(int frame)
 {
 	if(!m_curAnimation)
 	{
 		return;
 	}
-	m_curFrame=m_curAnimation->getFrame(frame);
+	m_curFrameIndex=frame;
 	m_curFrameImage=NULL;
 }
 
 void DsProject::setCurFrameImage(const std::string& name)
 {
-    if(!m_curFrame)
+    if(m_curFrameIndex==-1)
     {
         return;
     }
-    assert(m_curFrame->getType()==DsFrame::FRAME_KEY);
-    m_curFrameImage=((DsKeyFrame*)m_curFrame)->getFrameImage(name);
+	DsFrame* frame=m_curAnimation->getFrame(m_curFrameIndex);
+	assert(frame);
+    assert(frame->getType()==DsFrame::FRAME_KEY);
+    m_curFrameImage=((DsKeyFrame*)frame)->getFrameImage(name);
     assert(m_curFrameImage);
 }
 
@@ -47,17 +48,36 @@ void DsProject::setCurFrameImage(const std::string& name)
 void DsProject::dropCurAnimation()
 {
 	m_curAnimation=NULL;
-	m_curFrame=NULL;
+	m_curFrameIndex=-1;
 	m_curFrameImage=NULL;
 }
-void DsProject::dropCurFrame()
+void DsProject::dropCurFrameIndex()
 {
-	m_curFrame=NULL;
+	m_curFrameIndex=-1;
 	m_curFrameImage=NULL;
 }
 void DsProject::dropCurFrameImage()
 {
 	m_curFrameImage=NULL;
 }
+
+
+DsFrame* DsProject::getCurFrame()
+{
+	if(!m_curAnimation)
+	{
+		return NULL;
+	}
+    if(m_curFrameIndex==-1)
+	{
+		return NULL;
+	}
+
+	return m_curAnimation->getFrame(m_curFrameIndex);
+}
+
+
+
+
 
 

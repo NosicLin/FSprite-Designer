@@ -3,7 +3,7 @@
 #include "DsEditState.h"
 #include "DsEditView.h"
 #include "operator/DsOperator.h"
-
+#include "util/DsDebug.h"
 
 void DsEditState::onEnter(DsEditState* prev)
 {
@@ -32,14 +32,14 @@ void DsEditState::keyReleaseEvent(QKeyEvent* event)
 }
 void DsEditState::draw()
 {
-    out<<"draw"<<endl;
+    DsDebug<<"draw"<<endl;
 }
 
 /* DsEditStateIdel */
 
 DsEditStateIdel::DsEditStateIdel()
 {
-	m_type=DsEditView::ST_IDEL;
+    m_type=DsEditState::ST_IDEL;
 }
 
 void DsEditStateIdel::mousePressEvent(QMouseEvent* event)
@@ -65,7 +65,7 @@ void DsEditStateIdel::mousePressEvent(QMouseEvent* event)
 		{
 			if((*iter)->hit(x,y))
 			{
-				out<<"hit:"<<(*iter)->getName().c_str()<<endl;
+                DsDebug<<"hit:"<<(*iter)->getName().c_str()<<endl;
 				DsOperator::data.setCurFrameImage((*iter)->getName());
                 m_editView->changeToState(&m_editView->m_stateSelect);
 			}
@@ -75,16 +75,18 @@ void DsEditStateIdel::mousePressEvent(QMouseEvent* event)
 
 void DsEditStateIdel::draw()
 {
-	DsData* data=DsData::shareData();
+    DsData* data=DsData::shareData();
+    int cur_frame_index=data->getCurFrameIndex();
+    DsDebug<<"Cur_frame_index:"<<cur_frame_index<<endl;
     DsKeyFrame* cur_frame=(DsKeyFrame*)data->getCurFrame();
 	if(!cur_frame)
 	{
-		out<<"cur_frame not finde"<<endl;
+        DsDebug<<"cur_frame not finde"<<endl;
 		return;
 	}
 	int image_nu=cur_frame->getFrameImageNu();
 
-	//out<<"image_nu:"<<image_nu<<endl;
+    //DsDebug<<"image_nu:"<<image_nu<<endl;
 	for(int i=image_nu-1;i>=0;i--)
 	{
 		DsFrameImage* image=cur_frame->getFrameImage(i);
@@ -117,7 +119,7 @@ void DsEditStateSelect::mousePressEvent(QMouseEvent* event)
 		{
 			if((*iter)->hit(x,y))
 			{
-				out<<"hit:"<<(*iter)->getName().c_str()<<endl;
+                DsDebug<<"hit:"<<(*iter)->getName().c_str()<<endl;
 				DsOperator::data.setCurFrameImage((*iter)->getName());
 				return;
 			}
@@ -132,14 +134,14 @@ void DsEditStateSelect::draw()
 {
 	DsData* data=DsData::shareData();
     DsKeyFrame* cur_frame=(DsKeyFrame*)data->getCurFrame();
-	assert(cur_frame);
+    assert(((DsFrame*)cur_frame)->getType()==DsFrame::FRAME_KEY);
 
 	DsFrameImage* cur_frameImg=data->getCurFrameImage();
 	assert(cur_frameImg);
 
 	int image_nu=cur_frame->getFrameImageNu();
 
-	//out<<"image_nu:"<<image_nu<<endl;
+    //DsDebug<<"image_nu:"<<image_nu<<endl;
 	for(int i=image_nu-1;i>=0;i--)
 	{
 		DsFrameImage* image=cur_frame->getFrameImage(i);
@@ -158,7 +160,7 @@ void DsEditStateSelect::draw()
 			width*=sx;
 			height*=sx;
 			glTranslatef(x,y,0);
-			glRotatef(0,0,1,angle);
+            glRotatef(angle,0,0,1);
 
 			m_editView->setLineColor(1.0,0.0,0.0);
 			m_editView->drawLine(-width/2,-height/2,width/2,-height/2);
@@ -170,6 +172,33 @@ void DsEditStateSelect::draw()
 	}
 }
 
+
+
+DsEditStateNotEdit::DsEditStateNotEdit()
+{
+	m_type=ST_NOT_EDIT;
+}
+
+void DsEditStateNotEdit::draw()
+{
+	DsData* data=DsData::shareData();
+	assert(data->getCurFrame()->getType()==DsFrame::FRAME_TWEEN);
+	DsTweenFrame* cur_frame=(DsTweenFrame*)data->getCurFrame();
+	assert(cur_frame);
+
+    DsKeyFrame* key_frame=cur_frame->slerpToKeyFrame(data->getCurFrameIndex());
+
+    int image_nu=key_frame->getFrameImageNu();
+    DsDebug<<"image_NU:"<<image_nu<<endl;
+	for(int i=image_nu-1;i>=0;i--)
+	{
+        DsFrameImage* image=key_frame->getFrameImage(i);
+        assert(image);
+        //DsDebug<"ImageName:"<<image->getName().c_str()<<endl;
+		m_editView->drawFrameImage(image);
+	}
+	delete key_frame;
+}
 
 
 

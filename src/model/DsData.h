@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <QImage>
+#include <QObject>
 
 #include "DsProject.h"
 class DsSprite;
@@ -27,8 +28,10 @@ public:
     int texture;
 };
 
-class DsData
+class DsData:public QObject
 {
+    Q_OBJECT
+
 public:
     enum
     {
@@ -50,8 +53,8 @@ public:
     DsData();
     ~DsData();
 public:
-    DsProject* getCurProject(){return m_curProject;}
-    void setCurProject(DsProject* proj){m_curProject=proj;}
+    DsProject* getCurProject();
+    void setCurProject(DsProject* proj);
     DsSprite* getCurSprite();
 
     DsAnimation* getCurAnimation();
@@ -59,7 +62,8 @@ public:
 	void dropCurAnimation();
 
     DsFrame* getCurFrame();
-    void setCurFrame(int framenu);
+	int getCurFrameIndex();
+    void setCurFrameIndex(int framenu);
 	void dropCurFrame();
 
     DsFrameImage* getCurFrameImage();
@@ -69,16 +73,16 @@ public:
     void emitSignal(int type);
 
 signals:
-    void signalCurProjectChange(){}
-    void signalCurAnimationChange(){}
-    void signalCurFrameChange(){}
-    void signalCurFrameImageChange(){}
+    void signalCurProjectChange();
+    void signalCurAnimationChange();
+    void signalCurFrameChange();
+    void signalCurFrameImageChange();
 
-    void signalProjectPropertyChange(){}
-    void signalSpritePropertyChange(){}
-    void signalAnimationPropertyChange(){}
-    void signalFramePropertyChange(){}
-    void signalFrameImagePropertyChange(){}
+    void signalProjectPropertyChange();
+    void signalSpritePropertyChange();
+    void signalAnimationPropertyChange();
+    void signalFramePropertyChange();
+    void signalFrameImagePropertyChange();
 
 private:
     DsProject* m_curProject;

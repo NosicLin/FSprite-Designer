@@ -12,7 +12,6 @@
 
 #include "DsEditState.h"
 
-static QTextStream out(stdout) ;
 
 
 class DsEditView:public QGLWidget
@@ -25,17 +24,6 @@ class DsEditView:public QGLWidget
             DIRECTTION_Y,
             DIRECTION_BOTH
         };
-		enum
-		{
-			ST_IDEL,
-			ST_ADD_IMAGE,
-			ST_SELECT,
-			ST_SCALE,
-			ST_TRANSLATE,
-			ST_ROTATE,
-			ST_PLAY,
-            ST_MOVE_COORD
-		};
 
 	public:	
         DsEditView(QWidget* parent);
@@ -61,8 +49,12 @@ class DsEditView:public QGLWidget
         void focusOutEvent(QFocusEvent* event);
         void wheelEvent(QWheelEvent* event);
 
+	public slots:
+		void slotCurFrameChange();
+
 
     protected:
+		void initState();
         virtual void initializeGL();
         virtual void resizeGL(int width,int height);
         virtual void paintGL();
@@ -94,7 +86,8 @@ class DsEditView:public QGLWidget
 		DsEditState* m_curState;
 
 
-		/* all state */
+        /* all state */
+        DsEditStateNotEdit m_stateNotEdit;
         DsEditStateIdel m_stateIdel;
 		DsEditStateAddImage m_stateAddImage;
 		DsEditStateTranslate m_stateTranslate;
@@ -107,6 +100,7 @@ class DsEditView:public QGLWidget
 
 	public:
 		friend class DsEditState;
+		friend class DsEditStateNotEdit;
 		friend class DsEditStateIdel;
 		friend class DsEditStateAddImage;
 		friend class DsEditStateTranslate;

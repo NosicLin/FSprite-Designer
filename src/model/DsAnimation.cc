@@ -1,8 +1,10 @@
+
 #include <assert.h>
 
 
 #include "DsAnimation.h"
 #include "DsFrame.h"
+#include "util/DsDebug.h"
 int DsAnimation::m_defaulFps=10;
 
 DsAnimation::DsAnimation(const std::string& name)
@@ -23,7 +25,12 @@ DsAnimation::~DsAnimation()
 
 DsFrame* DsAnimation::getFrame(int index)
 {
-	int keyid=toKeyFramePos(index);
+    int keyid=toKeyFramePos(index);
+    if(keyid==-1)
+    {
+        return NULL;
+    }
+    assert(keyid>=0&&keyid<m_keyFrames.size());
 	return m_keyFrames[keyid];
 }
 
@@ -38,7 +45,7 @@ void DsAnimation::pushFrame(DsFrame* frame)
 		if(frame->getType()==DsFrame::FRAME_TWEEN)
 		{
 			assert(last_frame->getType()==DsFrame::FRAME_KEY);
-			((DsTweenFrame*)last_frame)->setToKeyFrame((DsKeyFrame*)last_frame);
+            ((DsTweenFrame*)frame)->setFromKeyFrame((DsKeyFrame*)last_frame);
 		}
 		/*      _ */
 		/* .. t k */
@@ -298,8 +305,9 @@ void DsAnimation::insertFrameTypeKey(int index,bool empty)
 			/*       _     */
 			/* K T _ _ _ K */
 			if(next_insert==ftween)
-			{
+            {
 
+                DsDebug<<"next_insert"<<endl;
                 DsTweenFrame* next_tween=new DsTweenFrame(
                             insert_frame,
                             ftween->getToKeyFrame(),
@@ -364,7 +372,7 @@ void DsAnimation::rawInsertFrame(DsFrame* frame)
 	}
 	else 
 	{
-        m_keyFrames.insert(m_keyFrames.begin()+keypos,frame);
+        m_keyFrames.insert(m_keyFrames.begin()+keypos+1,frame);
 	}
 }
 

@@ -10,35 +10,55 @@ class DsEditView;
 class DsEditState 
 {
 	public:
-        virtual void onEnter(DsEditState* prev);
-        virtual void onExit(DsEditState* next);
-        virtual void mouseMoveEvent(QMouseEvent* event);
-        virtual void mousePressEvent(QMouseEvent* event);
-        virtual void mouseReleaseEvent(QMouseEvent* event);
-        virtual void wheelEvent(QMouseEvent* event);
+		enum
+		{
+			ST_IDEL,
+			ST_NOT_EDIT,
+			ST_ADD_IMAGE,
+			ST_SELECT,
+			ST_SCALE,
+			ST_TRANSLATE,
+			ST_ROTATE,
+			ST_PLAY,
+			ST_MOVE_COORD
+		};
+	public:
+		virtual void onEnter(DsEditState* prev);
+		virtual void onExit(DsEditState* next);
+		virtual void mouseMoveEvent(QMouseEvent* event);
+		virtual void mousePressEvent(QMouseEvent* event);
+		virtual void mouseReleaseEvent(QMouseEvent* event);
+		virtual void wheelEvent(QMouseEvent* event);
 
 		virtual void keyPressEvent(QKeyEvent* event);
 		virtual void keyReleaseEvent(QKeyEvent* event);
 		virtual int getType(){return m_type;}
-        virtual void draw();
+		virtual void draw();
 
 
-        //virtual void onExit(DsEditState* next);
-        void setEditView(DsEditView* view)
-        {
-            m_editView=view;
-        }
+		//virtual void onExit(DsEditState* next);
+		void setEditView(DsEditView* view)
+		{
+			m_editView=view;
+		}
 
-    protected:
+	protected:
 		int m_type;
 		DsEditView* m_editView;
+};
+class DsEditStateNotEdit:public DsEditState 
+{
+	public:
+		DsEditStateNotEdit();
+	public:
+		virtual void draw();
 };
 
 class DsEditStateIdel:public DsEditState 
 {
 	public: 
 		DsEditStateIdel();
-        virtual void mousePressEvent(QMouseEvent* event);
+		virtual void mousePressEvent(QMouseEvent* event);
 		virtual void draw();
 };
 
@@ -74,9 +94,9 @@ class DsEditStateRotate:public DsEditState
 
 class DsEditStateSelect :public DsEditState 
 {
-    public:
-        void mousePressEvent(QMouseEvent* event);
-        void draw();
+	public:
+		void mousePressEvent(QMouseEvent* event);
+		void draw();
 
 };
 

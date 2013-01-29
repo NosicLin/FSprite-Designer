@@ -15,8 +15,8 @@ class DsDataOperator
         void setCurAnimation(const std::string& anim);
         void dropCurAnimation();
 
-        void setCurFrame(int frame);
-        void dropCurFrame();
+        void setCurFrameIndex(int frame);
+        void dropCurFrameIndex();
 
         void setCurFrameImage(const std::string& anim);
         void dropCurFrameImage();
@@ -27,11 +27,9 @@ class DsDataOperator
 
 		/* animation operator */
 		void setAnimationFps(int fps);
-		void pushFrame();
 		void removeFrame(int index);
-		void insertFrame(int index);
-		void copyFrame(int src,int dst);
-		void swapFrame(int l,int r);
+        void insertKeyFrame(int index);
+        void insertEmptyKeyFrame(int index);
 
 		/* frame operator */
 		void upFrameImage(const std::string& name);

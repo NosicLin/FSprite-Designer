@@ -12,6 +12,13 @@ class DsEditSpace:public QWidget
     Q_OBJECT
 public:
     DsEditSpace(QWidget* parent);
+public slots:
+    void slotCurProjectChange(){}
+    void slotCurAnimationChange(){}
+    void slotCurFrameChange();
+    void slotAnimationPropertyChange();
+
+
 private:
     QTabBar* m_tabbar;
     DsEditView* m_editView;

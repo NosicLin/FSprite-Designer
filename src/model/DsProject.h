@@ -16,7 +16,7 @@ class DsProject
 			m_name=name;
 			m_sprite=sprite;
 			m_curAnimation=NULL;
-			m_curFrame=NULL;
+            m_curFrameIndex=-1;
 			m_curFrameImage=NULL;
 		}
 		DsProject(DsSprite* sprite)
@@ -34,9 +34,10 @@ class DsProject
 		void dropCurAnimation();
 
 		/* Frame */
-		DsFrame* getCurFrame(){return m_curFrame;}
-		void setCurFrame(int framenu);
-		void dropCurFrame();
+        DsFrame* getCurFrame();
+		int getCurFrameIndex(){return m_curFrameIndex;}
+		void setCurFrameIndex(int framenu);
+		void dropCurFrameIndex();
 		
 		/* Frame image */
 		DsFrameImage* getCurFrameImage(){return m_curFrameImage;}
@@ -46,9 +47,9 @@ class DsProject
 	private:
 		std::string m_name;
 		DsSprite* m_sprite;
+		int m_curFrameIndex;
 
 		DsAnimation* m_curAnimation;
-		DsFrame* m_curFrame;
 		DsFrameImage* m_curFrameImage;
 };
 

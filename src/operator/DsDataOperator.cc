@@ -17,9 +17,9 @@ void DsDataOperator::setCurAnimation(const std::string& anim)
     m_data->emitSignal(DsData::SG_CUR_ANIMATION_CHANGE);
 }
 
-void DsDataOperator::setCurFrame(int frame)
+void DsDataOperator::setCurFrameIndex(int frame)
 {
-	m_data->setCurFrame(frame);
+    m_data->setCurFrameIndex(frame);
     m_data->emitSignal(DsData::SG_CUR_FRAME_CHANGE);
 }
 
@@ -60,6 +60,16 @@ void DsDataOperator::dropCurFrameImage()
     }
 }
 
+
+void DsDataOperator::insertKeyFrame(int index)
+{
+    DsAnimation* anim=m_data->getCurAnimation();
+    if(anim)
+    {
+        anim->insertKeyFrame(index);
+        m_data->emitSignal(DsData::SG_ANIMATION_PROPERTY_CHANGE);
+    }
+}
 
 
 

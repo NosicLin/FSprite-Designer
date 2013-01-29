@@ -34,9 +34,11 @@ int main(int argc, char *argv[])
 void initProject(DsProject* proj)
 {
     DsDataOperator& op=DsOperator::data;
+
     op.setCurProject(proj);
     op.setCurAnimation("jump");
-    op.setCurFrame(0);
+    op.setCurFrameIndex(20);
+
 }
 
 
@@ -47,10 +49,10 @@ DsProject* createTestProject()
     DsAnimation* anim=new DsAnimation("jump");
 
     DsKeyFrame* frame1=new DsKeyFrame(0);
-
     DsKeyFrame* frame10=new DsKeyFrame(10);
     DsKeyFrame* frame15=new DsKeyFrame(15);
     DsKeyFrame* frame20=new DsKeyFrame(20);
+    DsTweenFrame* frame21_39= new DsTweenFrame(NULL,NULL,21);
     DsKeyFrame* frame40=new DsKeyFrame(40);
 
     DsFrameImage* img_head=DsFrameImage::create("head.png");
@@ -64,21 +66,32 @@ DsProject* createTestProject()
     img_larm->setPos(-200,0);
 
     DsFrameImage* img_rarm=DsFrameImage::create("rarm.png");
+
     img_rarm->setPos(200,0);
 
-    frame1->pushFrameImage(img_head);
+    DsFrameImage* f20_img1=DsFrameImage::create("rarm.png");
+    f20_img1->setPos(200,0);
+    f20_img1->setAngle(-300);
+    DsFrameImage* f40_img1=DsFrameImage::create("rarm.png");
+    f40_img1->setPos(300,0);
+
+
+    //frame0->pushFrameImage(img_head);
     frame10->pushFrameImage(img_body);
     frame15->pushFrameImage(img_larm);
-    frame20->pushFrameImage(img_rarm);
+    frame20->pushFrameImage(f20_img1);
 
-    anim->pushFrame(frame1);
-    anim->pushFrame(frame15);
+    frame40->pushFrameImage(f40_img1);
+
+    //anim->pushFrame(frame0);
     anim->pushFrame(frame10);
+    anim->pushFrame(frame15);
     anim->pushFrame(frame20);
+    anim->pushFrame(frame21_39);
     anim->pushFrame(frame40);
 
-
     sp->addAnimation(anim);
+
     DsProject* project=new DsProject(sp);
     return project;
 }

@@ -38,7 +38,8 @@ HEADERS += \
     src/ui/DsEditState.h \
     src/operator/DsOperator.h \
     src/operator/DsDataOperator.h \
-    src/ui/DsAnimationEdit.h
+    src/ui/DsAnimationEdit.h \
+    src/util/DsDebug.h
 
 INCLUDEPATH +=src/
 
