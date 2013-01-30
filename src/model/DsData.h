@@ -62,7 +62,8 @@ public:
 	void dropCurAnimation();
 
     DsFrame* getCurFrame();
-	int getCurFrameIndex();
+    int getCurFrameIndex();
+    int getFrameNu();
     void setCurFrameIndex(int framenu);
 	void dropCurFrame();
 

@@ -88,7 +88,7 @@ DsAnimation* DsData::getCurAnimation()
 {
     if(m_curProject)
     {
-        return m_curProject->getCurAniamtion();
+        return m_curProject->getCurAnimation();
     }
     return NULL;
 }
@@ -132,6 +132,21 @@ void DsData::setCurFrameIndex(int framenu)
         return m_curProject->setCurFrameIndex(framenu);
     }
 }
+
+int DsData::getFrameNu()
+{
+    if(m_curProject)
+    {
+        DsAnimation* anim=m_curProject->getCurAnimation();
+        if(anim)
+        {
+            return anim->getFrameNu();
+        }
+
+    }
+    return 0;
+}
+
 
 
 

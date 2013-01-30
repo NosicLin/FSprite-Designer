@@ -29,7 +29,7 @@ class DsProject
 		std::string getName(){return m_name;}
 
 		/* animation */
-        DsAnimation* getCurAniamtion(){return m_curAnimation;}
+        DsAnimation* getCurAnimation(){return m_curAnimation;}
         void setCurAnimation(const std::string& anim);
 		void dropCurAnimation();
 

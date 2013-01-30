@@ -1,3 +1,4 @@
+#include <assert.h>
 #include "DsDataOperator.h"
 
 DsDataOperator::DsDataOperator()
@@ -71,10 +72,88 @@ void DsDataOperator::insertKeyFrame(int index)
     }
 }
 
+void DsDataOperator::insertEmptyKeyFrame(int index)
+{
+    DsAnimation* anim=m_data->getCurAnimation();
+    if(anim)
+    {
+        anim->insertEmptyKeyFrame(index);
+        m_data->emitSignal(DsData::SG_ANIMATION_PROPERTY_CHANGE);
+    }
+}
 
 
+void DsDataOperator::removeKeyFrame(int index)
+{
+    DsAnimation* anim=m_data->getCurAnimation();
+    if(anim)
+    {
+        anim->removeKeyFrame(index);
+        m_data->emitSignal(DsData::SG_ANIMATION_PROPERTY_CHANGE);
+    }
+}
+void DsDataOperator::removeRangeFrame(int from,int to)
+{
+    DsAnimation* anim=m_data->getCurAnimation();
+    if(anim)
+    {
+        for(int i=from;i<=to;i++)
+        {
+            DsFrame* frame=anim->getFrame(i);
+            if(frame==NULL)
+            {
+                continue;
+            }
+            if(frame->getType()==DsFrame::FRAME_KEY)
+            {
+                if(frame->getFrameId()==i)
+                {
+                    anim->removeKeyFrame(i);
+                }
+            }
+        }
+        m_data->emitSignal(DsData::SG_ANIMATION_PROPERTY_CHANGE);
+    }
+}
 
 
+ void DsDataOperator::insertTween(int index)
+ {
+     DsAnimation* anim=m_data->getCurAnimation();
+     if(anim)
+     {
+         anim->insertTween(index);
+         m_data->emitSignal(DsData::SG_ANIMATION_PROPERTY_CHANGE);
+     }
+ }
+
+ void DsDataOperator::removeTween(int index)
+ {
+     DsAnimation* anim=m_data->getCurAnimation();
+     if(anim)
+     {
+         anim->removeTween(index);
+         m_data->emitSignal(DsData::SG_ANIMATION_PROPERTY_CHANGE);
+     }
+ }
+ void DsDataOperator::tweenToKeyFrame(int index)
+ {
+     DsAnimation* anim=m_data->getCurAnimation();
+     if(anim)
+     {
+         DsFrame* frame=anim->getFrame(index);
+         assert(frame);
+         assert(frame->getType()==DsFrame::FRAME_TWEEN);
+         DsTweenFrame* tween=(DsTweenFrame*)frame;
+         int from=tween->getFromKeyFrame()->getFrameId();
+         int to=tween->getToKeyFrame()->getFrameId();
+         for(int i=from+1;i<to;i++)
+         {
+             anim->insertKeyFrame(i);
+         }
+         m_data->emitSignal(DsData::SG_ANIMATION_PROPERTY_CHANGE);
+     }
+ }
 
 
 

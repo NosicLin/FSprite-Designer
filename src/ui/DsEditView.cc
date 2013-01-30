@@ -11,7 +11,7 @@
 DsEditView::DsEditView(QWidget* parent)
     :QGLWidget(parent)
 {
-    m_space_down=false;
+    m_spaceDown=false;
     m_lastpos=QPoint(0,0);
 	m_tx=0;
     m_ty=0;
@@ -20,6 +20,11 @@ DsEditView::DsEditView(QWidget* parent)
     m_g=1;
     m_b=1;
     m_a=1;
+
+    /*  space down */
+    m_spaceDown=false;
+    m_sDPrevCursor=Qt::ArrowCursor;
+
     setFocusPolicy(Qt::StrongFocus);
     setMouseTracking(true);
 	initState();
@@ -108,7 +113,11 @@ void DsEditView::paintGL()
 void DsEditView::mousePressEvent(QMouseEvent* event)
 {
     setFocus();
-	m_lastpos=event->pos();
+    m_lastpos=event->pos();
+    if(m_spaceDown)
+    {
+        return;
+    }
     m_curState->mousePressEvent(event);
     update();
 }
@@ -121,10 +130,10 @@ void DsEditView::mouseMoveEvent(QMouseEvent* event)
 
     if(event->buttons()&Qt::LeftButton)
     {
-        if(m_space_down)
+        if(m_spaceDown)
         {
             setTranslate(m_tx+dx,m_ty+dy);
-    		m_lastpos=event->pos();
+            m_lastpos=event->pos();
 			return ;
         }
     }
@@ -171,7 +180,9 @@ void DsEditView::keyPressEvent(QKeyEvent* event)
     switch(event->key())
     {
     case Qt::Key_Space:
-        m_space_down=true;
+        m_spaceDown=true;
+        m_sDPrevCursor=cursor();
+        setCursor(Qt::ClosedHandCursor);
         break;
     default:
         break;
@@ -185,7 +196,9 @@ void DsEditView::keyReleaseEvent(QKeyEvent* event)
     switch(event->key())
     {
     case Qt::Key_Space:
-        m_space_down=false;
+        m_spaceDown=false;
+        setCursor(m_sDPrevCursor);
+        m_sDPrevCursor=Qt::ArrowCursor;
         break;
     default:
         break;
@@ -247,12 +260,12 @@ void DsEditView::draw()
     }
 
 
-	/* draw to clientarea */
-	m_curState->draw();
+    /* draw to clientarea */
+    m_curState->draw();
 
 
-	setLineColor(0.0,0.0,1.0);
-	drawLine(100,100,-100,-100);
+    setLineColor(0.0,0.0,1.0);
+    drawLine(100,100,-100,-100);
 
 }
 
@@ -260,10 +273,10 @@ void DsEditView::drawAxis()
 {
     glDisable(GL_TEXTURE_2D);
 
-	setLineColor(1.0,0.0,0.0);
-	drawLine(-100000,0,100000,0);
-	setLineColor(0.0,1.0,0.0);
-	drawLine(0,-100000,0,100000);
+    setLineColor(1.0,0.0,0.0);
+    drawLine(-100000,0,100000,0);
+    setLineColor(0.0,1.0,0.0);
+    drawLine(0,-100000,0,100000);
 }
 void DsEditView::drawGrid()
 {
@@ -271,23 +284,23 @@ void DsEditView::drawGrid()
 }
 void DsEditView::drawFrameImage(DsFrameImage* image)
 {
-	glPushMatrix();
-	float x,y,width,height,sx,sy,angle;
-	float cx0,cy0,cx1,cy1;
+    glPushMatrix();
+    float x,y,width,height,sx,sy,angle;
+    float cx0,cy0,cx1,cy1;
 
-	x=image->getPosX();
-	y=image->getPosY();
+    x=image->getPosX();
+    y=image->getPosY();
 
-	width=image->getWidth();
-	height=image->getHeight();
+    width=image->getWidth();
+    height=image->getHeight();
 
-	sx=image->getScaleX();
-	sy=image->getScaleY();
+    sx=image->getScaleX();
+    sy=image->getScaleY();
 
-	angle=image->getAngle();
+    angle=image->getAngle();
 
-	width*=sx;
-	height*=sx;
+    width*=sx;
+    height*=sx;
 
     image->getTextureArea(&cx0,&cy0,&cx1,&cy1);
 
@@ -313,15 +326,15 @@ void DsEditView::drawFrameImage(DsFrameImage* image)
     glColor3f(1.0,1.0,1.0);
     glBindTexture(GL_TEXTURE_2D,ds_img->texture);
 
-	float vertex[8]=
-	{
-		-width/2,-height/2,
-		width/2,-height/2,
-		width/2,height/2,
-		-width/2,height/2
-	};
-	float texcoord[8]=
-	{
+    float vertex[8]=
+    {
+        -width/2,-height/2,
+        width/2,-height/2,
+        width/2,height/2,
+        -width/2,height/2
+    };
+    float texcoord[8]=
+    {
         cx0,cy0,
         cx1,cy0,
         cx1,cy1,
@@ -335,26 +348,26 @@ void DsEditView::drawFrameImage(DsFrameImage* image)
 }
 void DsEditView::setLineColor(float r,float g,float b,float a)
 {
-	m_r=r;
-	m_g=g;
-	m_b=b;
-	m_a=a;
+    m_r=r;
+    m_g=g;
+    m_b=b;
+    m_a=a;
 }
 
 void DsEditView::drawLine(float x0,float y0,float x1,float y1,float width)
 {
-	glLineWidth(width);
+    glLineWidth(width);
 
     glColor4f(m_r,m_g,m_b,m_a);
     glDisable(GL_TEXTURE_2D);
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     float vertex[4]=
-	{
-		x0,y0,
-		x1,y1
-	};
+    {
+        x0,y0,
+        x1,y1
+    };
 
-	glVertexPointer(2,GL_FLOAT,0,vertex);
+    glVertexPointer(2,GL_FLOAT,0,vertex);
     glDrawArrays(GL_LINES,0,2);
     glEnable(GL_TEXTURE_2D);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -385,6 +398,10 @@ void DsEditView::transformToRealCoord(float* x,float* y)
 
 void DsEditView::changeToState(DsEditState* target)
 {
+    if(m_curState==target)
+    {
+        return;
+    }
     m_curState->onExit(target);
     target->onEnter(m_curState);
     m_curState=target;

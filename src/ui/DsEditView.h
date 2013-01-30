@@ -71,7 +71,6 @@ class DsEditView:public QGLWidget
 
 	private:
         QPoint m_lastpos;
-        bool m_space_down;
         float m_tx,m_ty;
         float m_scale;
 
@@ -83,7 +82,11 @@ class DsEditView:public QGLWidget
 		float m_r,m_g,m_b,m_a;
 
 		/* state information */
-		DsEditState* m_curState;
+        DsEditState* m_curState;
+
+        /* space move state */
+        bool m_spaceDown;
+        QCursor m_sDPrevCursor;
 
 
         /* all state */

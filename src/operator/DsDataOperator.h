@@ -27,9 +27,15 @@ class DsDataOperator
 
 		/* animation operator */
 		void setAnimationFps(int fps);
-		void removeFrame(int index);
+        void removeKeyFrame(int index);
+        void removeRangeFrame(int from,int to);
+
         void insertKeyFrame(int index);
         void insertEmptyKeyFrame(int index);
+        void tweenToKeyFrame(int index);
+
+        void insertTween(int index);
+        void removeTween(int index);
 
 		/* frame operator */
 		void upFrameImage(const std::string& name);

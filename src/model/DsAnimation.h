@@ -32,7 +32,8 @@ class  DsAnimation
 		void removeKeyFrame(int index);
 		void insertKeyFrame(int index);
 		void insertEmptyKeyFrame(int index);
-		void insertTweenFrame(int index);
+        void insertTween(int index);
+        void removeTween(int index);
 		int getKeyFrameNu(){return m_keyFrames.size();};
 
 		void setFps(int fps) {m_fps=fps;}

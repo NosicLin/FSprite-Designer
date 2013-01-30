@@ -51,7 +51,11 @@ class DsEditStateNotEdit:public DsEditState
 	public:
 		DsEditStateNotEdit();
 	public:
-		virtual void draw();
+        virtual void onEnter(DsEditState* prev);
+        virtual void onExit(DsEditState* next);
+        virtual void draw();
+    private:
+        QCursor m_prev;
 };
 
 class DsEditStateIdel:public DsEditState 

@@ -176,7 +176,8 @@ void DsEditStateSelect::draw()
 
 DsEditStateNotEdit::DsEditStateNotEdit()
 {
-	m_type=ST_NOT_EDIT;
+    m_type=ST_NOT_EDIT;
+    m_prev=Qt::ArrowCursor;
 }
 
 void DsEditStateNotEdit::draw()
@@ -198,6 +199,15 @@ void DsEditStateNotEdit::draw()
 		m_editView->drawFrameImage(image);
 	}
 	delete key_frame;
+}
+void DsEditStateNotEdit::onEnter(DsEditState* s)
+{
+    m_prev=m_editView->cursor();
+    m_editView->setCursor(Qt::ForbiddenCursor);
+}
+void DsEditStateNotEdit::onExit(DsEditState* s)
+{
+    m_editView->setCursor(m_prev);
 }
 
 
