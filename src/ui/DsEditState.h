@@ -9,6 +9,13 @@ class DsEditView;
 
 class DsEditState 
 {
+    public:
+        enum
+        {
+            DIRECTION_X,
+            DIRECTION_Y,
+            DIRECTION_BOTH
+        };
 	public:
 		enum
 		{
@@ -67,19 +74,32 @@ class DsEditStateIdel:public DsEditState
 };
 
 
+
 class DsEditStateAddImage:public DsEditState 
 {
-	public:
+    private:
 		DsImage* image;
 };
 
+
+
 class DsEditStateTranslate:public DsEditState
 {
-	public:
-		float startx,starty;
-		float newx,newy;
-		int direction;
+    public:
+        DsEditStateTranslate();
+    public:
+        virtual void onEnter(DsEditState* prev);
+
+        virtual void mouseMoveEvent(QMouseEvent* event);
+        virtual void mousePressEvent(QMouseEvent* event);
+        virtual void keyPressEvent(QKeyEvent* event);
+        virtual void draw();
+
+    private:
+        float m_movex,m_movey;
+        int m_direction;
 };
+
 
 class DsEditStateScale :public DsEditState
 {
@@ -89,6 +109,7 @@ class DsEditStateScale :public DsEditState
 		int direction;
 };
 
+
 class DsEditStateRotate:public DsEditState 
 {
 	public:
@@ -96,11 +117,13 @@ class DsEditStateRotate:public DsEditState
 		float newx,newy;
 };
 
+
 class DsEditStateSelect :public DsEditState 
 {
 	public:
-		void mousePressEvent(QMouseEvent* event);
-		void draw();
+        virtual void mousePressEvent(QMouseEvent* event);
+        virtual void keyPressEvent(QKeyEvent* event);
+        void draw();
 
 };
 

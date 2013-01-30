@@ -44,7 +44,7 @@ DsEditStateIdel::DsEditStateIdel()
 
 void DsEditStateIdel::mousePressEvent(QMouseEvent* event)
 {
-	if(event->buttons()&Qt::LeftButton)
+    if(event->buttons()&Qt::RightButton)
 	{
 		DsData* data=DsData::shareData();
         DsKeyFrame* cur_frame=(DsKeyFrame*)data->getCurFrame();
@@ -95,9 +95,12 @@ void DsEditStateIdel::draw()
 }
 
 
+
+/* DsEditStateSelect */
+
 void DsEditStateSelect::mousePressEvent(QMouseEvent* event)
 {
-	if(event->buttons()&Qt::LeftButton)
+    if(event->buttons()&Qt::RightButton)
 	{
 		float x=event->x();
 		float y=event->y();
@@ -129,17 +132,25 @@ void DsEditStateSelect::mousePressEvent(QMouseEvent* event)
 
     m_editView->changeToState(&m_editView->m_stateIdel);
 }
+void DsEditStateSelect::keyPressEvent(QKeyEvent* event)
+{
+    if(event->key()==Qt::Key_G)
+    {
+        m_editView->changeToState(&m_editView->m_stateTranslate);
+    }
+}
+
 
 void DsEditStateSelect::draw()
 {
-	DsData* data=DsData::shareData();
+    DsData* data=DsData::shareData();
     DsKeyFrame* cur_frame=(DsKeyFrame*)data->getCurFrame();
     assert(((DsFrame*)cur_frame)->getType()==DsFrame::FRAME_KEY);
 
-	DsFrameImage* cur_frameImg=data->getCurFrameImage();
-	assert(cur_frameImg);
+    DsFrameImage* cur_frameImg=data->getCurFrameImage();
+    assert(cur_frameImg);
 
-	int image_nu=cur_frame->getFrameImageNu();
+    int image_nu=cur_frame->getFrameImageNu();
 
     //DsDebug<<"image_nu:"<<image_nu<<endl;
 	for(int i=image_nu-1;i>=0;i--)
@@ -173,6 +184,7 @@ void DsEditStateSelect::draw()
 }
 
 
+/* DsEditStateNotEdit */
 
 DsEditStateNotEdit::DsEditStateNotEdit()
 {
@@ -213,6 +225,187 @@ void DsEditStateNotEdit::onExit(DsEditState* s)
 
 
 
+
+
+
+/*  DsEditStateTranslate */
+DsEditStateTranslate::DsEditStateTranslate()
+{
+    m_movex=0;
+    m_movey=0;
+    m_direction=DsEditState::DIRECTION_BOTH;
+}
+void DsEditStateTranslate::onEnter(DsEditState* prev)
+{
+    m_movex=0;
+    m_movey=0;
+    m_direction=DsEditState::DIRECTION_BOTH;
+}
+
+void DsEditStateTranslate::mouseMoveEvent(QMouseEvent* event)
+{
+    QPoint last_pos=m_editView->m_lastpos;
+    float dx=event->x()-last_pos.x();
+    float dy=event->y()-last_pos.y();
+
+    m_movex+=dx;
+    m_movey+=-dy;
+}
+
+void DsEditStateTranslate::mousePressEvent(QMouseEvent* event)
+{
+    if(event->buttons()&Qt::LeftButton)
+    {
+        DsData* data=DsData::shareData();
+        DsKeyFrame* cur_frame=(DsKeyFrame*)data->getCurFrame();
+        assert(((DsFrame*)cur_frame)->getType()==DsFrame::FRAME_KEY);
+
+        DsFrameImage* cur_frameImg=data->getCurFrameImage();
+        assert(cur_frameImg);
+        float x=cur_frameImg->getPosX();
+        float y=cur_frameImg->getPosY();
+
+        if(m_direction==DsEditState::DIRECTION_X)
+        {
+            x+=m_movex;
+        }
+        else if(m_direction==DsEditState::DIRECTION_Y)
+        {
+            y+=m_movey;
+        }
+        else
+        {
+            x+=m_movex;
+            y+=m_movey;
+        }
+        DsOperator::data.setCurFrameImagePos(x,y);
+        m_editView->changeToState(&m_editView->m_stateSelect);
+
+    }
+    else if(event->buttons()&Qt::RightButton)
+    {
+        m_editView->changeToState(&m_editView->m_stateSelect);
+    }
+}
+
+void DsEditStateTranslate::keyPressEvent(QKeyEvent* event)
+{
+    if(m_direction==DsEditState::DIRECTION_BOTH)
+    {
+        if(event->key()==Qt::Key_X)
+        {
+            m_direction=DsEditState::DIRECTION_X;
+        }
+        else if(event->key()==Qt::Key_Y)
+        {
+            m_direction=DsEditState::DIRECTION_Y;
+        }
+        else if(event->key()==Qt::Key_Escape)
+        {
+            m_editView->changeToState(&m_editView->m_stateSelect);
+        }
+    }
+    else if(m_direction==DsEditState::DIRECTION_X)
+    {
+        if(event->key()==Qt::Key_Y)
+        {
+            m_direction=DsEditState::DIRECTION_Y;
+        }
+        else if(event->key()==Qt::Key_Escape)
+        {
+            m_movey=0;
+            m_direction=DsEditState::DIRECTION_BOTH;
+        }
+    }
+    else if(m_direction==DsEditState::DIRECTION_Y)
+    {
+        if(event->key()==Qt::Key_X)
+        {
+            m_direction=DsEditState::DIRECTION_X;
+        }
+        else if(event->key()==Qt::Key_Escape)
+        {
+            m_movex=0;
+            m_direction=DsEditState::DIRECTION_BOTH;
+        }
+    }
+
+}
+
+void DsEditStateTranslate::draw()
+{
+    DsData* data=DsData::shareData();
+    DsKeyFrame* cur_frame=(DsKeyFrame*)data->getCurFrame();
+    assert(((DsFrame*)cur_frame)->getType()==DsFrame::FRAME_KEY);
+
+    DsFrameImage* cur_frameImg=data->getCurFrameImage();
+    assert(cur_frameImg);
+
+    int image_nu=cur_frame->getFrameImageNu();
+
+    //DsDebug<<"image_nu:"<<image_nu<<endl;
+    for(int i=image_nu-1;i>=0;i--)
+    {
+        DsFrameImage* image=cur_frame->getFrameImage(i);
+
+        if(image==cur_frameImg)
+        {
+
+            glPushMatrix();
+            if(m_direction==DsEditState::DIRECTION_X)
+            {
+                glTranslatef(m_movex,0,0);
+
+            }
+            else if(m_direction==DsEditState::DIRECTION_Y)
+            {
+                glTranslatef(0,m_movey,0);
+            }
+            else
+            {
+                glTranslatef(m_movex,m_movey,0);
+            }
+
+            m_editView->drawFrameImage(image);
+
+            float x,y,width,height,sx,sy,angle;
+            x=image->getPosX();
+            y=image->getPosY();
+            width=image->getWidth();
+            height=image->getHeight();
+            sx=image->getScaleX();
+            sy=image->getScaleY();
+            angle=image->getAngle();
+            width*=sx;
+            height*=sx;
+            glTranslatef(x,y,0);
+            if(m_direction==DsEditState::DIRECTION_X)
+            {
+
+                m_editView->setLineColor(0.0,0.0,1.0);
+                m_editView->drawLine(-100000,0,100000,0);
+            }
+            else if(m_direction==DsEditState::DIRECTION_Y)
+            {
+                m_editView->setLineColor(0.0,0.0,1.0);
+                m_editView->drawLine(0,100000,0,-100000);
+            }
+            glRotatef(angle,0,0,1);
+
+            m_editView->setLineColor(1.0,0.0,0.0);
+            m_editView->drawLine(-width/2,-height/2,width/2,-height/2);
+            m_editView->drawLine(width/2,-height/2,width/2,height/2);
+            m_editView->drawLine(-width/2,height/2,width/2,height/2);
+            m_editView->drawLine(-width/2,height/2,-width/2,-height/2);
+            glPopMatrix();
+        }
+        else
+        {
+            m_editView->drawFrameImage(image);
+        }
+
+    }
+}
 
 
 

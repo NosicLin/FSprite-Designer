@@ -157,6 +157,14 @@ void DsDataOperator::removeRangeFrame(int from,int to)
 
 
 
-
+void DsDataOperator::setCurFrameImagePos(float x,float y)
+{
+    DsFrameImage* img=m_data->getCurFrameImage();
+    if(img)
+    {
+        img->setPos(x,y);
+         m_data->emitSignal(DsData::SG_FRAME_IMAGE_PROPERTY_CHANGE);
+    }
+}
 
 

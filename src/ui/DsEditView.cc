@@ -113,12 +113,13 @@ void DsEditView::paintGL()
 void DsEditView::mousePressEvent(QMouseEvent* event)
 {
     setFocus();
-    m_lastpos=event->pos();
     if(m_spaceDown)
     {
+        m_lastpos=event->pos();
         return;
     }
     m_curState->mousePressEvent(event);
+    m_lastpos=event->pos();
     update();
 }
 
@@ -134,17 +135,19 @@ void DsEditView::mouseMoveEvent(QMouseEvent* event)
         {
             setTranslate(m_tx+dx,m_ty+dy);
             m_lastpos=event->pos();
-			return ;
+            return ;
         }
     }
 
     m_curState->mouseMoveEvent(event);
+    m_lastpos=event->pos();
     update();
 }
 
 void DsEditView::mouseReleaseEvent(QMouseEvent* event)
 {
     m_curState->mouseReleaseEvent(event);
+    m_lastpos=event->pos();
     update();
 }
 void DsEditView::wheelEvent(QWheelEvent* event)
@@ -262,10 +265,6 @@ void DsEditView::draw()
 
     /* draw to clientarea */
     m_curState->draw();
-
-
-    setLineColor(0.0,0.0,1.0);
-    drawLine(100,100,-100,-100);
 
 }
 

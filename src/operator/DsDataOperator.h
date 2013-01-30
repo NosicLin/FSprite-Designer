@@ -42,10 +42,12 @@ class DsDataOperator
 		void downFrameImage(const std::string& name);
 		void frameImageToFront(const std::string& name);
 		void frameImageToTail(const std::string& name);
-		void duplicateFrameImage(const std::string& src_name,const std::string& dst_name);
+        void duplicateFrameImage(const std::string& src_name,const std::string& dst_name);
+
+
 
 		/* frameImage operator */
-		void setPostion(float tx,float ty);
+        void setCurFrameImagePos(float tx,float ty);
 		void setScale(float sx,float sy);
 		void setAngle(float angle);
 		void setArea(float x0,float y0,float x1,float y1);
