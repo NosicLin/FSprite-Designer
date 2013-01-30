@@ -34,5 +34,7 @@
         <file>IDI_UNDO.ico</file>
         <file>IDI_ZOOM_IN.ico</file>
         <file>IDI_ZOOM_OUT.ico</file>
+        <file>IDI_FILE.ico</file>
+        <file>IDI_FILE_OPEN.ico</file>
     </qresource>
 </RCC>
