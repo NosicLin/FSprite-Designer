@@ -103,40 +103,59 @@ class DsEditStateTranslate:public DsEditState
 
 class DsEditStateScale :public DsEditState
 {
-	public:
-		float startx,starty;
-		float newx,newy;
-		int direction;
+    public:
+        DsEditStateScale();
+    public:
+        virtual void onEnter(DsEditState* prev);
+
+        virtual void mouseMoveEvent(QMouseEvent* event);
+        virtual void mousePressEvent(QMouseEvent* event);
+        virtual void keyPressEvent(QKeyEvent* event);
+        virtual void draw();
+	protected:
+		float getScale();
+    public:
+        float m_startx,m_starty;
+        float m_nowx,m_nowy;
+        int m_direction;
 };
 
 
 class DsEditStateRotate:public DsEditState 
 {
-	public:
-		float startx,starty;
-		float newx,newy;
+public:
+    DsEditStateRotate();
+public:
+    virtual void onEnter(DsEditState* prev);
+
+    virtual void mouseMoveEvent(QMouseEvent* event);
+    virtual void mousePressEvent(QMouseEvent* event);
+    virtual void keyPressEvent(QKeyEvent* event);
+    virtual void draw();
+private:
+    float m_angle;
 };
 
 
 class DsEditStateSelect :public DsEditState 
 {
-	public:
-        virtual void mousePressEvent(QMouseEvent* event);
-        virtual void keyPressEvent(QKeyEvent* event);
-        void draw();
+public:
+    virtual void mousePressEvent(QMouseEvent* event);
+    virtual void keyPressEvent(QKeyEvent* event);
+    void draw();
 
 };
 
 class DsEditStatePlay:public DsEditState
 {
-	public:
-		int curframe;
-		int elapse;
+public:
+    int curframe;
+    int elapse;
 };
 
 class DSEditStateMoveCoord:public DsEditState 
 {
-	public:
+public:
 };
 
 

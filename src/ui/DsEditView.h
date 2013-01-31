@@ -63,11 +63,14 @@ class DsEditView:public QGLWidget
         void drawAxis();
 		void drawGrid();
         void drawFrameImage(DsFrameImage* image);
-		void drawFrameImageDecorate(DsFrameImage* image);
+        void rawDrawFrameImage(DsFrameImage* image);
+        void drawFrameImageDecorate(DsFrameImage* image);
 		void setLineColor(float r,float g,float b,float a=1.0);
 		void drawLine(float x0,float y0,float x1,float y1,float width=1.0f);
+        void drawDashLine(float x0,float y0,float x1,float y1,float width=1.0f);
 
-		void transformToRealCoord(float* x,float* y);
+        void transformToRealCoord(float* x,float* y);
+        void transformToWidgetCoord(float* x,float* y);
 
 	private:
         QPoint m_lastpos;

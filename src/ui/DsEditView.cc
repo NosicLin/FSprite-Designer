@@ -285,7 +285,6 @@ void DsEditView::drawFrameImage(DsFrameImage* image)
 {
     glPushMatrix();
     float x,y,width,height,sx,sy,angle;
-    float cx0,cy0,cx1,cy1;
 
     x=image->getPosX();
     y=image->getPosY();
@@ -298,22 +297,26 @@ void DsEditView::drawFrameImage(DsFrameImage* image)
 
     angle=image->getAngle();
 
-    width*=sx;
-    height*=sx;
-
-    image->getTextureArea(&cx0,&cy0,&cx1,&cy1);
-
 
     glTranslatef(x,y,0);
     glRotatef(angle,0,0,1);
+    glScalef(sx,sy,1);
 
+	rawDrawFrameImage(image);
+    glPopMatrix();
+}
+void DsEditView::rawDrawFrameImage(DsFrameImage* image)
+{
+    float width=image->getWidth();
+    float height=image->getHeight();
+    float cx0,cy0,cx1,cy1;
+    image->getTextureArea(&cx0,&cy0,&cx1,&cy1);
 
     DsImage* ds_img=image->getImage();
     if(ds_img->texture==0)
     {
         ds_img->texture=bindTexture(*ds_img->image);
     }
-
     /*
     out<<"wdith:"<<ds_img->image->width()<<" height:"<<ds_img->image->height()<<endl;
 
@@ -321,7 +324,6 @@ void DsEditView::drawFrameImage(DsFrameImage* image)
     out<<" sx:"<<sx<<" sy:"<<sy;
     out<<" tex:"<<ds_img->texture<<" tx0:"<<cx0<<" cy0:"<<cy0<<" cx1:"<<cx1<<" cy1:"<<cy1<<endl;
     */
-
     glColor3f(1.0,1.0,1.0);
     glBindTexture(GL_TEXTURE_2D,ds_img->texture);
 
@@ -343,7 +345,6 @@ void DsEditView::drawFrameImage(DsFrameImage* image)
     glTexCoordPointer(2,GL_FLOAT,0,texcoord);
 
     glDrawArrays(GL_QUADS,0,4);
-    glPopMatrix();
 }
 void DsEditView::setLineColor(float r,float g,float b,float a)
 {
@@ -372,6 +373,27 @@ void DsEditView::drawLine(float x0,float y0,float x1,float y1,float width)
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
 }	
+void DsEditView::drawDashLine(float x0,float y0,float x1,float y1,float width)
+{
+    glLineStipple(1,0x66666666);
+    glLineWidth(width);
+    glEnable(GL_LINE_STIPPLE);
+
+    glColor4f(m_r,m_g,m_b,m_a);
+    glDisable(GL_TEXTURE_2D);
+    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    float vertex[4]=
+    {
+        x0,y0,
+        x1,y1
+    };
+
+    glVertexPointer(2,GL_FLOAT,0,vertex);
+    glDrawArrays(GL_LINES,0,2);
+    glEnable(GL_TEXTURE_2D);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    glDisable(GL_LINE_STIPPLE);
+}
 
 void DsEditView::drawFrameImageDecorate(DsFrameImage* image)
 {
@@ -393,6 +415,19 @@ void DsEditView::transformToRealCoord(float* x,float* y)
 
     *x=(rx-m_tx)/m_scale;
     *y=(ry-m_ty)/m_scale;
+}
+void DsEditView::transformToWidgetCoord(float* x,float *y)
+{
+    float rx=*x;
+    float ry=*y;
+    QSize  wsize=size();
+    rx=rx*m_scale+m_tx;
+    ry=ry*m_scale+m_ty;
+    rx=rx+wsize.width()/2;
+    ry=wsize.height()/2-ry;
+
+    *x=rx;
+    *y=ry;
 }
 
 void DsEditView::changeToState(DsEditState* target)

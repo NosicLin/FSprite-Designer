@@ -167,4 +167,26 @@ void DsDataOperator::setCurFrameImagePos(float x,float y)
     }
 }
 
+void DsDataOperator::setCurFrameImageScale(float x,float y)
+{
+    DsFrameImage* img=m_data->getCurFrameImage();
+    if(img)
+    {
+        img->setScale(x,y);
+         m_data->emitSignal(DsData::SG_FRAME_IMAGE_PROPERTY_CHANGE);
+    }
+}
+
+void DsDataOperator::setCurFrameImageAngle(float angle)
+{
+    DsFrameImage* img=m_data->getCurFrameImage();
+    if(img)
+    {
+        img->setAngle(angle);
+         m_data->emitSignal(DsData::SG_FRAME_IMAGE_PROPERTY_CHANGE);
+    }
+}
+
+
+
 

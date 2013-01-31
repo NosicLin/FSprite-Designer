@@ -78,6 +78,9 @@ DsProject* createTestProject()
     img_larm->setPos(-200,0);
 
     DsFrameImage* img_rarm=DsFrameImage::create("rarm.png");
+    img_rarm->setPos(200,0);
+    DsFrameImage* img_rarm1=DsFrameImage::create("rarm.png");
+    img_rarm1->setPos(-200,0);
 
     img_rarm->setPos(200,0);
 
@@ -90,6 +93,9 @@ DsProject* createTestProject()
 
     //frame0->pushFrameImage(img_head);
     frame10->pushFrameImage(img_body);
+    frame10->pushFrameImage(img_rarm1);
+    frame10->pushFrameImage(img_rarm);
+
     frame15->pushFrameImage(img_larm);
     frame20->pushFrameImage(f20_img1);
 

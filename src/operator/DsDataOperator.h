@@ -48,8 +48,8 @@ class DsDataOperator
 
 		/* frameImage operator */
         void setCurFrameImagePos(float tx,float ty);
-		void setScale(float sx,float sy);
-		void setAngle(float angle);
+        void setCurFrameImageScale(float sx,float sy);
+        void setCurFrameImageAngle(float angle);
 		void setArea(float x0,float y0,float x1,float y1);
 	private:
 		DsData* m_data;
