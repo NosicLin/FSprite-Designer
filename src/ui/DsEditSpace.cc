@@ -29,7 +29,8 @@ DsEditSpace::DsEditSpace(QWidget* parent)
     vlayout->addWidget(m_editView,1);
     vlayout->addWidget(m_animationEdit,0,Qt::AlignBottom);
 
-    connect(m_tabbar,SIGNAL(currentChanged(int)),this,SLOT(tabbarCurrentChange(int)));
+    connect(m_tabbar,SIGNAL(currentChanged(int)),this,SLOT(slotTabbarCurrentChange(int)));
+
 
     connect(DsData::shareData(),
             SIGNAL(signalCurProjectChange()),
@@ -52,8 +53,6 @@ DsEditSpace::DsEditSpace(QWidget* parent)
             SLOT(slotAnimationPropertyChange()));
 
    setLayout(vlayout);
-
-
 }
 
 
@@ -127,7 +126,7 @@ int DsEditSpace::getCurAnimationIndex()
     return cur_index;
 }
 
-void DsEditSpace::tabbarCurrentChange(int index)
+void DsEditSpace::slotTabbarCurrentChange(int index)
 {
     if(m_markTabNotify)
     {
@@ -149,6 +148,7 @@ void DsEditSpace::slotCurAnimationChange()
     m_tabbar->setCurrentIndex(cur_index);
     m_markTabNotify=false;
 
+    m_editView->slotCurAnimationChange();
     m_editView->update();
     m_animationEdit->update();
 }
@@ -168,6 +168,15 @@ void DsEditSpace::slotAnimationPropertyChange()
     m_editView->update();
     m_animationEdit->update();
 }
+
+void DsEditSpace::slotResFileSelect(const std::string& path,const std::string& name)
+{
+    DsDebug<<"File Select: "<<path.c_str()<<name.c_str()<<endl;
+    m_editView->slotAddFrameImage(path,name);
+    m_editView->update();
+}
+
+
 
 
 

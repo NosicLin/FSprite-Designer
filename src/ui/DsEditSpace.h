@@ -19,14 +19,18 @@ protected:
     void clearTab();
     void reTabAnimation();
     int getCurAnimationIndex();
+
 public slots:
-    void tabbarCurrentChange(int index);
+    void slotTabbarCurrentChange(int index);
 
     void slotCurrentProjectChange();
     void slotCurAnimationChange();
 
     void slotCurFrameChange();
     void slotAnimationPropertyChange();
+
+
+    void slotResFileSelect(const std::string& path,const std::string& name);
 
 private:
     QTabBar* m_tabbar;

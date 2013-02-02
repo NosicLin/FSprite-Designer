@@ -120,9 +120,9 @@ void createProjectDog()
 void createProjectCat()
 {
     DsSprite* sp=new DsSprite();
-    DsAnimation* anim_jump=new DsAnimation("jump");
-    DsAnimation* anim_run=new DsAnimation("run");
-    DsAnimation* anim_dead=new DsAnimation("dead");
+    DsAnimation* anim_jump=DsAnimation::createWithFirstFrame("jump");
+    DsAnimation* anim_run=DsAnimation::createWithFirstFrame("run");
+    DsAnimation* anim_dead=DsAnimation::createWithFirstFrame("dead");
     sp->addAnimation(anim_jump);
     sp->addAnimation(anim_run);
     sp->addAnimation(anim_dead);

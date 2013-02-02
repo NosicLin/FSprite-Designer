@@ -40,44 +40,47 @@ void DsEditView::initState()
     m_stateSelect.setEditView(this);
     m_statePlay.setEditView(this);
     m_stateMoveCoord.setEditView(this);
+    m_curState=&m_stateIdel;
+    toDefaultState();
 
-	DsData* data=DsData::shareData();
-	DsFrame* frame=data->getCurFrame();
-	if(frame==NULL)
-	{
-		m_curState=&m_stateIdel;
-	}
-	else 
-	{
-		if(frame->getType()==DsFrame::FRAME_KEY)
-		{
-			m_curState=&m_stateIdel;
-		}
-		else 
-		{
-			m_curState=&m_stateNotEdit;
-		}
-	}
 }
-void DsEditView::slotCurFrameChange()
+void DsEditView::toDefaultState()
 {
-    DsData* data=DsData::shareData();
+	DsData* data=DsData::shareData();
     DsFrame* frame=data->getCurFrame();
-    if(frame==NULL)
-	{
-        changeToState(&m_stateIdel);
+    DsFrameImage* image=data->getCurFrameImage();
+
+	if(frame==NULL)
+    {
+        changeToState(&m_stateNotEdit);
 	}
 	else 
 	{
 		if(frame->getType()==DsFrame::FRAME_KEY)
-		{
-            changeToState(&m_stateIdel);
+        {
+            if(image)
+            {
+                changeToState(&m_stateSelect);
+            }
+            else
+            {
+                changeToState(&m_stateIdel);
+            }
 		}
 		else 
-		{
+        {
             changeToState(&m_stateNotEdit);
 		}
 	}
+}
+
+void DsEditView::slotCurAnimationChange()
+{
+    toDefaultState();
+}
+void DsEditView::slotCurFrameChange()
+{
+    toDefaultState();
 }
 
 void DsEditView::initializeGL()
@@ -174,6 +177,17 @@ void DsEditView::wheelEvent(QWheelEvent* event)
 
     m_tx=x-rx*m_scale;
     m_ty=y-ry*m_scale;
+    update();
+}
+
+void DsEditView::enterEvent(QEvent* event)
+{
+    m_curState->enterEvent(event);
+    update();
+}
+void DsEditView::leaveEvent(QEvent* event)
+{
+    m_curState->leaveEvent(event);
     update();
 }
 
@@ -305,6 +319,7 @@ void DsEditView::drawFrameImage(DsFrameImage* image)
 	rawDrawFrameImage(image);
     glPopMatrix();
 }
+
 void DsEditView::rawDrawFrameImage(DsFrameImage* image)
 {
     float width=image->getWidth();
@@ -440,6 +455,26 @@ void DsEditView::changeToState(DsEditState* target)
     target->onEnter(m_curState);
     m_curState=target;
 }
+
+void DsEditView::slotAddFrameImage(const std::string& path,const std::string& name)
+{
+    if(m_curState==&m_stateNotEdit)
+    {
+        return;
+    }
+
+    std::string full_path=path+name;
+
+    DsFrameImage* frame_image=DsFrameImage::create(full_path);
+
+    m_stateAddImage.setFrameImage(frame_image);
+    changeToState(&m_stateAddImage);
+}
+
+
+
+
+
 
 
 

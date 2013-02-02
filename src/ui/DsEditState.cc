@@ -5,31 +5,39 @@
 #include "operator/DsOperator.h"
 #include "util/DsDebug.h"
 
-void DsEditState::onEnter(DsEditState* prev)
+void DsEditState::onEnter(DsEditState* )
 {
 }
 
-void DsEditState::onExit(DsEditState* next)
+void DsEditState::onExit(DsEditState* )
 {
 }
-void DsEditState::mouseMoveEvent(QMouseEvent* event)
+void DsEditState::mouseMoveEvent(QMouseEvent* )
 {
 }
-void DsEditState::mousePressEvent(QMouseEvent* event)
+void DsEditState::mousePressEvent(QMouseEvent* )
 {
 }
-void DsEditState::mouseReleaseEvent(QMouseEvent* event)
+void DsEditState::mouseReleaseEvent(QMouseEvent* )
 {
 }
-void DsEditState::wheelEvent(QMouseEvent* event)
+void DsEditState::wheelEvent(QMouseEvent* )
 {
 }
-void DsEditState::keyPressEvent(QKeyEvent* event)
+void DsEditState::keyPressEvent(QKeyEvent* )
 {
 }
-void DsEditState::keyReleaseEvent(QKeyEvent* event)
+void DsEditState::keyReleaseEvent(QKeyEvent* )
+{
+
+}
+void DsEditState::enterEvent(QEvent* event)
 {
 }
+void DsEditState::leaveEvent(QEvent* event)
+{
+}
+
 void DsEditState::draw()
 {
     DsDebug<<"draw"<<endl;
@@ -202,10 +210,16 @@ DsEditStateNotEdit::DsEditStateNotEdit()
 
 void DsEditStateNotEdit::draw()
 {
-	DsData* data=DsData::shareData();
-	assert(data->getCurFrame()->getType()==DsFrame::FRAME_TWEEN);
-	DsTweenFrame* cur_frame=(DsTweenFrame*)data->getCurFrame();
-	assert(cur_frame);
+    DsData* data=DsData::shareData();
+    DsFrame* frame=data->getCurFrame();
+    if(frame==NULL)
+    {
+        return ;
+    }
+    assert(frame->getType()==DsFrame::FRAME_TWEEN);
+
+    DsTweenFrame* cur_frame=(DsTweenFrame*)frame;
+    assert(cur_frame);
 
     DsKeyFrame* key_frame=cur_frame->slerpToKeyFrame(data->getCurFrameIndex());
 
@@ -485,9 +499,7 @@ void DsEditStateScale::mouseMoveEvent(QMouseEvent* event)
 float DsEditStateScale::getScale()
 {
     DsData* data=DsData::shareData();
-    DsKeyFrame* cur_frame=(DsKeyFrame*)data->getCurFrame();
     DsFrameImage* cur_frameImg=data->getCurFrameImage();
-
     float x=cur_frameImg->getPosX();
     float y=cur_frameImg->getPosY();
     m_editView->transformToWidgetCoord(&x,&y);
@@ -738,6 +750,85 @@ void DsEditStateRotate::draw()
 }
 
 
+
+DsEditStateAddImage::DsEditStateAddImage()
+{
+    m_image=NULL;
+    m_draw=false;
+}
+
+
+void DsEditStateAddImage::onEnter(DsEditState* )
+{
+    m_draw=false;
+}
+
+void DsEditStateAddImage::mouseMoveEvent(QMouseEvent* event)
+{
+    float x=event->x();
+    float y=event->y();
+
+    m_editView->transformToRealCoord(&x,&y);
+    m_image->setPos(x,y);
+}
+
+void  DsEditStateAddImage::draw()
+{
+
+    DsData* data=DsData::shareData();
+    DsKeyFrame* cur_frame=(DsKeyFrame*)data->getCurFrame();
+    assert(cur_frame);
+
+    int image_nu=cur_frame->getFrameImageNu();
+    for(int i=image_nu-1;i>=0;i--)
+    {
+        DsFrameImage* image=cur_frame->getFrameImage(i);
+        assert(image);
+        m_editView->drawFrameImage(image);
+    }
+
+    if(m_draw)
+    {
+        m_editView->drawFrameImage(m_image);
+    }
+
+}
+
+void DsEditStateAddImage::mousePressEvent(QMouseEvent* event)
+{
+    if(event->buttons()&Qt::LeftButton)
+    {
+        DsOperator::data.addFrameImage(m_image);
+        DsOperator::data.setCurFrameImage(m_image->getName());
+        m_editView->toDefaultState();
+
+    }
+    else if(event->buttons()&Qt::RightButton)
+    {
+        m_editView->toDefaultState();
+    }
+}
+
+void DsEditStateAddImage::keyPressEvent(QKeyEvent* event)
+{
+    DsDebug<<"KeyPress"<<endl;
+    if(event->key()==Qt::Key_Escape)
+    {
+        m_editView->toDefaultState();
+    }
+}
+
+
+void DsEditStateAddImage::enterEvent(QEvent* )
+{
+    m_draw=true;
+    m_editView->setFocus();
+}
+
+void DsEditStateAddImage::leaveEvent(QEvent* )
+{
+    m_draw=false;
+}
 
 
 

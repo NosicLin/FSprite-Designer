@@ -325,7 +325,7 @@ int DsResourceDisplay::AddFileItem(QString strDir, QTreeWidgetItem *currentItem)
                         //添加图片图标
                         QString fileNameTemp = GetDirFromItem(noteTemp);
                         QString fileName = fileNameTemp.left(fileNameTemp.length() - 1);
-                        //noteTemp->setIcon(0, QIcon(fileName));
+                        noteTemp->setIcon(0, QIcon(fileName));
                     }
                 }
             }
