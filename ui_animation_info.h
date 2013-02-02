@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'animation_info.ui'
 **
-** Created: Sat Feb 2 22:01:30 2013
+** Created: Sat Feb 2 22:38:39 2013
 **      by: Qt User Interface Compiler version 4.8.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!

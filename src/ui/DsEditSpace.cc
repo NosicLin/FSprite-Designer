@@ -85,6 +85,7 @@ void DsEditSpace::slotCurrentProjectChange()
 void DsEditSpace::reTabAnimation()
 {
     /* clear all tab */
+    m_markTabNotify=true;
     clearTab();
     DsSprite* sprite=DsData::shareData()->getCurSprite();
     DsAnimation* cur_animation=DsData::shareData()->getCurAnimation();
@@ -104,7 +105,6 @@ void DsEditSpace::reTabAnimation()
         }
     }
 
-    m_markTabNotify=true;
     m_tabbar->setCurrentIndex(cur_index);
     m_markTabNotify=false;
 
