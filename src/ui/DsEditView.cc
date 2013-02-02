@@ -23,8 +23,8 @@ DsEditView::DsEditView(QWidget* parent)
 
 
 	/* axis and grid */
-	m_showGrid=true;
-	m_showGrid=true;
+    m_showAxis=true;
+    m_showGrid=false;
 	m_gridWidth=32;
 	m_gridHeight=32;
 
@@ -170,17 +170,13 @@ void DsEditView::wheelEvent(QWheelEvent* event)
 
     QSize wsize=size();
     x=x-wsize.width()/2;
-    y=y-wsize.height()/2;
+    y=wsize.height()/2-y;
 
     float rx=(x-m_tx)/scale;
     float ry=(y-m_ty)/scale;
 
-    detal=m_scale>1.0f?0.2f:0.1f;
-    m_scale+=(event->delta()/120.0f)*detal;
-    if(m_scale<0.1)
-    {
-        m_scale=0.1f;
-    }
+    detal=event->delta()>0?1.1f:0.9f;
+    m_scale*=detal;
 
     m_tx=x-rx*m_scale;
     m_ty=y-ry*m_scale;
@@ -252,9 +248,33 @@ void DsEditView::setScale(float scale)
     update();
 }
 
+void DsEditView::zoomIn()
+{
+    m_scale*=1.1f;
+    update();
+}
+void DsEditView::zoomOut()
+{
+    m_scale*=0.9f;
+    update();
+}
+void DsEditView::resetZoomTranslate()
+{
+    m_tx=0;
+    m_ty=0;
+    m_scale=1.0;
+    update();
+}
+
+
 void DsEditView::setShowAxis(bool enable)
 {
     m_showAxis=enable;
+    update();
+}
+void DsEditView::setShowGrid(bool enable)
+{
+    m_showGrid=enable;
     update();
 }
 
@@ -293,7 +313,7 @@ void DsEditView::drawAxis()
 {
     glDisable(GL_TEXTURE_2D);
 
-    setLineColor(1.0,0.0,0.0);
+    setLineColor(0.0,0.0,1.0);
     drawLine(-100000,0,100000,0);
     setLineColor(0.0,1.0,0.0);
     drawLine(0,-100000,0,100000);
@@ -510,7 +530,6 @@ void DsEditView::slotAddFrameImage(const std::string& path,const std::string& na
     m_stateAddImage.setFrameImage(frame_image);
     changeToState(&m_stateAddImage);
 }
-
 
 
 

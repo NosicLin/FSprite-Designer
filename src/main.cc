@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
     main_frame.move(x, y); // center the main_frame
     main_frame.setWindowTitle("FSprite Designer");
     main_frame.setWindowIcon(QIcon(DS_MS_WINDOW_ICON));
-    main_frame.show();
+    main_frame.showMaximized();
 
     initProject();
 

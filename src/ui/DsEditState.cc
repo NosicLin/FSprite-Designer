@@ -269,6 +269,8 @@ void DsEditStateTranslate::mouseMoveEvent(QMouseEvent* event)
     QPoint last_pos=m_editView->m_lastpos;
     float dx=event->x()-last_pos.x();
     float dy=event->y()-last_pos.y();
+    dx/=m_editView->m_scale;
+    dy/=m_editView->m_scale;
 
     m_movex+=dx;
     m_movey+=-dy;

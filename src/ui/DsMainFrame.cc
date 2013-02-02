@@ -42,7 +42,7 @@ void DsMainFrame::createEditSpace()
 
 void DsMainFrame::createSpriteDisplay()
 {
-	m_spriteDisplay=new DsSpriteDisplay(m_clientArea);
+    m_spriteDisplay=new DsSpriteDisplay(m_clientArea);
 }
 void DsMainFrame::createPropertyDisplay()
 {
@@ -153,9 +153,10 @@ void DsMainFrame::createMenuBar()
 		/* show grid */
         ms_viewGrid=new QAction("&View Grid",this);
         ms_viewGrid->setCheckable(true);
-        ms_viewGrid->setChecked(true);
+        ms_viewGrid->setChecked(false);
         mn_view->addAction(ms_viewGrid);
         connect(ms_viewGrid,SIGNAL(triggered()),this,SLOT(onStatusGrid()));
+
 
         ms_addBackgroud=new QAction(QPixmap(DS_MS_BACKGROUND),"&Add Background Image",this);
         mn_view->addAction(ms_addBackgroud);
@@ -256,8 +257,8 @@ void DsMainFrame::createToolBar()
 
 
 	/* Resize */
-	tl_resize=m_toolBar->addAction(QIcon(DS_TL_RESIZE),"Resize");
-	connect(tl_resize,SIGNAL(triggered()),this,SLOT(onResize()));
+    tl_resize=m_toolBar->addAction(QIcon(DS_TL_RESIZE),"resetZoomTranslate");
+    connect(tl_resize,SIGNAL(triggered()),this,SLOT(onResetZoomTranslate()));
 
 	m_toolBar->addSeparator();
 
@@ -282,28 +283,29 @@ void DsMainFrame::initLayout()
 			QSizePolicy::Expanding);
 	setCentralWidget(m_clientArea);
 
-	QSplitter* hsplitter = new QSplitter(Qt::Horizontal, m_clientArea);
+    QHBoxLayout* hlayout= new QHBoxLayout(m_clientArea);
 
 	QTabWidget* left=new QTabWidget();
 	left->setElideMode(Qt::ElideRight);
 	left->setMovable(1);
 	left->setDocumentMode(1);
 	left->addTab(m_resDisplay,QString("Resource"));
-	left->addTab(m_propertyDisplay,QString("Property"));
-
-
-	hsplitter->addWidget(left);
-	hsplitter->addWidget(m_editSpace);
-	hsplitter->setStretchFactor(1,1);
+    left->addTab(m_propertyDisplay,QString("Property"));
 
 
 
+    hlayout->addWidget(left);
+    hlayout->addWidget(m_editSpace,1);
+    hlayout->addWidget(m_spriteDisplay);
+    //hlayout->setStretchFactor(1,1);
 
-	QHBoxLayout* hbox=new QHBoxLayout(m_clientArea);
+    //hsplitter->addWidget(m_spriteDisplay);
+
+    //QHBoxLayout* hbox=new QHBoxLayout(m_clientArea);
 
 
-	hbox->addWidget(hsplitter);
-	m_clientArea->setLayout(hbox);
+    //hbox->addWidget(hlayout);
+    m_clientArea->setLayout(hlayout);
 
 
 
@@ -339,7 +341,29 @@ void DsMainFrame::onStatusAxis()
 }
 void DsMainFrame::onStatusGrid()
 {
+    if(ms_viewGrid->isChecked())
+    {
+        m_editSpace->showGrid(true);
+    }
+    else
+    {
+        m_editSpace->showGrid(false);
+    }
 }
+
+void DsMainFrame::onZoomIn()
+{
+    m_editSpace->zoomIn();
+}
+void DsMainFrame::onZoomOut()
+{
+    m_editSpace->zoomOut();
+}
+void DsMainFrame::onResetZoomTranslate()
+{
+    m_editSpace->resetZoomTranslate();
+}
+
 
 
 

@@ -84,9 +84,9 @@ class DsMainFrame:public QMainWindow
 		void onToggleStatusBar(){}
 
 		/* change size */
-		void onZoomIn(){}
-		void onZoomOut(){}
-		void onResize(){}
+        void onZoomIn();
+        void onZoomOut();
+        void onResetZoomTranslate();
 
 	private:
 		QDialog* m_aboutDialog;
@@ -112,6 +112,9 @@ class DsMainFrame:public QMainWindow
 		/* view */
         QAction* ms_viewAxis;
         QAction* ms_viewGrid;
+        QAction* ms_zoomOut;
+        QAction* ms_zoomIn;
+        QAction* ms_resetZoomTranslate;
         QAction* ms_addBackgroud;
 
 		/* animation */

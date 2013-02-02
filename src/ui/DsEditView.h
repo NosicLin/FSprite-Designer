@@ -36,8 +36,13 @@ class DsEditView:public QGLWidget
         float getTranslateX(){return m_tx;}
         float getTranslateY(){return m_ty;}
 
+        void zoomIn();
+        void zoomOut();
+        void resetZoomTranslate();
+
         void setShowAxis(bool enable);
-		void setShowGrid(bool enable);
+        void setShowGrid(bool enable);
+
 		void setGridSize(int width,int height);
 		int getGridHeight();
 		int getGridWidth();
