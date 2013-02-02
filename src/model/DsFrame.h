@@ -59,7 +59,9 @@ class DsKeyFrame:public DsFrame
 
 		DsFrameImage* getFrameImage(const std::string& name);
 
-		void pushFrameImage(DsFrameImage* image);
+        void pushFrameImage(DsFrameImage* image);
+        void insertFrameImage(DsFrameImage* image,int pos);
+
 		void removeFrameImage(const std::string& name);
 
 		void upFrameImage(const std::string& name);

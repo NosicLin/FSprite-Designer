@@ -35,7 +35,11 @@ class DsEditState
 		virtual void mouseMoveEvent(QMouseEvent* event);
 		virtual void mousePressEvent(QMouseEvent* event);
 		virtual void mouseReleaseEvent(QMouseEvent* event);
-		virtual void wheelEvent(QMouseEvent* event);
+        virtual void wheelEvent(QMouseEvent* event);
+
+        virtual void enterEvent(QEvent* event);
+        virtual void leaveEvent(QEvent* event);
+
 
 		virtual void keyPressEvent(QKeyEvent* event);
 		virtual void keyReleaseEvent(QKeyEvent* event);
@@ -77,8 +81,23 @@ class DsEditStateIdel:public DsEditState
 
 class DsEditStateAddImage:public DsEditState 
 {
+    public:
+        DsEditStateAddImage();
+        void setFrameImage(DsFrameImage* img){m_image=img;}
+
+    public:
+        virtual void onEnter(DsEditState* );
+        virtual void mouseMoveEvent(QMouseEvent* event);
+        virtual void enterEvent(QEvent* );
+        virtual void leaveEvent(QEvent* );
+        virtual void mousePressEvent(QMouseEvent* event);
+        virtual void keyPressEvent(QKeyEvent* event);
+
+        virtual void draw();
+
     private:
-		DsImage* image;
+        DsFrameImage* m_image;
+        bool m_draw;
 };
 
 
@@ -127,7 +146,6 @@ public:
     DsEditStateRotate();
 public:
     virtual void onEnter(DsEditState* prev);
-
     virtual void mouseMoveEvent(QMouseEvent* event);
     virtual void mousePressEvent(QMouseEvent* event);
     virtual void keyPressEvent(QKeyEvent* event);

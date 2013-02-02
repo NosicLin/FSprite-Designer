@@ -37,7 +37,8 @@ class DsEditView:public QGLWidget
         float getTranslateY(){return m_ty;}
 
         void setShowAxis(bool enable);
-		void changeToState(DsEditState* state);
+        void changeToState(DsEditState* state);
+        void toDefaultState();
 
 	public:
 		void mouseMoveEvent(QMouseEvent* event);
@@ -48,10 +49,13 @@ class DsEditView:public QGLWidget
         void focusInEvent(QFocusEvent* event);
         void focusOutEvent(QFocusEvent* event);
         void wheelEvent(QWheelEvent* event);
+        void enterEvent(QEvent* event);
+        void leaveEvent(QEvent* event);
 
 	public slots:
-		void slotCurFrameChange();
-
+        void slotCurFrameChange();
+        void slotCurAnimationChange();
+        void slotAddFrameImage(const std::string& path,const std::string& name);
 
     protected:
 		void initState();
@@ -64,6 +68,7 @@ class DsEditView:public QGLWidget
 		void drawGrid();
         void drawFrameImage(DsFrameImage* image);
         void rawDrawFrameImage(DsFrameImage* image);
+
         void drawFrameImageDecorate(DsFrameImage* image);
 		void setLineColor(float r,float g,float b,float a=1.0);
 		void drawLine(float x0,float y0,float x1,float y1,float width=1.0f);

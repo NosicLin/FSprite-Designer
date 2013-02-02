@@ -47,6 +47,7 @@ class DsDataOperator
         void duplicateFrameImage(const std::string& src_name,const std::string& dst_name);
 
         void setCurFrameImage(const std::string& anim);
+        void addFrameImage(DsFrameImage* image);
         void dropCurFrameImage();
 
 

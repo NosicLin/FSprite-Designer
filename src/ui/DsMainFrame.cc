@@ -21,8 +21,11 @@ DsMainFrame::DsMainFrame(QWidget* parent)
     createEditSpace();
     createSpriteDisplay();
     createPropertyDisplay();
-	initLayout();
+    initLayout();
+    connect(m_resDisplay,SIGNAL(resFileSelect(const std::string& ,const std::string& )),
+            m_editSpace,SLOT(slotResFileSelect(const std::string&,const std::string& )));
 }
+
 
 void DsMainFrame::createResourceDisplay()
 {

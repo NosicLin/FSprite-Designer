@@ -12,6 +12,13 @@ DsAnimation::DsAnimation(const std::string& name)
 	m_name=name;
 	m_fps=m_defaulFps;
 }
+DsAnimation* DsAnimation::createWithFirstFrame(const std::string& name)
+{
+    DsAnimation* ret=new DsAnimation(name);
+    DsKeyFrame* zero=new DsKeyFrame(0);
+    ret->pushFrame(zero);
+    return ret;
+}
 
 DsAnimation::~DsAnimation()
 {

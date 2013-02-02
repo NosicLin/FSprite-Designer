@@ -30,6 +30,21 @@ void DsDataOperator::setCurFrameImage(const std::string& anim)
     m_data->emitSignal(DsData::SG_CUR_FRAME_IMAGE_CHANGE);
 }
 
+void DsDataOperator::addFrameImage(DsFrameImage* image)
+{
+    DsFrame* frame=m_data->getCurFrame();
+    if(frame)
+    {
+        if(frame->getType()==DsFrame::FRAME_KEY)
+        {
+            ((DsKeyFrame*)frame)->insertFrameImage(image,0);
+            m_data->emitSignal(DsData::SG_FRAME_PROPERTY_CHANGE);
+
+        }
+    }
+
+}
+
 void DsDataOperator::addAnimation(const std::string& name)
 {
 	DsSprite* sprite=m_data->getCurSprite();
