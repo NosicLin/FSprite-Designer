@@ -311,17 +311,10 @@ void DsMainFrame::initLayout()
     hsplitter->addWidget(m_editSpace);
     hsplitter->setStretchFactor(1,1);
 
-    QTabWidget* right=new QTabWidget();
-    right->setElideMode(Qt::ElideRight);
-    right->setMovable(1);
-    right->setDocumentMode(1);
-    right->addTab(m_spriteDisplay,QString("Sprite"));
-
-    QWidget* m_animationDisplay=new QWidget(this);
-    right->addTab(m_animationDisplay,QString("Animation"));
 
 
-    hsplitter->addWidget(right);
+
+
 
 
     QHBoxLayout* hbox=new QHBoxLayout(m_clientArea);

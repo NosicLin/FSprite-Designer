@@ -52,6 +52,7 @@ void initProject()
     DsData::shareData()->emitSignal(DsData::SG_DATA_PROPERTY_CHANGE);
 
     op.setCurProject("cat");
+    //op.setCurProject("Dog");
     op.setCurAnimation("jump");
     op.setCurFrameIndex(20);
 
