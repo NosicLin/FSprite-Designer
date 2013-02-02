@@ -14,6 +14,9 @@ public:
     DsEditSpace(QWidget* parent);
 
 
+public:
+    void showAxis(bool enable);
+
 
 protected:
     void clearTab();

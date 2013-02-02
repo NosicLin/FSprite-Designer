@@ -28,7 +28,9 @@ grammar.tab.c
 *.pdb
 BuildLog.htm
 Debug
+debug
 Release
+release
 temp
 *.idb 
 *.manifest

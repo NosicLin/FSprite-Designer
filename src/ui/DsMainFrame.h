@@ -16,91 +16,164 @@
 
 class DsMainFrame:public QMainWindow
 {
-    Q_OBJECT
+	Q_OBJECT
 
-public:
-    DsMainFrame(QWidget* parenet=0);
+	public:
+		DsMainFrame(QWidget* parenet=0);
 
-private:
+	private:
 
-    void createMenuBar();
-    void createStatusBar();
-    void createToolBar();
-    void createResourceDisplay();
-    void createEditSpace();
-    void createSpriteDisplay();
-    void createPropertyDisplay();
-    void initLayout();
-
-
-
-private:
-
-    QToolBar* m_toolBar;
-    QMenuBar* m_menuBar;
-    QStatusBar* m_statusBar;
-
-    DsResourceDisplay* m_resDisplay;
-    DsSpriteDisplay* m_spriteDisplay;
-    DsEditSpace* m_editSpace;
-    DsPropertyDisplay* m_propertyDisplay;
-
-    QWidget* m_clientArea;
-public slots:
-    /* file */
-    void onNew(){}
-    void onOpen(){}
-    void onSave(){}
-    void onSaveAs(){}
-    void onClose(){}
-    void onExport(){}
-    void onQuit(){}
-
-    /* edit */
-    void onPaste(){}
-    void onCopy(){}
-    void onUndo(){}
-    void onRedo(){}
-    void onRotate(){}
-    void onScale(){}
-    void onPosition(){}
-
-    /* animation */
-    void onPlay(){}
-    void onStop(){}
-    void onAddAnimation(){}
-    void onSetFrame(){}
-
-    /* view */
-    void onStatusAxis();
-    void onStatusGrid();
-    void onAddBackground(){}
-
-    /* about */
-    void onAbout(){}
-    void onHelp(){}
-    void onToggleStatusBar(){}
-
-    /* change size */
-    void onZoomIn(){}
-    void onZoomOut(){}
-    void onResize(){}
-
-public:
-
-    /* set */
-    void setGrid(bool show){}
-    void setAxis(bool show){}
+		void createMenuBar();
+		void createStatusBar();
+		void createToolBar();
+		void createResourceDisplay();
+		void createEditSpace();
+		void createSpriteDisplay();
+		void createPropertyDisplay();
+		void createDialog();
+		void initLayout();
 
 
-private:
-    /* status bar */
-    QAction* m_gridStatus;
-    QAction* m_axisStatus;
-    /* status bar */
-    QAction* m_viewStatus;
+
+	private:
+
+		QToolBar* m_toolBar;
+		QMenuBar* m_menuBar;
+		QStatusBar* m_statusBar;
+
+		DsResourceDisplay* m_resDisplay;
+		DsSpriteDisplay* m_spriteDisplay;
+		DsEditSpace* m_editSpace;
+		DsPropertyDisplay* m_propertyDisplay;
+
+		QWidget* m_clientArea;
+
+		public slots:
+			/* file */
+			void onNew(){}
+		void onOpen(){}
+		void onSave(){}
+		void onSaveAs(){}
+		void onClose(){}
+		void onExport(){}
+		void onQuit(){}
+
+		/* edit */
+		void onPaste(){}
+		void onCopy(){}
+		void onUndo(){}
+		void onRedo(){}
+		void onRotate(){}
+		void onScale(){}
+		void onPosition(){}
+
+		/* animation */
+		void onPlay(){}
+		void onStop(){}
+		void onAddAnimation(){}
+		void onSetFrame(){}
+
+		/* view */
+		void onStatusAxis();
+		void onStatusGrid();
+		void onAddBackground(){}
+
+		/* about */
+		void onAbout();
+		void onHelp(){}
+		void onToggleStatusBar(){}
+
+		/* change size */
+		void onZoomIn(){}
+		void onZoomOut(){}
+		void onResize(){}
+
+	private:
+		QDialog* m_aboutDialog;
+
+	private:
+		/* file */
+		QAction* ms_new;
+		QAction* ms_open;
+		QAction* ms_save;
+		QAction* ms_save_as;
+		QAction* ms_close;
+		QAction* ms_export;
+		QAction* ms_quit;
+
+		/* edit */
+		QAction* ms_undo;
+		QAction* ms_redo;
+		QAction* ms_paste;
+		QAction* ms_copy;
+		QAction* ms_rotate;
+		QAction* ms_scale;
+		QAction* ms_position;
+		/* view */
+        QAction* ms_viewAxis;
+        QAction* ms_viewGrid;
+        QAction* ms_addBackgroud;
+
+		/* animation */
+		QAction* ms_play;
+		QAction* ms_stop;
+		QAction* ms_add_animation;
+		QAction* ms_set_frame;
+
+		/* about */
+		QAction* ms_help;
+		QAction* ms_about_us;
+
+
+		/* tool bar */
+		QAction* tl_new;
+		QAction* tl_open;
+		QAction* tl_save;
+		QAction* tl_undo;
+		QAction* tl_redo;
+		QAction* tl_play;
+		QAction* tl_stop;
+		QAction* tl_zoom_in;
+		QAction* tl_zoom_out;
+		QAction* tl_resize;
+		QAction* tl_background;
+		QAction* tl_help;
+
+
 };
 
 
 #endif /*_DS_MAIN_FRAME_H_*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

@@ -56,6 +56,11 @@ DsEditSpace::DsEditSpace(QWidget* parent)
 }
 
 
+void DsEditSpace::showAxis(bool enable)
+{
+    m_editView->setShowAxis(enable);
+}
+
 void DsEditSpace::clearTab()
 {
     int count=m_tabbar->count();

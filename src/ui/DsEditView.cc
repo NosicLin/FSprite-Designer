@@ -21,6 +21,13 @@ DsEditView::DsEditView(QWidget* parent)
     m_b=1;
     m_a=1;
 
+
+	/* axis and grid */
+	m_showGrid=true;
+	m_showGrid=true;
+	m_gridWidth=32;
+	m_gridHeight=32;
+
     /*  space down */
     m_spaceDown=false;
     m_sDPrevCursor=Qt::ArrowCursor;
@@ -258,22 +265,22 @@ void DsEditView::draw()
 
     /* move editor area */
     glTranslatef(m_tx,m_ty,0);
-
-
-    /* draw Axis */
-    if(m_showAxis)
-    {
-        drawAxis();
-    }
-
-
     /* zoom editor area */
     glScalef(m_scale,m_scale,1);
+
+
+
 
     /* draw  grid */
     if(m_showGrid)
     {
         drawGrid();
+    }
+
+    /* draw Axis */
+    if(m_showAxis)
+    {
+        drawAxis();
     }
 
 
@@ -293,7 +300,40 @@ void DsEditView::drawAxis()
 }
 void DsEditView::drawGrid()
 {
-    /*TODO*/
+	QSize wsize=size();
+	float x0,y0,x1,y1;
+	x0=0;
+	y0=0;
+	x1=wsize.width();
+	y1=wsize.height();
+
+	transformToRealCoord(&x0,&y0);
+	transformToRealCoord(&x1,&y1);
+
+	int vline_start=x0/m_gridWidth;
+    int vline_end=x1/m_gridWidth+1;
+
+    int hline_start=y0/m_gridHeight;
+    int hline_end=y1/m_gridHeight+1;
+
+    if(hline_start>hline_end)
+    {
+        int temp=hline_start;
+        hline_start=hline_end;
+        hline_end=temp;
+    }
+
+    DsDebug<<" x0:"<<vline_start<<" y0:"<<vline_end<<" x1:"<<hline_start<<" y1"<<hline_end<<endl;
+
+    setLineColor(0.8f,0.8f,0.8f);
+	for(int i=vline_start;i<=vline_end;i++)
+	{
+		drawLine(i*m_gridWidth,-10000,i*m_gridWidth,10000);
+    }
+    for(int i=hline_start;i<=hline_end;i++)
+    {
+        drawLine(-10000,i*m_gridHeight,10000,i*m_gridHeight);
+    }
 }
 void DsEditView::drawFrameImage(DsFrameImage* image)
 {
