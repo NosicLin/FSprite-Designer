@@ -10,23 +10,25 @@ class DsDataOperator
         DsDataOperator();
 	
 	public:
-		/* change cur information */
-		void setCurProject(DsProject* proj);
+        /* project */
+        void addProject(DsProject* project);
+        void removeProject(const std::string& name);
+        void renameProject(const std::string& name,const std::string& target);
+        void setCurProject(const std::string& name);
+
+        /* sprite */
         void setCurAnimation(const std::string& anim);
         void dropCurAnimation();
+        void renameAnimation(const std::string& proj_name,const std::string& anim_name,const std::string& target_name);
+        void addAnimation(const std::string& anim);
+        void removeAnimation(const std::string& anim);
 
+
+        /* animation */
         void setCurFrameIndex(int frame);
         void dropCurFrameIndex();
 
-        void setCurFrameImage(const std::string& anim);
-        void dropCurFrameImage();
-
-		/* sprite operator */
-		void addAnimation(const std::string& anim);
-		void removeAnimation(const std::string& anim);
-
-		/* animation operator */
-		void setAnimationFps(int fps);
+        void setAnimationFps(int fps);
         void removeKeyFrame(int index);
         void removeRangeFrame(int from,int to);
 
@@ -44,6 +46,8 @@ class DsDataOperator
 		void frameImageToTail(const std::string& name);
         void duplicateFrameImage(const std::string& src_name,const std::string& dst_name);
 
+        void setCurFrameImage(const std::string& anim);
+        void dropCurFrameImage();
 
 
 		/* frameImage operator */

@@ -6,9 +6,9 @@ DsDataOperator::DsDataOperator()
 	m_data=DsData::shareData();
 }
 
-void DsDataOperator::setCurProject(DsProject* prog)
+void DsDataOperator::setCurProject(const std::string& name)
 {
-	m_data->setCurProject(prog);
+    m_data->setCurProject(name);
     m_data->emitSignal(DsData::SG_CUR_PROJECT_CHANGE);
 }
 

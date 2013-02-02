@@ -12,15 +12,25 @@ class DsEditSpace:public QWidget
     Q_OBJECT
 public:
     DsEditSpace(QWidget* parent);
+
+
+
+protected:
+    void clearTab();
+    void reTabAnimation();
+    int getCurAnimationIndex();
 public slots:
-    void slotCurProjectChange(){}
-    void slotCurAnimationChange(){}
+    void tabbarCurrentChange(int index);
+
+    void slotCurrentProjectChange();
+    void slotCurAnimationChange();
+
     void slotCurFrameChange();
     void slotAnimationPropertyChange();
 
-
 private:
     QTabBar* m_tabbar;
+    bool m_markTabNotify;
     DsEditView* m_editView;
     DsAnimationEdit* m_animationEdit;
 };

@@ -366,7 +366,14 @@ int DsAnimation::toKeyFramePos(int index)
 
 int DsAnimation::getFrameNu()
 {
-	return m_keyFrames[m_keyFrames.size()-1]->getFrameId()+1;
+    if(m_keyFrames.size()==0)
+    {
+        return 0;
+    }
+    else
+    {
+        return m_keyFrames[m_keyFrames.size()-1]->getFrameId()+1;
+    }
 }
 
 void DsAnimation::rawInsertFrame(DsFrame* frame)

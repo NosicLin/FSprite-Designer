@@ -22,7 +22,8 @@ static int s_id=0;
 DsFrameImage::DsFrameImage(const std::string& name)
 {
     char buf[128];
-    std::string unique=std::string("##")+std::string(itoa(s_id++,buf,10));
+    sprintf(buf,"%d",s_id++);
+    std::string unique=std::string("##")+std::string(buf);
     m_name=name+unique;
     m_image=NULL;
     m_width=0;
@@ -41,7 +42,8 @@ DsFrameImage::DsFrameImage(const std::string& name)
 void DsFrameImage::setImage(DsImage* img)
 {
     char buf[128];
-    std::string unique=std::string("##")+std::string(itoa(s_id++,buf,10));
+    sprintf(buf,"%d",s_id++);
+    std::string unique=std::string("##")+std::string(buf);
 
     m_image=img;
     m_name=img->name+unique;

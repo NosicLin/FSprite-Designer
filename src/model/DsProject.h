@@ -19,14 +19,10 @@ class DsProject
             m_curFrameIndex=-1;
 			m_curFrameImage=NULL;
 		}
-		DsProject(DsSprite* sprite)
-		{
-			m_name=sprite->getName();
-			m_sprite=sprite;
-		}
 	public:
         DsSprite* getSprite(){return m_sprite;}
-		std::string getName(){return m_name;}
+        std::string getName(){return m_name;}
+        void setName(const std::string& name){m_name=name;}
 
 		/* animation */
         DsAnimation* getCurAnimation(){return m_curAnimation;}
