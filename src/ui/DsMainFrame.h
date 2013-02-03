@@ -42,16 +42,16 @@ class DsMainFrame:public QMainWindow
 		QStatusBar* m_statusBar;
 
 		DsResourceDisplay* m_resDisplay;
-		DsSpriteDisplay* m_spriteDisplay;
-		DsEditSpace* m_editSpace;
-		DsPropertyDisplay* m_propertyDisplay;
+        DsSpriteDisplay* m_spriteDisplay;
+        DsEditSpace* m_editSpace;
+        DsPropertyDisplay* m_propertyDisplay;
 
 		QWidget* m_clientArea;
 
-		public slots:
-			/* file */
-			void onNew(){}
-		void onOpen(){}
+        public slots:
+            /* file */
+            void onNew(){}
+        void onOpen();
 		void onSave(){}
 		void onSaveAs(){}
 		void onClose(){}
@@ -68,8 +68,8 @@ class DsMainFrame:public QMainWindow
 		void onPosition(){}
 
 		/* animation */
-		void onPlay(){}
-		void onStop(){}
+        void onPlay();
+        void onStop();
 		void onAddAnimation(){}
 		void onSetFrame(){}
 

@@ -185,7 +185,7 @@ void DsEditStateSelect::draw()
 			sy=image->getScaleY();
 			angle=image->getAngle();
 			width*=sx;
-			height*=sx;
+            height*=sy;
 			glTranslatef(x,y,0);
             glRotatef(angle,0,0,1);
 

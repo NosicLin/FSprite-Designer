@@ -4,7 +4,7 @@
 #include "DsResourceDisplay.h"
 
 DsResourceDisplay::DsResourceDisplay(QWidget* p)
-	:QWidget(p)
+    :QWidget(p)
 {
     /* TODO(use real tree widget here */
     //QLabel* tree= new QLabel(tr("Tree Control List\n  Folder1\n    File1.jpg\n    File2.png\n  Folder2\n    File1.bmp\n    File2.tga\n"), this);

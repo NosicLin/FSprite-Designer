@@ -51,7 +51,14 @@ class DsFrameImage
 		{
 			m_sx=sx;
 			m_sy=sy;
-		}
+        }
+        void setTextureArea(float x0,float y0,float x1,float y1)
+        {
+            m_areax0=x0;
+            m_areay0=y0;
+            m_areax1=x1;
+            m_areay1=y1;
+        }
 
 
 	protected:

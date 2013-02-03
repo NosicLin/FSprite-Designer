@@ -8,6 +8,7 @@
 
 #include "DsMainFrame.h"
 #include "DsQrcMacros.h"
+#include "operator/DsOperator.h"
 
 /* auto gernert files */
 #include "ui_about.h"
@@ -16,8 +17,8 @@
 	DsMainFrame::DsMainFrame(QWidget* parent)
 :QMainWindow(parent)
 {
-	m_clientArea=new QWidget(this);
-	createMenuBar();
+    m_clientArea=new QWidget(this);
+    createMenuBar();
 	createStatusBar();
 	createToolBar();
 	createResourceDisplay();
@@ -33,7 +34,7 @@
 
 void DsMainFrame::createResourceDisplay()
 {
-	m_resDisplay=new DsResourceDisplay(m_clientArea);
+    m_resDisplay=new DsResourceDisplay(m_clientArea);
 }
 void DsMainFrame::createEditSpace()
 {
@@ -285,11 +286,11 @@ void DsMainFrame::initLayout()
 
     QHBoxLayout* hlayout= new QHBoxLayout(m_clientArea);
 
-	QTabWidget* left=new QTabWidget();
-	left->setElideMode(Qt::ElideRight);
-	left->setMovable(1);
-	left->setDocumentMode(1);
-	left->addTab(m_resDisplay,QString("Resource"));
+    QTabWidget* left=new QTabWidget();
+    left->setElideMode(Qt::ElideRight);
+    left->setMovable(1);
+    left->setDocumentMode(1);
+    left->addTab(m_resDisplay,QString("Resource"));
     left->addTab(m_propertyDisplay,QString("Property"));
 
 
@@ -363,7 +364,19 @@ void DsMainFrame::onResetZoomTranslate()
 {
     m_editSpace->resetZoomTranslate();
 }
+void DsMainFrame::onPlay()
+{
+    DsOperator::animation()->animationPlay();
+}
+void DsMainFrame::onStop()
+{
+    DsOperator::animation()->animationStop();
+}
 
+void DsMainFrame::onOpen()
+{
+    DsOperator::io()->loadProject();
+}
 
 
 

@@ -26,17 +26,11 @@ class DsProjectState
 class DsProject
 {
 	public:
-		DsProject(DsSprite* sprite,std::string name)
-		{
-			m_name=name;
-			m_sprite=sprite;
-			m_curAnimation=NULL;
-            m_curFrameIndex=-1;
-			m_curFrameImage=NULL;
-		}
+        DsProject(DsSprite* sprite,std::string name);
 	public:
         DsSprite* getSprite(){return m_sprite;}
         std::string getName(){return m_name;}
+        std::string getRealName(){return m_realName;}
         void setName(const std::string& name){m_name=name;}
 
 		/* animation */
@@ -62,7 +56,8 @@ class DsProject
         void popState();
 
 	private:
-		std::string m_name;
+        std::string m_name;
+        std::string m_realName;
 		DsSprite* m_sprite;
 		int m_curFrameIndex;
 		DsAnimation* m_curAnimation;

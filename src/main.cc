@@ -6,6 +6,8 @@
 
 #include "model/DsModel.h"
 #include "operator/DsOperator.h"
+#include "util/DsSpriteUtil.h"
+#include "util/DsDebug.h"
 
 #include <QDesktopWidget>
 
@@ -13,6 +15,7 @@
 void initProject();
 void createProjectDog();
 void createProjectCat();
+void createProjectFromFile(const char* filename);
 
 int main(int argc, char *argv[])
 {
@@ -47,14 +50,16 @@ void initProject()
 {
     createProjectDog();
     createProjectCat();
+    createProjectFromFile("dog.xml");
 
     DsDataOperator& op=DsOperator::data;
     DsData::shareData()->emitSignal(DsData::SG_DATA_PROPERTY_CHANGE);
 
+    /*
     op.setCurProject("cat");
-    //op.setCurProject("Dog");
     op.setCurAnimation("jump");
     op.setCurFrameIndex(20);
+    */
 
 }
 
@@ -114,7 +119,7 @@ void createProjectDog()
 
     sp->addAnimation(anim);
 
-    DsProject* project=new DsProject(sp,"Dog");
+    DsProject* project=new DsProject(sp,"bird");
     DsData::shareData()->addProject(project);
 }
 
@@ -132,6 +137,19 @@ void createProjectCat()
     DsData::shareData()->addProject(project);
 }
 
+void createProjectFromFile(const char* filename)
+{
+    std::string msg;
+    DsProject* proj=DsSpriteUtil::loadProject(filename,msg);
+    if(proj==NULL)
+    {
+        DsDebug<<"Load Project Failed("<<filename<<","<<msg.c_str()<<")"<<endl;
+    }
+    else
+    {
+        DsData::shareData()->addProject(proj);
+    }
+}
 
 
 
