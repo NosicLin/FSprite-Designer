@@ -17,7 +17,11 @@ SOURCES += \
     src/ui/DsEditState.cc \
     src/operator/DsDataOperator.cc \
     src/operator/DsOperator.cc \
-    src/ui/DsAnmationEdit.cc
+    src/ui/DsAnmationEdit.cc \
+    src/operator/DsAnimationOperator.cc \
+    src/util/DsSpriteUtil.cc \
+    src/util/DsUtil.cc \
+    src/operator/DsIoOperator.cc
 
 HEADERS += \
     src/ui/DsSpriteDisplay.h \
@@ -39,7 +43,11 @@ HEADERS += \
     src/operator/DsOperator.h \
     src/operator/DsDataOperator.h \
     src/ui/DsAnimationEdit.h \
-    src/util/DsDebug.h
+    src/util/DsDebug.h \
+    src/operator/DsAnimationOperator.h \
+    src/util/DsSpriteUtil.h \
+    src/util/DsUtil.h \
+    src/operator/DsIoOperator.h
 
 INCLUDEPATH +=src/
 
@@ -56,3 +64,4 @@ FORMS += \
     resource/ui/frame.ui
 
 QT+=opengl
+QT+=xml

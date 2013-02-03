@@ -11,7 +11,7 @@
 #include <QDebug>
 #include <QTextCodec>
 
-class DsResourceDisplay:public QWidget 
+class DsResourceDisplay:public QWidget
 {
 	Q_OBJECT
 	public:

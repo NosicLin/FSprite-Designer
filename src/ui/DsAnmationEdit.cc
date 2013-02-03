@@ -227,6 +227,7 @@ void DsAnimationEdit::mouseMoveEvent(QMouseEvent* event)
 {
     int dx=-(event->x()-m_lastpos.x());
     int select_frame=(m_move+event->x())/m_ruler_unit;
+    if(select_frame<0) select_frame=0;
     if(event->buttons()&Qt::LeftButton)
     {
         if(event->y()<22)

@@ -36,7 +36,17 @@ class DsEditView:public QGLWidget
         float getTranslateX(){return m_tx;}
         float getTranslateY(){return m_ty;}
 
+        void zoomIn();
+        void zoomOut();
+        void resetZoomTranslate();
+
         void setShowAxis(bool enable);
+        void setShowGrid(bool enable);
+
+		void setGridSize(int width,int height);
+		int getGridHeight();
+		int getGridWidth();
+
         void changeToState(DsEditState* state);
         void toDefaultState();
 
@@ -62,10 +72,10 @@ class DsEditView:public QGLWidget
         virtual void initializeGL();
         virtual void resizeGL(int width,int height);
         virtual void paintGL();
-
 		
         void drawAxis();
 		void drawGrid();
+
         void drawFrameImage(DsFrameImage* image);
         void rawDrawFrameImage(DsFrameImage* image);
 
@@ -84,6 +94,9 @@ class DsEditView:public QGLWidget
 
         bool m_showAxis;
 		bool m_showGrid;
+		int m_gridWidth;
+		int m_gridHeight;
+
 		bool m_imageLocalCoord;
 
 		/* gl infomation */

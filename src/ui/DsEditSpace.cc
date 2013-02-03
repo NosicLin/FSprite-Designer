@@ -56,6 +56,28 @@ DsEditSpace::DsEditSpace(QWidget* parent)
 }
 
 
+void DsEditSpace::showAxis(bool enable)
+{
+    m_editView->setShowAxis(enable);
+}
+void DsEditSpace::showGrid(bool enable)
+{
+    m_editView->setShowGrid(enable);
+}
+void DsEditSpace::zoomIn()
+{
+    m_editView->zoomIn();
+}
+void DsEditSpace::zoomOut()
+{
+    m_editView->zoomOut();
+}
+void DsEditSpace::resetZoomTranslate()
+{
+    m_editView->resetZoomTranslate();
+}
+
+
 void DsEditSpace::clearTab()
 {
     int count=m_tabbar->count();

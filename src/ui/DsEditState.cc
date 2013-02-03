@@ -185,7 +185,7 @@ void DsEditStateSelect::draw()
 			sy=image->getScaleY();
 			angle=image->getAngle();
 			width*=sx;
-			height*=sx;
+            height*=sy;
 			glTranslatef(x,y,0);
             glRotatef(angle,0,0,1);
 
@@ -269,6 +269,8 @@ void DsEditStateTranslate::mouseMoveEvent(QMouseEvent* event)
     QPoint last_pos=m_editView->m_lastpos;
     float dx=event->x()-last_pos.x();
     float dy=event->y()-last_pos.y();
+    dx/=m_editView->m_scale;
+    dy/=m_editView->m_scale;
 
     m_movex+=dx;
     m_movey+=-dy;

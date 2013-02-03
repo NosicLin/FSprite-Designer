@@ -14,6 +14,13 @@ public:
     DsEditSpace(QWidget* parent);
 
 
+public:
+    void showAxis(bool enable);
+    void showGrid(bool enable);
+    void zoomIn();
+    void zoomOut();
+    void resetZoomTranslate();
+
 
 protected:
     void clearTab();
