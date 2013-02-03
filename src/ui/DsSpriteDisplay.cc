@@ -69,7 +69,11 @@ DsSpriteTreeWidget::DsSpriteTreeWidget(QWidget* parent)
     m_changedCausedByView = false;
     m_markCurProjectChange = false;
 
+
     connect(DsData::shareData(),SIGNAL(signalDataPropertyChange()),
+            this,SLOT(slotProjectInited()));
+
+    connect(DsData::shareData(),SIGNAL(signalProjectPropertyChange()),
             this,SLOT(slotProjectInited()));
 
     connect(DsData::shareData(),SIGNAL(signalCurProjectChange()),
@@ -80,6 +84,9 @@ DsSpriteTreeWidget::DsSpriteTreeWidget(QWidget* parent)
 
     connect(this,SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem *)),
             this,SLOT(slotCurrentItemChanged ( QTreeWidgetItem * , QTreeWidgetItem * )));
+
+
+
 
     this->setColumnCount(1);
     this->setHeaderHidden(true);
