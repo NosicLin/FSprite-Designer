@@ -36,6 +36,7 @@ class DsSpriteTreeWidget:public QTreeWidget
     public:
         DsSpriteTreeWidget(QWidget* parent);
         void initView();
+        void createView();
         void updateView();
 
     public slots:

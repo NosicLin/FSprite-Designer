@@ -36,5 +36,7 @@
         <file>IDI_ZOOM_OUT.ico</file>
         <file>IDI_FILE.ico</file>
         <file>IDI_FILE_OPEN.ico</file>
+        <file>SpriteTreeItem/IDI_ANIMATION.png</file>
+        <file>SpriteTreeItem/IDI_SPRITE.png</file>
     </qresource>
 </RCC>

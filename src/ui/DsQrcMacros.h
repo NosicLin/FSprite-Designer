@@ -52,6 +52,10 @@
 
 #define DS_FB_FILE ":images/IDI_FILE_OPEN.ico"
 
+/* SpriteTreeItem icon */
+#define DS_MS_TI_ANIMATION ":images/SpriteTreeItem/IDI_ANIMATION.png"
+#define DS_MS_TI_SPRITE ":images/SpriteTreeItem/IDI_SPRITE.png"
+
 #endif /*_DS_QRC_MACROS_H_*/
 
 
