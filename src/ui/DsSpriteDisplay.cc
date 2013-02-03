@@ -81,6 +81,8 @@ DsSpriteTreeWidget::DsSpriteTreeWidget(QWidget* parent)
     connect(this,SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem *)),
             this,SLOT(slotCurrentItemChanged ( QTreeWidgetItem * , QTreeWidgetItem * )));
 
+    this->setColumnCount(1);
+    this->setHeaderHidden(true);
 }
 
 
@@ -273,10 +275,6 @@ void DsSpriteTreeWidget::createView()
         return;
     }
 
-    this->setColumnCount(1);
-    this->setHeaderHidden(true);
-   // m_spriteTreeWidget->setColumnHidden(2,true);
-
    // bool hasProject = false;
     bool hasCurProjet = false;
     bool hasCurAnimation = false;
@@ -357,7 +355,7 @@ void DsSpriteTreeWidget::createView()
                if(projectName == curProjectName)
                {
                     m_changedCausedByView = true;
-                    this->setCurrentItem(animationItem);
+                    this->setCurrentItem(projectItem);
                     bSetCurrentItem = true;
                 }
            }
