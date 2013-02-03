@@ -1,6 +1,17 @@
 #include <assert.h>
 #include "DsDataOperator.h"
 
+void DsDataOperator::newProject()
+{
+	DsSprite* sprite=new DsSprite;
+	DsProject* proj=new DsProject(sprite,"untitled");
+	m_data->addProject(proj);
+	m_data->emitSignal(DsData::SG_DATA_PROPERTY_CHANGE);
+	m_data->setCurProject(proj->getName());
+	m_data->emitSignal(DsData::SG_CUR_PROJECT_CHANGE);
+}
+
+
 DsDataOperator::DsDataOperator()
 {
 	m_data=DsData::shareData();
@@ -52,7 +63,7 @@ void DsDataOperator::addAnimation(const std::string& name)
     {
         DsAnimation* anim=new DsAnimation(name);
 		sprite->addAnimation(anim);
-        m_data->emitSignal(DsData::SG_SPRITE_PROPERTY_CHANGE);
+        m_data->emitSignal(DsData::SG_PROJECT_PROPERTY_CHANGE);
 	}
 }
 
@@ -201,6 +212,43 @@ void DsDataOperator::setCurFrameImageAngle(float angle)
          m_data->emitSignal(DsData::SG_FRAME_IMAGE_PROPERTY_CHANGE);
     }
 }
+
+void DsDataOperator::newAnimation()
+{
+	DsSprite* sprite=m_data->getCurSprite();
+    if(sprite)
+	{
+		int i=0;
+		while(true)
+		{
+			QString qname=QString("anim")+QString::number(i);
+            std::string name=qname.toStdString();
+            if(!sprite->hasAnimation(name))
+            {
+                DsAnimation* anim;
+                anim=DsAnimation::createWithFirstFrame(name);
+                sprite->addAnimation(anim);
+                m_data->emitSignal(DsData::SG_PROJECT_PROPERTY_CHANGE);
+                m_data->setCurAnimation(name);
+                m_data->emitSignal(DsData::SG_CUR_ANIMATION_CHANGE);
+				break;
+			}
+			i++;
+		}
+	}
+
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 

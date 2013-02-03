@@ -42,7 +42,6 @@ public:
         SG_CUR_FRAME_IMAGE_CHANGE,
 
         SG_PROJECT_PROPERTY_CHANGE,
-        SG_SPRITE_PROPERTY_CHANGE,
         SG_ANIMATION_PROPERTY_CHANGE,
         SG_FRAME_PROPERTY_CHANGE,
         SG_FRAME_IMAGE_PROPERTY_CHANGE
@@ -96,7 +95,6 @@ signals:
     void signalCurFrameImageChange();
 
     void signalProjectPropertyChange();
-    void signalSpritePropertyChange();
     void signalAnimationPropertyChange();
     void signalFramePropertyChange();
     void signalFrameImagePropertyChange();

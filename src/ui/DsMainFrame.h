@@ -50,9 +50,9 @@ class DsMainFrame:public QMainWindow
 
         public slots:
             /* file */
-            void onNew(){}
+        void onNew();
         void onOpen();
-		void onSave(){}
+        void onSave();
 		void onSaveAs(){}
 		void onClose(){}
 		void onExport(){}
@@ -70,7 +70,7 @@ class DsMainFrame:public QMainWindow
 		/* animation */
         void onPlay();
         void onStop();
-		void onAddAnimation(){}
+        void onAddAnimation();
 		void onSetFrame(){}
 
 		/* view */

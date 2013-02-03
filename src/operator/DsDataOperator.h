@@ -11,16 +11,21 @@ class DsDataOperator
 	
 	public:
         /* project */
+		void newProject();
         void addProject(DsProject* project);
         void removeProject(const std::string& name);
         void renameProject(const std::string& name,const std::string& target);
         void setCurProject(const std::string& name);
 
         /* sprite */
+		void newAnimation();
+        void addAnimation(const std::string& anim);
         void setCurAnimation(const std::string& anim);
         void dropCurAnimation();
-        void renameAnimation(const std::string& proj_name,const std::string& anim_name,const std::string& target_name);
-        void addAnimation(const std::string& anim);
+        void renameAnimation(
+				const std::string& proj_name,
+				const std::string& anim_name,
+				const std::string& target_name);
         void removeAnimation(const std::string& anim);
 
 

@@ -38,6 +38,18 @@ DsAnimation* DsSprite::getAnimation(const std::string& name)
     assert(0); /*never reach here*/
     return NULL;
 }
+bool DsSprite::hasAnimation(const std::string& name)
+{
+    Iterator iter=m_animations.begin();
+    for(;iter!=m_animations.end();++iter)
+    {
+        if((*iter)->getName()==name)
+        {
+            return true;
+        }
+    }
+    return false;
+}
 
 DsAnimation* DsSprite::getAnimation(int index)
 {

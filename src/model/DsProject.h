@@ -33,6 +33,11 @@ class DsProject
         std::string getRealName(){return m_realName;}
         void setName(const std::string& name){m_name=name;}
 
+        /* path */
+        std::string getFileName(){return m_fileName;}
+        void setFileName(const std::string& filename){m_fileName=filename;}
+
+
 		/* animation */
         DsAnimation* getCurAnimation(){return m_curAnimation;}
         void setCurAnimation(const std::string& anim);
@@ -58,6 +63,8 @@ class DsProject
 	private:
         std::string m_name;
         std::string m_realName;
+        std::string m_fileName;
+
 		DsSprite* m_sprite;
 		int m_curFrameIndex;
 		DsAnimation* m_curAnimation;

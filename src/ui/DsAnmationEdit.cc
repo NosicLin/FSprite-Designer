@@ -287,11 +287,20 @@ void DsAnimationEdit::showPopupMenu(QMouseEvent* event)
     int select_frame=(m_move+x)/m_ruler_unit;
     DsOperator::data.setCurFrameIndex(select_frame);
     DsData* data=DsData::shareData();
+    DsAnimation* anim=data->getCurAnimation();
     DsFrame* frame=data->getCurFrame();
     if(frame==NULL)
     {
-        ma_insertKeyFrame->setEnabled(true);
-        ma_insertEmptyKeyFrame->setEnabled(true);
+        if(anim!=NULL)
+        {
+            ma_insertKeyFrame->setEnabled(true);
+            ma_insertEmptyKeyFrame->setEnabled(true);
+        }
+        else
+        {
+            ma_insertKeyFrame->setEnabled(false);
+            ma_insertEmptyKeyFrame->setEnabled(false);
+        }
         ma_removeFrame->setEnabled(false);
         ma_createTween->setEnabled(false);
         ma_removeTween->setEnabled(false);

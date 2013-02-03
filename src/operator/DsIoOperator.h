@@ -8,6 +8,7 @@ class DsIoOperator
 		DsIoOperator();
 	public:
         void saveProject(const std::string& name);
+        void saveProject();
         void loadProject();
 		void exportFSprite(const std::string& name);
 	private:

@@ -20,6 +20,7 @@ DsEditSpace::DsEditSpace(QWidget* parent)
     m_tabbar->setExpanding(false);
     m_tabbar->setCurrentIndex(-1);
     m_tabbar->setMovable(false);
+    //m_tabbar->setDrawBase(true);
 
     m_editView=new DsEditView(this);
     m_animationEdit=new DsAnimationEdit(this);
@@ -35,7 +36,12 @@ DsEditSpace::DsEditSpace(QWidget* parent)
     connect(DsData::shareData(),
             SIGNAL(signalCurProjectChange()),
             this,
-            SLOT(slotCurrentProjectChange()));
+            SLOT(slotResetProject()));
+
+    connect(DsData::shareData(),
+            SIGNAL(signalProjectPropertyChange()),
+            this,
+            SLOT(slotResetProject()));
 
     connect(DsData::shareData(),
             SIGNAL(signalCurAnimationChange()),
@@ -87,9 +93,9 @@ void DsEditSpace::clearTab()
     }
 }
 
-void DsEditSpace::slotCurrentProjectChange()
+void DsEditSpace::slotResetProject()
 {
-    DsDebug<<"DataPropertyChange"<<endl;
+    DsDebug<<"ResetProject"<<endl;
     reTabAnimation();
 
     m_editView->slotCurFrameChange();
@@ -120,6 +126,10 @@ void DsEditSpace::reTabAnimation()
             }
             m_tabbar->addTab(QString(anim->getName().c_str()));
         }
+    }
+    else
+    {
+        DsDebug<<"Sprite Not Find"<<endl;
     }
 
     m_tabbar->setCurrentIndex(cur_index);

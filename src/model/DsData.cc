@@ -135,9 +135,6 @@ void DsData::emitSignal(int type)
 			emit signalProjectPropertyChange();
 			break;
 
-		case SG_SPRITE_PROPERTY_CHANGE:
-			emit signalSpritePropertyChange();
-			break;
 
 		case SG_ANIMATION_PROPERTY_CHANGE:
 			emit signalAnimationPropertyChange();

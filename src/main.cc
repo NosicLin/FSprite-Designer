@@ -48,19 +48,18 @@ int main(int argc, char *argv[])
 
 void initProject()
 {
-    createProjectDog();
-    createProjectCat();
-    createProjectFromFile("dog.xml");
+    //createProjectDog();
+    //createProjectCat();
+    //createProjectFromFile("dog.xml");
 
-    DsDataOperator& op=DsOperator::data;
     DsData::shareData()->emitSignal(DsData::SG_DATA_PROPERTY_CHANGE);
 
     /*
-    op.setCurProject("cat");
+    DsDataOperator& op=DsOperator::data;
+    op.setCurProject("bird##0");
     op.setCurAnimation("jump");
-    op.setCurFrameIndex(20);
-    */
-
+  //  op.setCurFrameIndex(20);
+  */
 }
 
 

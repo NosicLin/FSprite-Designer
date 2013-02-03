@@ -9,6 +9,7 @@
 #include "DsMainFrame.h"
 #include "DsQrcMacros.h"
 #include "operator/DsOperator.h"
+#include "util/DsDebug.h"
 
 /* auto gernert files */
 #include "ui_about.h"
@@ -378,7 +379,20 @@ void DsMainFrame::onOpen()
     DsOperator::io()->loadProject();
 }
 
+void DsMainFrame::onSave()
+{
+    DsOperator::io()->saveProject();
+}
+void DsMainFrame::onNew()
+{
+	DsOperator::data.newProject();
+}
 
+void DsMainFrame::onAddAnimation()
+{
+    DsDebug<<"create Animation"<<endl;
+    DsOperator::data.newAnimation();
+}
 
 
 

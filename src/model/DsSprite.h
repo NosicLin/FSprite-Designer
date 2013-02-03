@@ -20,7 +20,8 @@ class DsSprite
 
 		DsAnimation* getAnimation(const std::string& name);
 		DsAnimation* getAnimation(int index);
-		int getAnimationNu(){return m_animations.size();}
+        int getAnimationNu(){return m_animations.size();}
+        bool hasAnimation(const std::string& name);
 
 
 		Iterator begin(){return m_animations.begin();}
