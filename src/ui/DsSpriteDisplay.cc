@@ -222,7 +222,6 @@ void DsSpriteTreeWidget::slotCurrentItemChanged ( QTreeWidgetItem * current, QTr
 
        m_changedCausedByView = true;
        DsOperator::data.setCurAnimation(q2s(current->text(0)));
-
     }
 }
 
