@@ -37,7 +37,8 @@ void DsIoOperator::saveProject(const std::string& name)
 
     if(fileName.length()==0)
     {
-        QMessageBox::information(NULL,"Save Sprite","You didn't select any files");
+        //QMessageBox::information(NULL,"Save Sprite","You didn't select any files");
+        return;
     }
     else
     {
@@ -77,8 +78,8 @@ void DsIoOperator::loadProject()
     proj->setFileName(file.toStdString());
     m_data->addProject(proj);
     m_data->emitSignal(DsData::SG_DATA_PROPERTY_CHANGE);
-
     m_data->setCurProject(proj->getName());
+    m_data->emitSignal(DsData::SG_CUR_PROJECT_CHANGE);
 }
 
 void DsIoOperator::saveProject()
