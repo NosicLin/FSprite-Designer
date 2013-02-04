@@ -85,9 +85,43 @@ void DsDataOperator::removeAnimation(const std::string& anim)
 	DsSprite* sprite=m_data->getCurSprite();
 	if(sprite)
 	{
-		/*TODO*/
+		DsAnimation* cur_anim=m_data->getCurAnimation();
+		if(cur_anim->getName()==anim)
+		{
+			m_data->dropCurAnimation();
+		}
+		sprite->removeAnimation(anim);
+		m_data->emitSignal(DsData::SG_PROJECT_PROPERTY_CHANGE);
 	}
 }
+/*
+void  DsDataOperator::renameAnimation(
+				const std::string& target_name)
+{
+	DsSprite* sprite=m_data->getCurSprite();
+	if(sprite)
+	{
+		DsAnimation* cur_anim=m_data->getCurAnimation();
+		if(sprite->hasAnimation(target_name))
+		{
+			std::string rename_target;
+			int i=0;
+			do 
+			{
+				rename_target=target_name+"("+QString::number(i)+")";
+				i++;
+			}while(sprite->hasAnimation(rename_target));
+			cur_anim->setName(rename_target);
+		}
+		else 
+		{
+			cur_anim->setName(target_name);
+		}
+		m_data->emitSignal(DsData::SG_ANIMATION_PROPERTY_CHANGE);
+	}
+}
+*/
+
 
 
 void DsDataOperator::dropCurFrameImage()

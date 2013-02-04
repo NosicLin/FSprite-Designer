@@ -22,16 +22,18 @@ class DsDataOperator
         void addAnimation(const std::string& anim);
         void setCurAnimation(const std::string& anim);
         void dropCurAnimation();
+
         void renameAnimation(
-				const std::string& proj_name,
 				const std::string& anim_name,
 				const std::string& target_name);
+
         void removeAnimation(const std::string& anim);
 
 
         /* animation */
         void setCurFrameIndex(int frame);
         void dropCurFrameIndex();
+
 
         void setAnimationFps(int fps);
         void removeKeyFrame(int index);
@@ -70,6 +72,18 @@ class DsDataOperator
 
 };
 #endif /*_DS_DATA_OPERATOR_H_*/
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

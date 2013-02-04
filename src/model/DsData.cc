@@ -125,11 +125,11 @@ void DsData::emitSignal(int type)
 			break;
 		case SG_CUR_FRAME_CHANGE:
 			emit signalCurFrameChange();
-			break;
+            break;
+
 		case SG_CUR_FRAME_IMAGE_CHANGE:
 			emit signalCurFrameImageChange();
-			break;
-
+            break;
 
 		case SG_PROJECT_PROPERTY_CHANGE:
 			emit signalProjectPropertyChange();
