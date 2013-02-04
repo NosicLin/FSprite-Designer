@@ -637,12 +637,11 @@ void DsFrameTreeWidget::slotItemDoubleClicked(QTreeWidgetItem* item,int column)
 
     QString name = item->text(column);
 
-    qDebug()<<"call setCurFrameImage";
-    disconnect(DsData::shareData(),0,
-            this,0);
+
+    disconnect(DsData::shareData(),0,this,0);
 
     DsData::shareData()->setCurFrameImage(q2s(name));
-
+    qDebug()<<"call setCurFrameImage";
     //sigal from DsData
     connect(DsData::shareData(),SIGNAL(signalDataPropertyChange()),
             this,SLOT(slotProjectRefresh()));
