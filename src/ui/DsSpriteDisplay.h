@@ -112,7 +112,7 @@ class DsFrameTreeWidget:public QTreeWidget
 
 public slots:
     void slotProjectRefresh();
-    void slotItemDoubleClicked(QTreeWidgetItem* item,int column);
+    void slotItemClicked(QTreeWidgetItem* item,int column);
     /*
     void slotCurProjectChange();
     void slotCurAnimationChange();

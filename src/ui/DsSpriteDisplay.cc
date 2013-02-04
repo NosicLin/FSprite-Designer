@@ -555,8 +555,8 @@ DsFrameTreeWidget::DsFrameTreeWidget(QWidget* parent)
             this,SLOT(slotProjectRefresh()));
 
     //sigal from this
-    connect(this,SIGNAL(itemDoubleClicked(QTreeWidgetItem* ,int )),
-            this,SLOT(slotItemDoubleClicked(QTreeWidgetItem* ,int )));
+    connect(this,SIGNAL(itemClicked(QTreeWidgetItem* ,int )),
+            this,SLOT(slotItemClicked(QTreeWidgetItem* ,int )));
 
 
     /*
@@ -632,7 +632,7 @@ void DsFrameTreeWidget::slotProjectRefresh()
    createView();
 }
 
-void DsFrameTreeWidget::slotItemDoubleClicked(QTreeWidgetItem* item,int column)
+void DsFrameTreeWidget::slotItemClicked(QTreeWidgetItem* item,int column)
 {
 
     QString name = item->text(column);
