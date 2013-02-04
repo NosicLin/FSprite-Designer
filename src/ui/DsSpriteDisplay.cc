@@ -615,12 +615,35 @@ void DsFrameTreeWidget::createView()
     QTreeWidgetItem* iamgeItem;
     DsFrameImage* frameImage;
     std::string imageName;
+    QStringList stringList;
+
+    std::string pathName;
+    std::string path;
+    std::string fileName;
+    int index;
     for(int i=0;i<imageNum;i++)
     {
         frameImage = ((DsKeyFrame*)curFrame)->getFrameImage(i);
         imageName = frameImage->getName();
-        iamgeItem = new QTreeWidgetItem(this,QStringList(s2q(imageName)));
-        itemList << iamgeItem;
+
+        pathName = frameImage->getImage()->name;
+
+        index = pathName.find_last_of("/\\");
+        qDebug()<<"index = "<<QString::number(index);
+        if(-1 == index)
+        {
+            fileName = pathName;
+        }
+        else
+        {
+            fileName = pathName.substr(index+1);
+        }
+
+        stringList<< s2q(fileName)<<s2q(imageName);
+        iamgeItem = new QTreeWidgetItem(this,stringList);
+        stringList.clear();
+        iamgeItem->setIcon(0,QIcon(s2q(pathName)));
+
     }
     this->insertTopLevelItems(0,itemList);
 }
@@ -635,13 +658,13 @@ void DsFrameTreeWidget::slotProjectRefresh()
 void DsFrameTreeWidget::slotItemClicked(QTreeWidgetItem* item,int column)
 {
 
-    QString name = item->text(column);
+    QString name = item->text(1);
 
 
     disconnect(DsData::shareData(),0,this,0);
-
+    qDebug()<<"call setCurFrameImage name = "<<name;
     DsOperator::data.setCurFrameImage(q2s(name));
-    qDebug()<<"call setCurFrameImage";
+
     //sigal from DsData
     connect(DsData::shareData(),SIGNAL(signalDataPropertyChange()),
             this,SLOT(slotProjectRefresh()));
