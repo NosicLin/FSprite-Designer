@@ -14,10 +14,16 @@
         <file>IDI_DELETE.ico</file>
         <file>IDI_EXIT.ico</file>
         <file>IDI_EXPORT.ico</file>
+        <file>IDI_FILE.ico</file>
+        <file>IDI_FILE_OPEN.ico</file>
         <file>IDI_FOWARD.ico</file>
         <file>IDI_FRAMES.ico</file>
         <file>IDI_GRID.ico</file>
         <file>IDI_HELP.ico</file>
+        <file>IDI_MOVE_DOWN.ico</file>
+        <file>IDI_MOVE_END.ico</file>
+        <file>IDI_MOVE_FRONT.ico</file>
+        <file>IDI_MOVE_UP.ico</file>
         <file>IDI_NEW.ico</file>
         <file>IDI_OPEN.ico</file>
         <file>IDI_PAST.ico</file>
@@ -34,8 +40,6 @@
         <file>IDI_UNDO.ico</file>
         <file>IDI_ZOOM_IN.ico</file>
         <file>IDI_ZOOM_OUT.ico</file>
-        <file>IDI_FILE.ico</file>
-        <file>IDI_FILE_OPEN.ico</file>
         <file>SpriteTreeItem/IDI_ANIMATION.png</file>
         <file>SpriteTreeItem/IDI_SPRITE.png</file>
     </qresource>

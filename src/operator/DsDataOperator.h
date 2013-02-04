@@ -45,15 +45,19 @@ class DsDataOperator
         void removeTween(int index);
 
 		/* frame operator */
-		void upFrameImage(const std::string& name);
-		void downFrameImage(const std::string& name);
-		void frameImageToFront(const std::string& name);
-		void frameImageToTail(const std::string& name);
+        void frameImageMoveUp();
+        void frameImageMoveDown();
+        void frameImageMoveEnd();
+        void frameImageMoveFront();
+
         void duplicateFrameImage(const std::string& src_name,const std::string& dst_name);
 
         void setCurFrameImage(const std::string& anim);
         void addFrameImage(DsFrameImage* image);
+        void removeFrameImage(const std::string& name);
+        void removeCurFrameImage(); /* it will remove current */
         void dropCurFrameImage();
+
 
 
 		/* frameImage operator */

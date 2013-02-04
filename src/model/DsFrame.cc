@@ -119,14 +119,90 @@ DsKeyFrame* DsKeyFrame::clone()
 
 
 
+void DsKeyFrame::upFrameImage(const std::string& name)
+{
+    int pos=getFrameImagePos(name);
+    assert(pos!=-1);
+
+    if(pos==0)
+    {
+        return;
+    }
+
+    DsFrameImage* temp=m_images[pos];
+    m_images[pos]=m_images[pos-1];
+    m_images[pos-1]=temp;
+}
+void DsKeyFrame::downFrameImage(const std::string& name)
+{
+    int pos=getFrameImagePos(name);
+    assert(pos!=-1);
+    if(pos==m_images.size()-1)
+    {
+        return ;
+    }
+    DsFrameImage* temp=m_images[pos];
+    m_images[pos]=m_images[pos+1];
+    m_images[pos+1]=temp;
+}
+
+void DsKeyFrame::frameImageToEnd(const std::string& name)
+{
+    int pos=getFrameImagePos(name);
+    assert(pos!=-1);
+    DsFrameImage* temp=m_images[pos];
+
+    for(int i=pos;i<m_images.size()-1;i++)
+    {
+        m_images[i]=m_images[i+1];
+    }
+    m_images[m_images.size()-1]=temp;
+
+}
+
+void DsKeyFrame::frameImageToFront(const std::string& name)
+{
+    int pos=getFrameImagePos(name);
+    assert(pos!=-1);
+    DsFrameImage* temp=m_images[pos];
+
+    for(int i=pos;i>0;i--)
+    {
+        m_images[i]=m_images[i-1];
+    }
+    m_images[0]=temp;
+}
+
+int DsKeyFrame::getFrameImagePos(const std::string& name)
+{
+
+    int pos=-1;
+    for(int i=0;i<m_images.size();i++)
+    {
+        if(m_images[i]->getName()==name)
+        {
+            pos=i;
+            break;
+        }
+    }
+    return pos;
+}
 
 
-
-
-
-
-
-
+void DsKeyFrame::removeFrameImage(const std::string& name)
+{
+    Iterator iter;
+    for(iter=m_images.begin();iter!=end();++iter)
+    {
+        if((*iter)->getName()==name)
+        {
+            delete *iter;
+            m_images.erase(iter);
+            return ;
+        }
+    }
+    assert(0); /* never reached here */
+}
 
 
 

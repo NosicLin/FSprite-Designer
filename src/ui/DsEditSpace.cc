@@ -54,6 +54,11 @@ DsEditSpace::DsEditSpace(QWidget* parent)
             SLOT(slotCurFrameChange()));
 
     connect(DsData::shareData(),
+            SIGNAL(signalFramePropertyChange()),
+            this,
+            SLOT(slotCurFrameChange()));
+
+    connect(DsData::shareData(),
             SIGNAL(signalAnimationPropertyChange()),
             this,
             SLOT(slotAnimationPropertyChange()));

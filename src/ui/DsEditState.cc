@@ -154,6 +154,11 @@ void DsEditStateSelect::keyPressEvent(QKeyEvent* event)
     {
         m_editView->changeToState(&m_editView->m_stateRotate);
     }
+    else if(event->key()==Qt::Key_Delete)
+    {
+        DsOperator::data.removeCurFrameImage();
+
+    }
 }
 
 
