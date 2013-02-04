@@ -32,7 +32,7 @@ QString s2q(const std::string &s)
 
 std::string q2s(const QString &s)
 {
-    return std::string((const char *)s.toLocal8Bit());
+    return s.toStdString();
 }
 
 
@@ -640,7 +640,7 @@ void DsFrameTreeWidget::slotItemDoubleClicked(QTreeWidgetItem* item,int column)
 
     disconnect(DsData::shareData(),0,this,0);
 
-    DsData::shareData()->setCurFrameImage(q2s(name));
+    DsOperator::data.setCurFrameImage(q2s(name));
     qDebug()<<"call setCurFrameImage";
     //sigal from DsData
     connect(DsData::shareData(),SIGNAL(signalDataPropertyChange()),
