@@ -65,7 +65,12 @@ class DsMainFrame:public QMainWindow
 		void onRedo(){}
 		void onRotate(){}
 		void onScale(){}
-		void onPosition(){}
+        void onPosition(){}
+
+        void onMoveUp();
+        void onMoveDown();
+        void onMoveFront();
+        void onMoveEnd();
 
 		/* animation */
         void onPlay();
@@ -109,6 +114,11 @@ class DsMainFrame:public QMainWindow
 		QAction* ms_rotate;
 		QAction* ms_scale;
 		QAction* ms_position;
+        QAction* ms_moveUp;
+        QAction* ms_moveDown;
+        QAction* ms_moveFront;
+        QAction* ms_moveEnd;
+
 		/* view */
         QAction* ms_viewAxis;
         QAction* ms_viewGrid;
@@ -134,6 +144,10 @@ class DsMainFrame:public QMainWindow
 		QAction* tl_save;
 		QAction* tl_undo;
 		QAction* tl_redo;
+		QAction* tl_moveUp;
+		QAction* tl_moveDown;
+		QAction* tl_moveFront;
+		QAction* tl_moveEnd;
 		QAction* tl_play;
 		QAction* tl_stop;
 		QAction* tl_zoom_in;

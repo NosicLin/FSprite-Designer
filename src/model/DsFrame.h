@@ -68,12 +68,13 @@ class DsKeyFrame:public DsFrame
 		void downFrameImage(const std::string& name);
 
 		void frameImageToFront(const std::string& name);
-		void frameImageToTail(const std::string& name);
+        void frameImageToEnd(const std::string& name);
 
 		void duplicateFrameImage(const std::string& src_name,const std::string& dst_name);
 
         int getFrameImageNu(){return m_images.size();}
         DsFrameImage* getFrameImage(int index);
+        int getFrameImagePos(const std::string& name);
 
         void clearFrameImage(){m_images.clear();}
 

@@ -1,5 +1,6 @@
 #include <assert.h>
 #include "DsDataOperator.h"
+#include "util/DsDebug.h"
 
 void DsDataOperator::newProject()
 {
@@ -54,6 +55,18 @@ void DsDataOperator::addFrameImage(DsFrameImage* image)
         }
     }
 
+}
+void DsDataOperator::removeCurFrameImage()
+{
+    DsFrameImage* cur=m_data->getCurFrameImage();
+    if(cur)
+    {
+        DsKeyFrame* frame=(DsKeyFrame*) m_data->getCurFrame();
+        frame->removeFrameImage(cur->getName());
+        m_data->dropCurFrameImage();
+
+        m_data->emitSignal(DsData::SG_FRAME_PROPERTY_CHANGE);
+    }
 }
 
 void DsDataOperator::addAnimation(const std::string& name)
@@ -238,6 +251,80 @@ void DsDataOperator::newAnimation()
 	}
 
 }
+
+
+void DsDataOperator::frameImageMoveUp()
+{
+    DsFrameImage* cur=m_data->getCurFrameImage();
+    if(!cur)
+    {
+        DsDebug<<"Cur Frame Image Not Selected"<<endl;
+        return;
+    }
+    DsKeyFrame* frame=(DsKeyFrame*)m_data->getCurFrame();
+
+    frame->upFrameImage(cur->getName());
+    m_data->emitSignal(DsData::SG_FRAME_PROPERTY_CHANGE);
+}
+
+void DsDataOperator::frameImageMoveDown()
+{
+    DsFrameImage* cur=m_data->getCurFrameImage();
+    if(!cur)
+    {
+        DsDebug<<"Cur Frame Image Not Selected"<<endl;
+        return;
+    }
+    DsKeyFrame* frame=(DsKeyFrame*)m_data->getCurFrame();
+
+    frame->downFrameImage(cur->getName());
+    m_data->emitSignal(DsData::SG_FRAME_PROPERTY_CHANGE);
+}
+
+void DsDataOperator::frameImageMoveEnd()
+{
+    DsFrameImage* cur=m_data->getCurFrameImage();
+    if(!cur)
+    {
+        DsDebug<<"Cur Frame Image Not Selected"<<endl;
+        return;
+    }
+    DsKeyFrame* frame=(DsKeyFrame*)m_data->getCurFrame();
+
+    frame->frameImageToEnd(cur->getName());
+    m_data->emitSignal(DsData::SG_FRAME_PROPERTY_CHANGE);
+}
+
+void DsDataOperator::frameImageMoveFront()
+{
+    DsFrameImage* cur=m_data->getCurFrameImage();
+    if(!cur)
+    {
+        DsDebug<<"Cur Frame Image Not Selected"<<endl;
+        return;
+    }
+    DsKeyFrame* frame=(DsKeyFrame*)m_data->getCurFrame();
+
+    frame->frameImageToFront(cur->getName());
+    m_data->emitSignal(DsData::SG_FRAME_PROPERTY_CHANGE);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

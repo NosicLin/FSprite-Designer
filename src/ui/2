@@ -123,14 +123,14 @@ void DsMainFrame::createMenuBar()
 		connect(ms_moveDown,SIGNAL(triggered()),this,SLOT(onMoveDown()));
 
 		/* tofront */
-		ms_moveFront=new QAction(QPixmap(DS_MS_MOVE_FRONT),"&MoveFront",this);
-		mn_edit->addAction(ms_moveFront);
-		connect(ms_moveFront,SIGNAL(triggered()),this,SLOT(onMoveFront()));
+		ms_toFront=new QAction(QPixmap(DS_MS_TOFRONT),"&MoveFront",this);
+		mn_edit->addAction(ms_toFront);
+		connect(ms_toFront,SIGNAL(triggered()),this,SLOT(onToFront()));
 
 		/* toend */
-		ms_moveEnd=new QAction(QPixmap(DS_MS_MOVE_END),"&MoveEnd",this);
-		mn_edit->addAction(ms_moveEnd);
-		connect(ms_moveEnd,SIGNAL(triggered()),this,SLOT(onMoveEnd()));
+		ms_toEnd=new QAction(QPixmap(DS_MS_TOEND),"&MoveEnd",this);
+		mn_edit->addAction(ms_toEnd);
+		connect(ms_toEnd,SIGNAL(triggered()),this,SLOT(onToEnd()));
 
 
 
@@ -266,7 +266,7 @@ void DsMainFrame::createToolBar()
 
 	/* down */
 	tl_moveDown=m_toolBar->addAction(QIcon(DS_TL_MOVE_DOWN),"MoveDown");
-    connect(tl_moveDown,SIGNAL(triggered()),this,SLOT(onMoveDown()));
+	connect(tl_mvoeDown,SIGNAL(triggered()),this,SLOT(onMoveDown()));
 
 	/* tofront */
 	tl_moveFront=m_toolBar->addAction(QIcon(DS_TL_MOVE_FRONT),"MoveFront");
@@ -434,24 +434,24 @@ void DsMainFrame::onAddAnimation()
     DsOperator::data.newAnimation();
 }
 
-void DsMainFrame::onMoveUp()
+void DsMainFrame::onUp()
 {
-    DsOperator::data.frameImageMoveUp();
+	DsOperator::data.upFrameImage();
 }
 
-void DsMainFrame::onMoveDown()
+void DsMainFrame::onDown()
 {
-    DsOperator::data.frameImageMoveDown();
+	DsOperator::data.downFrameImage();
 }
 
-void DsMainFrame::onMoveFront()
+void DsMainFrame::onToFront()
 {
-    DsOperator::data.frameImageMoveFront();
+	DsOperator::data.toFrontFrameImage();
 }
 
-void DsMainFrame::onMoveEnd()
+void DsMainFrame::onToEnd()
 {
-    DsOperator::data.frameImageMoveEnd();
+	DsOperator::data.toEndFrameImage();
 }
 
 
