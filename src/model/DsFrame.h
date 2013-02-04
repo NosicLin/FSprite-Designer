@@ -51,6 +51,7 @@ class DsKeyFrame:public DsFrame
 		typedef std::vector<DsFrameImage*>::iterator Iterator;
 	public:
         DsKeyFrame(int id);
+        ~DsKeyFrame();
 		virtual int getType()
 		{
 			return FRAME_KEY;

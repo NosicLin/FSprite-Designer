@@ -204,6 +204,13 @@ void DsKeyFrame::removeFrameImage(const std::string& name)
     assert(0); /* never reached here */
 }
 
+DsKeyFrame::~DsKeyFrame()
+{
+    for(int i=0;i<m_images.size();i++)
+    {
+        delete m_images[i];
+    }
+}
 
 
 

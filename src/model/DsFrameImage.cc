@@ -4,6 +4,7 @@
 #include "DsFrameImage.h"
 #include "DsResourceMgr.h"
 #include "DsData.h"
+#include "util/DsDebug.h"
 
 
 DsFrameImage::~DsFrameImage()
@@ -57,11 +58,12 @@ bool DsFrameImage::hit(float x,float y)
     x=x-m_tx;
     y=y-m_ty;
 
-    float ks=sin(m_angle);
-    float kc=cos(m_angle);
+    float ks=sin(m_angle/180.0f*3.1415926);
+    float kc=cos(m_angle/180.0f*3.1415926);
 
-    float rx=kc*x-ks*y;
-    float ry=ks*x+kc*y;
+    float rx=kc*x+ks*y;
+    float ry=-ks*x+kc*y;
+    DsDebug<<"rx:"<<rx<<" ry:"<<ry<<" angle:"<<m_angle<<endl;
 
     if(abs(rx)<m_width/2*m_sx)
     {

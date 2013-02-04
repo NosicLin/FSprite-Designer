@@ -76,6 +76,7 @@ void DsEditStateIdel::mousePressEvent(QMouseEvent* event)
                 DsDebug<<"hit:"<<(*iter)->getName().c_str()<<endl;
 				DsOperator::data.setCurFrameImage((*iter)->getName());
                 m_editView->changeToState(&m_editView->m_stateSelect);
+                return;
 			}
 		}
 	}
