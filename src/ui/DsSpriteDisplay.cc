@@ -534,13 +534,31 @@ DsFrameTreeWidget::DsFrameTreeWidget(QWidget* parent)
     :QTreeWidget(parent)
 {
 
-    connect(DsData::shareData(),SIGNAL(signalFramePropertyChange()),
+    //sigal from DsData
+    connect(DsData::shareData(),SIGNAL(signalDataPropertyChange()),
+            this,SLOT(slotProjectRefresh()));
+    connect(DsData::shareData(),SIGNAL(signalCurProjectChange()),
+            this,SLOT(slotProjectRefresh()));
+
+    connect(DsData::shareData(),SIGNAL(signalCurAnimationChange()),
             this,SLOT(slotProjectRefresh()));
     connect(DsData::shareData(),SIGNAL(signalCurFrameChange()),
             this,SLOT(slotProjectRefresh()));
 
+    connect(DsData::shareData(),SIGNAL(signalProjectPropertyChange()),
+            this,SLOT(slotProjectRefresh()));
+    connect(DsData::shareData(),SIGNAL(signalAnimationPropertyChange()),
+            this,SLOT(slotProjectRefresh()));
+    connect(DsData::shareData(),SIGNAL(signalFramePropertyChange()),
+            this,SLOT(slotProjectRefresh()));
+    connect(DsData::shareData(),SIGNAL(signalFrameImagePropertyChange()),
+            this,SLOT(slotProjectRefresh()));
+
+    //sigal from this
     connect(this,SIGNAL(itemDoubleClicked(QTreeWidgetItem* ,int )),
             this,SLOT(slotItemDoubleClicked(QTreeWidgetItem* ,int )));
+
+
     /*
     connect(DsData::shareData(),SIGNAL(signalProjectPropertyChange()),
             this,SLOT(slotProjectInited()));
@@ -620,12 +638,29 @@ void DsFrameTreeWidget::slotItemDoubleClicked(QTreeWidgetItem* item,int column)
     QString name = item->text(column);
 
     qDebug()<<"call setCurFrameImage";
-    disconnect(this,SIGNAL(itemDoubleClicked(QTreeWidgetItem* ,int )),
-            this,SLOT(slotItemDoubleClicked(QTreeWidgetItem* ,int )));
+    disconnect(DsData::shareData(),0,
+            this,0);
 
     DsData::shareData()->setCurFrameImage(q2s(name));
 
-    connect(this,SIGNAL(itemDoubleClicked(QTreeWidgetItem* ,int )),
-            this,SLOT(slotItemDoubleClicked(QTreeWidgetItem* ,int )));
+    //sigal from DsData
+    connect(DsData::shareData(),SIGNAL(signalDataPropertyChange()),
+            this,SLOT(slotProjectRefresh()));
+    connect(DsData::shareData(),SIGNAL(signalCurProjectChange()),
+            this,SLOT(slotProjectRefresh()));
+
+    connect(DsData::shareData(),SIGNAL(signalCurAnimationChange()),
+            this,SLOT(slotProjectRefresh()));
+    connect(DsData::shareData(),SIGNAL(signalCurFrameChange()),
+            this,SLOT(slotProjectRefresh()));
+
+    connect(DsData::shareData(),SIGNAL(signalProjectPropertyChange()),
+            this,SLOT(slotProjectRefresh()));
+    connect(DsData::shareData(),SIGNAL(signalAnimationPropertyChange()),
+            this,SLOT(slotProjectRefresh()));
+    connect(DsData::shareData(),SIGNAL(signalFramePropertyChange()),
+            this,SLOT(slotProjectRefresh()));
+    connect(DsData::shareData(),SIGNAL(signalFrameImagePropertyChange()),
+            this,SLOT(slotProjectRefresh()));
 
 }
