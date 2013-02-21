@@ -7,6 +7,7 @@
 #include <QDebug>
 
 #include <QMainWindow>
+#include <QVBoxLayout>
 #include "operator\DsOperator.h"
 
 #include "model\DsData.h"
@@ -41,8 +42,11 @@ DsSpriteDisplay::DsSpriteDisplay(QWidget* parent)
 {
 
     //add Dock to MainWindow
-    m_Dock = new QDockWidget(tr("SpriteDisplay"),parent);
+   /* m_Dock = new QDockWidget(tr("SpriteDisplay"),parent);
     m_Dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+    m_Dock->setFeatures(QDockWidget::NoDockWidgetFeatures);
+    m_Dock->setWindowTitle("");
+
     //add tabWidget to Dock
     m_tabWidget = new QTabWidget(m_Dock);
     m_Dock->setWidget(m_tabWidget);
@@ -55,7 +59,18 @@ DsSpriteDisplay::DsSpriteDisplay(QWidget* parent)
     m_tabWidget->addTab(m_frameTreeWidget,tr("Frame"));
 
     QMainWindow* MainWindow = (QMainWindow*)parent->parent();
-    MainWindow->addDockWidget(Qt::RightDockWidgetArea, m_Dock);
+    MainWindow->addDockWidget(Qt::RightDockWidgetArea, m_Dock);*/
+
+    m_tabWidget = new QTabWidget;
+
+    QVBoxLayout* vLayout = new QVBoxLayout;
+    m_spriteTreeWidget = new DsSpriteTreeWidget(m_tabWidget);
+    m_frameTreeWidget = new DsFrameTreeWidget(m_tabWidget);
+
+    m_tabWidget->addTab(m_spriteTreeWidget,tr("Sprite"));
+    m_tabWidget->addTab(m_frameTreeWidget,tr("Frame"));
+    vLayout->addWidget(m_tabWidget);
+    setLayout(vLayout);
 
 }
 
