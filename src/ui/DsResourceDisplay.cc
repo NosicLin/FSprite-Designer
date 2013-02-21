@@ -6,35 +6,13 @@
 DsResourceDisplay::DsResourceDisplay(QWidget* p)
 	:QWidget(p)
 {
-    /* TODO(use real tree widget here */
-    //QLabel* tree= new QLabel(tr("Tree Control List\n  Folder1\n    File1.jpg\n    File2.png\n  Folder2\n    File1.bmp\n    File2.tga\n"), this);
-
-    /* TODO(use your control here)*/
-    //QLabel* controlbar= new QLabel(tr("<add> <delete>"), this);
-
-    //QLabel* controlbar= new QLabel(tr(" ----------------\n|<add>| <delete> |\n ----------------"),this);
-
-    /*
-    QVBoxLayout* hbox=new QVBoxLayout(this);
-
-    hbox->addWidget(tree, 1, Qt::AlignTop);
-    hbox->addWidget(controlbar,0);
-
-    setLayout(hbox);
-    */
-
-    /*
-    std::string strTemp("aaa");
-    char szdata[1024] = {'\0'};
-    strcpy_s(szdata, 1024, strTemp.data());
-    QMessageBox::information(this, "Document", QString(szdata), QMessageBox::Ok);
-    */
-
-
+    m_model = new QDirModel;
     m_dir = QString("E:/"); // default setting. undetermined
     m_tree = new QTreeWidget;
     m_tree->setColumnCount(1);
     m_tree->setHeaderLabel("Path");
+    m_tree->setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
+    m_tree->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     connect(m_tree, SIGNAL(clicked(const QModelIndex &)), this, SLOT(addSomething()));
     connect(m_tree, SIGNAL(itemExpanded(QTreeWidgetItem *)), this, SLOT(expandSomething(QTreeWidgetItem *)));
 
@@ -73,12 +51,11 @@ void DsResourceDisplay::addResFolder(const std::string &folder)
         }
         QTreeWidgetItem *noteTemp = new QTreeWidgetItem();
         noteTemp->setText(0, strpath);
-        noteTemp->setIcon(0, QIcon(DS_FB_FILE));
+        noteTemp->setIcon(0, QIcon(DS_FB_FILE)); // 待改进
         m_tree->addTopLevelItem(noteTemp);
         AddFileItem(strpath, noteTemp);
     }
 }
-
 
 void DsResourceDisplay::addSomething() // 点击图片图标，返回路径和文件名
 {
@@ -95,18 +72,16 @@ void DsResourceDisplay::addSomething() // 点击图片图标，返回路径和�
         strcpy_s(szdata, 1024, byteTemp.data());
         std::string filename(szdata);
 
-        if(CmpTypeByWM(szdata, "jpg") == 0 ||
-                CmpTypeByWM(szdata, "bmp") == 0 ||
-                //CmpTypeByWM(szfileName, "gif") == 0 ||
-                CmpTypeByWM(szdata, "tag") == 0 ||
-                CmpTypeByWM(szdata, "png") == 0)
+        if(fileName.right(4).compare(".jpg", Qt::CaseInsensitive) == 0 ||
+                fileName.right(4).compare(".bmp", Qt::CaseInsensitive) == 0 ||
+                fileName.right(4).compare(".tag", Qt::CaseInsensitive) == 0 ||
+                fileName.right(4).compare(".png", Qt::CaseInsensitive) == 0)
         {
             dirTemp = GetParentDirFromItem(m_tree->currentItem());
             byteTemp = dirTemp.toLocal8Bit();
             strcpy_s(szdata, 1024, byteTemp.data());
             std::string path(szdata); //--// char* to string
             emit resFileSelect(path, filename);
-            //QMessageBox::information(this, "test", dirTemp + fileName, QMessageBox::Ok);
         }
     }
 }
@@ -118,21 +93,16 @@ void DsResourceDisplay::expandSomething(QTreeWidgetItem *treeItem)
 
     if (nchildCount != 0) // 貌似能展开都不会为0
     {
-        char szfileName[1024] = {'\0'};
-        QByteArray byteTemp;
         QString strfileName;
         // 先遍历这个Item为路径是否有文件夹，若有则添加
-        for(int i = 0; i < nchildCount; ++i)
+        for (int i = 0; i < nchildCount; ++i)
         {
             strfileName = currentTree->child(i)->text(0);
-            QByteArray byteTemp = strfileName.toLocal8Bit();
-            strcpy_s(szfileName, 1024, byteTemp.data());
 
-            if(CmpTypeByWM(szfileName, "jpg") == 0 ||
-                    CmpTypeByWM(szfileName, "bmp") == 0 ||
-                    //CmpTypeByWM(szfileName, "gif") == 0 ||
-                    CmpTypeByWM(szfileName, "tag") == 0 ||
-                    CmpTypeByWM(szfileName, "png") == 0)
+            if (strfileName.right(4).compare(".jpg", Qt::CaseInsensitive) == 0 ||
+                    strfileName.right(4).compare(".bmp", Qt::CaseInsensitive) == 0 ||
+                    strfileName.right(4).compare(".tag", Qt::CaseInsensitive) == 0 ||
+                    strfileName.right(4).compare(".png", Qt::CaseInsensitive) == 0)
             {
                 // 是图片就不管
             }
@@ -143,11 +113,9 @@ void DsResourceDisplay::expandSomething(QTreeWidgetItem *treeItem)
                 {
                     QString dirTemp = GetDirFromItem(currentTree->child(i));
                     AddFileItem(dirTemp, currentTree->child(i));
-                    //QMessageBox::information(this, "Document", dirTemp, QMessageBox::Ok);
                 }
             }
-        }
-        //m_tree->expandItem(currentTree);
+        }        
         return;
     }
 }
@@ -188,13 +156,15 @@ void DsResourceDisplay::deleteSomething()
         {
             QString dirTemp;
             dirTemp = GetDirFromItem(currentItem); // 获得路径
+
+            // 删除一系列节点
             int nitemIndex = m_tree->indexOfTopLevelItem(currentItem);
-            currentItem->takeChildren();
             m_tree->takeTopLevelItem(nitemIndex);
+            DeleteItem(currentItem);
+            currentItem = NULL;
 
             QByteArray byteTemp;
             char szdata[1024] = {'\0'};
-
             byteTemp = dirTemp.toLocal8Bit();
             strcpy_s(szdata, 1024, byteTemp.data()); //--// QString to char*
             std::string path(szdata);
@@ -203,38 +173,6 @@ void DsResourceDisplay::deleteSomething()
         }
     }
 }
-
-void DsResourceDisplay::debugSomething()
-{
-    /* // example
-        //QString fileNameTemp = GetDirFromItem(m_tree->currentItem());
-        //QString fileName = fileNameTemp.left(fileNameTemp.length() - 1);
-    QString str = "Hello world";
-    QChar *data = str.data();
-    while (!data->isNull()) {
-        qDebug() << data->unicode();
-        ++data;
-    }
-    QTreeWidgetItem *note1 = new QTreeWidgetItem(QStringList("note1"));
-    tree->addTopLevelItem(note1);
-
-    QTreeWidgetItem *note2 = new QTreeWidgetItem(QStringList("note2"));
-    tree->addTopLevelItem(note2);
-
-    tree->expand(tree->model()->index(1, 0));
-
-    QTreeWidgetItem *note3 = new QTreeWidgetItem(QStringList("note3"));
-    tree->addTopLevelItem(note3);
-
-    QTreeWidgetItem *childtree1 = new QTreeWidgetItem(QStringList("child1"));
-    QTreeWidgetItem *childtree2 = new QTreeWidgetItem(QStringList("child2"));
-    note2->addChild(childtree1);
-    note2->addChild(childtree2);
-    */
-    qDebug() << "Hello world";
-    QMessageBox::information(this, "Document", "Hello World!", QMessageBox::Ok);
-}
-
 
 QString DsResourceDisplay::GetDirFromItem(QTreeWidgetItem *currentTreeItem)
 {
@@ -277,148 +215,97 @@ QString DsResourceDisplay::GetParentDirFromItem(QTreeWidgetItem *currentTreeItem
 
 int DsResourceDisplay::AddFileItem(QString strDir, QTreeWidgetItem *currentItem)
 {
-    char dir[1024] = {'\0'};
-    char fileDir[1024] = {'\0'};
-    //QByteArray byteTemp = strDir.toLatin1();
     if (strDir.right(1) != QString('/'))
     {
         strDir += '/';
     }
-    QByteArray byteTemp = strDir.toLocal8Bit();
-    _finddata_t ffile;
-    int ndone = -1;
-    int nret = 0;
 
-    strcpy_s(dir, 1024, byteTemp.data());
-    strcat_s(fileDir, 1024, dir);
-    strcat_s(fileDir, 1024, "*.*");
-
-    ndone = _findfirst(fileDir, &ffile);
-    nret = 0;
-    if(ndone != -1)
+    QDir dir(strDir);
+    if (!dir.exists())
     {
-        for( ; nret != -1; )
-        {
-            if(strcmp(ffile.name, ".") != 0 &&
-                    strcmp(ffile.name, "..") != 0 &&
-                    strcmp(ffile.name, "...") != 0)
-            {
-                if (ffile.attrib == _A_SUBDIR ||
-                        CmpTypeByWM(ffile.name, "jpg") == 0 ||
-                        CmpTypeByWM(ffile.name, "bmp") == 0 ||
-                        //CmpTypeByWM(ffile.name, "gif") == 0 ||
-                        CmpTypeByWM(ffile.name, "tag") == 0 ||
-                        CmpTypeByWM(ffile.name, "png") == 0)
-                {
-                    QTreeWidgetItem *noteTemp = new QTreeWidgetItem();
-                    //noteTemp->setText(0, ffile.name);
-                    //--// char* to QString
-                    noteTemp->setText(0, QTextCodec::codecForName("GBK")->toUnicode(ffile.name));
-                    currentItem->addChild(noteTemp);
-
-                    if (ffile.attrib == _A_SUBDIR)
-                    {
-                        noteTemp->setIcon(0, QIcon(DS_FB_FILE));
-                    }
-                    else
-                    {
-                        //添加图片图标
-                        QString fileNameTemp = GetDirFromItem(noteTemp);
-                        QString fileName = fileNameTemp.left(fileNameTemp.length() - 1);
-                        //noteTemp->setIcon(0, QIcon(fileName));
-                    }
-                }
-            }
-            nret = _findnext(ndone, &ffile);
-        }
+        return -1;
     }
+    dir.setFilter(QDir::Dirs | QDir::Files);
+    dir.setSorting(QDir::DirsFirst);
+    QFileInfoList list = dir.entryInfoList();
+
+    int i = 0;
+    do
+    {
+        QFileInfo fileInfo = list.at(i);
+        if (fileInfo.fileName() == "." ||
+                fileInfo.fileName() == ".." ||
+                fileInfo.fileName() == "...")
+        {
+            i++;
+            continue;
+        }
+        bool bisDir = fileInfo.isDir();
+        bool enableAddSign = false;
+        bool isDirSign = false;
+        if (bisDir)
+        {
+            enableAddSign = true;
+            isDirSign = true;
+        }
+        else if (fileInfo.fileName().right(4).compare(".jpg", Qt::CaseInsensitive) == 0 ||
+                 fileInfo.fileName().right(4).compare(".bmp", Qt::CaseInsensitive) == 0 ||
+                 fileInfo.fileName().right(4).compare(".tag", Qt::CaseInsensitive) == 0 ||
+                 fileInfo.fileName().right(4).compare(".png", Qt::CaseInsensitive) == 0)
+        {
+            enableAddSign = true;
+        }
+        if (enableAddSign)
+        {
+            QTreeWidgetItem *noteTemp = new QTreeWidgetItem();
+            //--// char* to QString
+            noteTemp->setText(0, fileInfo.fileName());
+            currentItem->addChild(noteTemp);
+            if (isDirSign)
+            {
+                noteTemp->setIcon(0, QIcon(DS_FB_FILE)); // 待改进
+            }
+            else
+            {
+                //添加图片图标
+                QString fileNameTemp = GetDirFromItem(noteTemp);
+                QString fileName = fileNameTemp.left(fileNameTemp.length() - 1);
+                noteTemp->setIcon(0, QIcon(DS_TL_NEW)); // 待改进
+            }
+        }
+        i++;
+    }
+    while (i < list.size());
 
     return 0;
 }
 
-int DsResourceDisplay::StrCmpByWM(const char *szstrT, const char *szstrS)
+void DsResourceDisplay::DeleteItem(QTreeWidgetItem *currentTreeItem)
 {
-    if(szstrT == NULL && szstrS == NULL)
+    if (currentTreeItem != NULL)
     {
-        return 0;
-    }
-    else if(szstrT == NULL && szstrS != NULL)
-    {
-        return szstrS[0];
-    }
-    else if(szstrT != NULL && szstrS == NULL)
-    {
-        return -1 * szstrT[0];
-    }
-    else
-    {
-        int i = 0;
-        int num = 0;
-        char chstrT;
-        char chstrS;
-        for ( ; (*(szstrT + i) != '\0') && (*(szstrS + i) != '\0'); ++i)
+        int childCount = currentTreeItem->childCount();
+        QTreeWidgetItem *childItem = NULL;
+        for (int i = 0; i < childCount; ++i)
         {
-            if(*(szstrT + i) >= 'A' && *(szstrT + i) <= 'Z')
+            childItem = currentTreeItem->child(0);
+            if (childItem->childCount() > 0)
             {
-                chstrT = *(szstrT + i) + 32;
+                DeleteItem(childItem);
             }
             else
             {
-                chstrT = *(szstrT + i);
+                delete childItem;
             }
-
-            if(*(szstrS + i) >= 'A' && *(szstrS + i) <= 'Z')
-            {
-                chstrS = *(szstrS + i) + 32;
-            }
-            else
-            {
-                chstrS = *(szstrS + i);
-            }
-
-            num = chstrS - chstrT;
-            if (num != 0)
-            {
-                return num;
-            }
+            childItem = NULL;
         }
-
-        if(*(szstrT + i) >= 'A' && *(szstrT + i) <= 'Z')
-        {
-            chstrT = *(szstrT + i) + 32;
-        }
-        else
-        {
-            chstrT = *(szstrT + i);
-        }
-
-        if(*(szstrS + i) >= 'A' && *(szstrS + i) <= 'Z')
-        {
-            chstrS = *(szstrS + i) + 32;
-        }
-        else
-        {
-            chstrS = *(szstrS + i);
-        }
-        num = chstrS - chstrT;
-        return num;
+        delete currentTreeItem;
+        currentTreeItem = NULL;
     }
 }
 
-int DsResourceDisplay::CmpTypeByWM(const char *filename, const char *type)
+void DsResourceDisplay::debugSomething()
 {
-    int len = strlen(filename);
-    int i = 0;
-    for(i = len - 1; i >= 0; --i)
-    {
-        if(*(filename + i) == '.')
-        {
-            if(0 == StrCmpByWM(filename + i + 1, type))
-            {
-                return 0;
-            }
-            return 1;
-        }
-    }
-    return 1;
+    qDebug() << "Hello world";
+    QMessageBox::information(this, "Document", "Hello World!", QMessageBox::Ok);
 }
