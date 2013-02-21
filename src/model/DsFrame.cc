@@ -98,6 +98,10 @@ void DsKeyFrame::pushFrameImage(DsFrameImage* image)
 {
 	m_images.push_back(image);
 }
+void DsKeyFrame::insertFrameImage(DsFrameImage* image,int pos)
+{
+    m_images.insert(m_images.begin()+pos,image);
+}
 
 
 DsKeyFrame* DsKeyFrame::clone()

@@ -9,6 +9,13 @@ class DsEditView;
 
 class DsEditState 
 {
+    public:
+        enum
+        {
+            DIRECTION_X,
+            DIRECTION_Y,
+            DIRECTION_BOTH
+        };
 	public:
 		enum
 		{
@@ -28,7 +35,11 @@ class DsEditState
 		virtual void mouseMoveEvent(QMouseEvent* event);
 		virtual void mousePressEvent(QMouseEvent* event);
 		virtual void mouseReleaseEvent(QMouseEvent* event);
-		virtual void wheelEvent(QMouseEvent* event);
+        virtual void wheelEvent(QMouseEvent* event);
+
+        virtual void enterEvent(QEvent* event);
+        virtual void leaveEvent(QEvent* event);
+
 
 		virtual void keyPressEvent(QKeyEvent* event);
 		virtual void keyReleaseEvent(QKeyEvent* event);
@@ -51,7 +62,11 @@ class DsEditStateNotEdit:public DsEditState
 	public:
 		DsEditStateNotEdit();
 	public:
-		virtual void draw();
+        virtual void onEnter(DsEditState* prev);
+        virtual void onExit(DsEditState* next);
+        virtual void draw();
+    private:
+        QCursor m_prev;
 };
 
 class DsEditStateIdel:public DsEditState 
@@ -63,53 +78,102 @@ class DsEditStateIdel:public DsEditState
 };
 
 
+
 class DsEditStateAddImage:public DsEditState 
 {
-	public:
-		DsImage* image;
+    public:
+        DsEditStateAddImage();
+        void setFrameImage(DsFrameImage* img){m_image=img;}
+
+    public:
+        virtual void onEnter(DsEditState* );
+        virtual void mouseMoveEvent(QMouseEvent* event);
+        virtual void enterEvent(QEvent* );
+        virtual void leaveEvent(QEvent* );
+        virtual void mousePressEvent(QMouseEvent* event);
+        virtual void keyPressEvent(QKeyEvent* event);
+
+        virtual void draw();
+
+    private:
+        DsFrameImage* m_image;
+        bool m_draw;
 };
+
+
 
 class DsEditStateTranslate:public DsEditState
 {
-	public:
-		float startx,starty;
-		float newx,newy;
-		int direction;
+    public:
+        DsEditStateTranslate();
+    public:
+        virtual void onEnter(DsEditState* prev);
+
+        virtual void mouseMoveEvent(QMouseEvent* event);
+        virtual void mousePressEvent(QMouseEvent* event);
+        virtual void keyPressEvent(QKeyEvent* event);
+        virtual void draw();
+
+    private:
+        float m_movex,m_movey;
+        int m_direction;
 };
+
 
 class DsEditStateScale :public DsEditState
 {
-	public:
-		float startx,starty;
-		float newx,newy;
-		int direction;
+    public:
+        DsEditStateScale();
+    public:
+        virtual void onEnter(DsEditState* prev);
+
+        virtual void mouseMoveEvent(QMouseEvent* event);
+        virtual void mousePressEvent(QMouseEvent* event);
+        virtual void keyPressEvent(QKeyEvent* event);
+        virtual void draw();
+	protected:
+		float getScale();
+    public:
+        float m_startx,m_starty;
+        float m_nowx,m_nowy;
+        int m_direction;
 };
+
 
 class DsEditStateRotate:public DsEditState 
 {
-	public:
-		float startx,starty;
-		float newx,newy;
+public:
+    DsEditStateRotate();
+public:
+    virtual void onEnter(DsEditState* prev);
+    virtual void mouseMoveEvent(QMouseEvent* event);
+    virtual void mousePressEvent(QMouseEvent* event);
+    virtual void keyPressEvent(QKeyEvent* event);
+    virtual void draw();
+private:
+    float m_angle;
 };
+
 
 class DsEditStateSelect :public DsEditState 
 {
-	public:
-		void mousePressEvent(QMouseEvent* event);
-		void draw();
+public:
+    virtual void mousePressEvent(QMouseEvent* event);
+    virtual void keyPressEvent(QKeyEvent* event);
+    void draw();
 
 };
 
 class DsEditStatePlay:public DsEditState
 {
-	public:
-		int curframe;
-		int elapse;
+public:
+    int curframe;
+    int elapse;
 };
 
 class DSEditStateMoveCoord:public DsEditState 
 {
-	public:
+public:
 };
 
 

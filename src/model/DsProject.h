@@ -8,6 +8,21 @@
 #include "DsFrame.h"
 #include "DsFrameImage.h"
 
+
+
+/* Note: DsProjectState Is Used For Undo and Redo, Every Time Project Property Change,
+         Opeartor will save the state of the project, this method is so easy, but will
+         used too many memory
+*/
+
+class DsProjectState
+{
+    DsSprite* m_sprite;
+    int m_curFrameIndex;
+    std::string m_curAnimation;
+    std::string m_curFrameImage;
+};
+
 class DsProject
 {
 	public:
@@ -19,17 +34,13 @@ class DsProject
             m_curFrameIndex=-1;
 			m_curFrameImage=NULL;
 		}
-		DsProject(DsSprite* sprite)
-		{
-			m_name=sprite->getName();
-			m_sprite=sprite;
-		}
 	public:
         DsSprite* getSprite(){return m_sprite;}
-		std::string getName(){return m_name;}
+        std::string getName(){return m_name;}
+        void setName(const std::string& name){m_name=name;}
 
 		/* animation */
-        DsAnimation* getCurAniamtion(){return m_curAnimation;}
+        DsAnimation* getCurAnimation(){return m_curAnimation;}
         void setCurAnimation(const std::string& anim);
 		void dropCurAnimation();
 
@@ -42,15 +53,24 @@ class DsProject
 		/* Frame image */
 		DsFrameImage* getCurFrameImage(){return m_curFrameImage;}
         void setCurFrameImage(const std::string& name);
-		void dropCurFrameImage();
+        void dropCurFrameImage();
+
+        /* undo/ redo */
+        int curStateIndex();
+        int saveStateNu();
+        void pushState();
+        void popState();
 
 	private:
 		std::string m_name;
 		DsSprite* m_sprite;
 		int m_curFrameIndex;
-
 		DsAnimation* m_curAnimation;
-		DsFrameImage* m_curFrameImage;
+        DsFrameImage* m_curFrameImage;
+
+        /* used for undo/redo */
+        std::vector<DsProjectState*> m_savedState;
+        int m_curStateIndex;
 };
 
 #endif /*_DS_PROJECT_H_*/

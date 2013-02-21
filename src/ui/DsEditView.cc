@@ -11,7 +11,7 @@
 DsEditView::DsEditView(QWidget* parent)
     :QGLWidget(parent)
 {
-    m_space_down=false;
+    m_spaceDown=false;
     m_lastpos=QPoint(0,0);
 	m_tx=0;
     m_ty=0;
@@ -20,6 +20,18 @@ DsEditView::DsEditView(QWidget* parent)
     m_g=1;
     m_b=1;
     m_a=1;
+
+
+	/* axis and grid */
+    m_showAxis=true;
+    m_showGrid=false;
+	m_gridWidth=32;
+	m_gridHeight=32;
+
+    /*  space down */
+    m_spaceDown=false;
+    m_sDPrevCursor=Qt::ArrowCursor;
+
     setFocusPolicy(Qt::StrongFocus);
     setMouseTracking(true);
 	initState();
@@ -35,44 +47,47 @@ void DsEditView::initState()
     m_stateSelect.setEditView(this);
     m_statePlay.setEditView(this);
     m_stateMoveCoord.setEditView(this);
+    m_curState=&m_stateIdel;
+    toDefaultState();
 
-	DsData* data=DsData::shareData();
-	DsFrame* frame=data->getCurFrame();
-	if(frame==NULL)
-	{
-		m_curState=&m_stateIdel;
-	}
-	else 
-	{
-		if(frame->getType()==DsFrame::FRAME_KEY)
-		{
-			m_curState=&m_stateIdel;
-		}
-		else 
-		{
-			m_curState=&m_stateNotEdit;
-		}
-	}
 }
-void DsEditView::slotCurFrameChange()
+void DsEditView::toDefaultState()
 {
-    DsData* data=DsData::shareData();
+	DsData* data=DsData::shareData();
     DsFrame* frame=data->getCurFrame();
-    if(frame==NULL)
-	{
-        changeToState(&m_stateIdel);
+    DsFrameImage* image=data->getCurFrameImage();
+
+	if(frame==NULL)
+    {
+        changeToState(&m_stateNotEdit);
 	}
 	else 
 	{
 		if(frame->getType()==DsFrame::FRAME_KEY)
-		{
-            changeToState(&m_stateIdel);
+        {
+            if(image)
+            {
+                changeToState(&m_stateSelect);
+            }
+            else
+            {
+                changeToState(&m_stateIdel);
+            }
 		}
 		else 
-		{
+        {
             changeToState(&m_stateNotEdit);
 		}
 	}
+}
+
+void DsEditView::slotCurAnimationChange()
+{
+    toDefaultState();
+}
+void DsEditView::slotCurFrameChange()
+{
+    toDefaultState();
 }
 
 void DsEditView::initializeGL()
@@ -108,8 +123,13 @@ void DsEditView::paintGL()
 void DsEditView::mousePressEvent(QMouseEvent* event)
 {
     setFocus();
-	m_lastpos=event->pos();
+    if(m_spaceDown)
+    {
+        m_lastpos=event->pos();
+        return;
+    }
     m_curState->mousePressEvent(event);
+    m_lastpos=event->pos();
     update();
 }
 
@@ -121,21 +141,23 @@ void DsEditView::mouseMoveEvent(QMouseEvent* event)
 
     if(event->buttons()&Qt::LeftButton)
     {
-        if(m_space_down)
+        if(m_spaceDown)
         {
             setTranslate(m_tx+dx,m_ty+dy);
-    		m_lastpos=event->pos();
-			return ;
+            m_lastpos=event->pos();
+            return ;
         }
     }
 
     m_curState->mouseMoveEvent(event);
+    m_lastpos=event->pos();
     update();
 }
 
 void DsEditView::mouseReleaseEvent(QMouseEvent* event)
 {
     m_curState->mouseReleaseEvent(event);
+    m_lastpos=event->pos();
     update();
 }
 void DsEditView::wheelEvent(QWheelEvent* event)
@@ -148,20 +170,27 @@ void DsEditView::wheelEvent(QWheelEvent* event)
 
     QSize wsize=size();
     x=x-wsize.width()/2;
-    y=y-wsize.height()/2;
+    y=wsize.height()/2-y;
 
     float rx=(x-m_tx)/scale;
     float ry=(y-m_ty)/scale;
 
-    detal=m_scale>1.0f?0.2f:0.1f;
-    m_scale+=(event->delta()/120.0f)*detal;
-    if(m_scale<0.1)
-    {
-        m_scale=0.1f;
-    }
+    detal=event->delta()>0?1.1f:0.9f;
+    m_scale*=detal;
 
     m_tx=x-rx*m_scale;
     m_ty=y-ry*m_scale;
+    update();
+}
+
+void DsEditView::enterEvent(QEvent* event)
+{
+    m_curState->enterEvent(event);
+    update();
+}
+void DsEditView::leaveEvent(QEvent* event)
+{
+    m_curState->leaveEvent(event);
     update();
 }
 
@@ -171,7 +200,9 @@ void DsEditView::keyPressEvent(QKeyEvent* event)
     switch(event->key())
     {
     case Qt::Key_Space:
-        m_space_down=true;
+        m_spaceDown=true;
+        m_sDPrevCursor=cursor();
+        setCursor(Qt::ClosedHandCursor);
         break;
     default:
         break;
@@ -185,7 +216,9 @@ void DsEditView::keyReleaseEvent(QKeyEvent* event)
     switch(event->key())
     {
     case Qt::Key_Space:
-        m_space_down=false;
+        m_spaceDown=false;
+        setCursor(m_sDPrevCursor);
+        m_sDPrevCursor=Qt::ArrowCursor;
         break;
     default:
         break;
@@ -215,9 +248,33 @@ void DsEditView::setScale(float scale)
     update();
 }
 
+void DsEditView::zoomIn()
+{
+    m_scale*=1.1f;
+    update();
+}
+void DsEditView::zoomOut()
+{
+    m_scale*=0.9f;
+    update();
+}
+void DsEditView::resetZoomTranslate()
+{
+    m_tx=0;
+    m_ty=0;
+    m_scale=1.0;
+    update();
+}
+
+
 void DsEditView::setShowAxis(bool enable)
 {
     m_showAxis=enable;
+    update();
+}
+void DsEditView::setShowGrid(bool enable)
+{
+    m_showGrid=enable;
     update();
 }
 
@@ -228,7 +285,17 @@ void DsEditView::draw()
 
     /* move editor area */
     glTranslatef(m_tx,m_ty,0);
+    /* zoom editor area */
+    glScalef(m_scale,m_scale,1);
 
+
+
+
+    /* draw  grid */
+    if(m_showGrid)
+    {
+        drawGrid();
+    }
 
     /* draw Axis */
     if(m_showAxis)
@@ -237,22 +304,8 @@ void DsEditView::draw()
     }
 
 
-    /* zoom editor area */
-    glScalef(m_scale,m_scale,1);
-
-    /* draw  grid */
-    if(m_showGrid)
-    {
-        drawGrid();
-    }
-
-
-	/* draw to clientarea */
-	m_curState->draw();
-
-
-	setLineColor(0.0,0.0,1.0);
-	drawLine(100,100,-100,-100);
+    /* draw to clientarea */
+    m_curState->draw();
 
 }
 
@@ -260,48 +313,85 @@ void DsEditView::drawAxis()
 {
     glDisable(GL_TEXTURE_2D);
 
-	setLineColor(1.0,0.0,0.0);
-	drawLine(-100000,0,100000,0);
-	setLineColor(0.0,1.0,0.0);
-	drawLine(0,-100000,0,100000);
+    setLineColor(0.0,0.0,1.0);
+    drawLine(-100000,0,100000,0);
+    setLineColor(0.0,1.0,0.0);
+    drawLine(0,-100000,0,100000);
 }
 void DsEditView::drawGrid()
 {
-    /*TODO*/
+	QSize wsize=size();
+	float x0,y0,x1,y1;
+	x0=0;
+	y0=0;
+	x1=wsize.width();
+	y1=wsize.height();
+
+	transformToRealCoord(&x0,&y0);
+	transformToRealCoord(&x1,&y1);
+
+	int vline_start=x0/m_gridWidth;
+    int vline_end=x1/m_gridWidth+1;
+
+    int hline_start=y0/m_gridHeight;
+    int hline_end=y1/m_gridHeight+1;
+
+    if(hline_start>hline_end)
+    {
+        int temp=hline_start;
+        hline_start=hline_end;
+        hline_end=temp;
+    }
+
+    DsDebug<<" x0:"<<vline_start<<" y0:"<<vline_end<<" x1:"<<hline_start<<" y1"<<hline_end<<endl;
+
+    setLineColor(0.8f,0.8f,0.8f);
+	for(int i=vline_start;i<=vline_end;i++)
+	{
+		drawLine(i*m_gridWidth,-10000,i*m_gridWidth,10000);
+    }
+    for(int i=hline_start;i<=hline_end;i++)
+    {
+        drawLine(-10000,i*m_gridHeight,10000,i*m_gridHeight);
+    }
 }
 void DsEditView::drawFrameImage(DsFrameImage* image)
 {
-	glPushMatrix();
-	float x,y,width,height,sx,sy,angle;
-	float cx0,cy0,cx1,cy1;
+    glPushMatrix();
+    float x,y,width,height,sx,sy,angle;
 
-	x=image->getPosX();
-	y=image->getPosY();
+    x=image->getPosX();
+    y=image->getPosY();
 
-	width=image->getWidth();
-	height=image->getHeight();
+    width=image->getWidth();
+    height=image->getHeight();
 
-	sx=image->getScaleX();
-	sy=image->getScaleY();
+    sx=image->getScaleX();
+    sy=image->getScaleY();
 
-	angle=image->getAngle();
-
-	width*=sx;
-	height*=sx;
-
-    image->getTextureArea(&cx0,&cy0,&cx1,&cy1);
+    angle=image->getAngle();
 
 
     glTranslatef(x,y,0);
     glRotatef(angle,0,0,1);
+    glScalef(sx,sy,1);
 
+	rawDrawFrameImage(image);
+    glPopMatrix();
+}
+
+void DsEditView::rawDrawFrameImage(DsFrameImage* image)
+{
+    float width=image->getWidth();
+    float height=image->getHeight();
+    float cx0,cy0,cx1,cy1;
+    image->getTextureArea(&cx0,&cy0,&cx1,&cy1);
 
     DsImage* ds_img=image->getImage();
     if(ds_img->texture==0)
     {
         ds_img->texture=bindTexture(*ds_img->image);
     }
-
     /*
     out<<"wdith:"<<ds_img->image->width()<<" height:"<<ds_img->image->height()<<endl;
 
@@ -309,19 +399,18 @@ void DsEditView::drawFrameImage(DsFrameImage* image)
     out<<" sx:"<<sx<<" sy:"<<sy;
     out<<" tex:"<<ds_img->texture<<" tx0:"<<cx0<<" cy0:"<<cy0<<" cx1:"<<cx1<<" cy1:"<<cy1<<endl;
     */
-
     glColor3f(1.0,1.0,1.0);
     glBindTexture(GL_TEXTURE_2D,ds_img->texture);
 
-	float vertex[8]=
-	{
-		-width/2,-height/2,
-		width/2,-height/2,
-		width/2,height/2,
-		-width/2,height/2
-	};
-	float texcoord[8]=
-	{
+    float vertex[8]=
+    {
+        -width/2,-height/2,
+        width/2,-height/2,
+        width/2,height/2,
+        -width/2,height/2
+    };
+    float texcoord[8]=
+    {
         cx0,cy0,
         cx1,cy0,
         cx1,cy1,
@@ -331,35 +420,55 @@ void DsEditView::drawFrameImage(DsFrameImage* image)
     glTexCoordPointer(2,GL_FLOAT,0,texcoord);
 
     glDrawArrays(GL_QUADS,0,4);
-    glPopMatrix();
 }
 void DsEditView::setLineColor(float r,float g,float b,float a)
 {
-	m_r=r;
-	m_g=g;
-	m_b=b;
-	m_a=a;
+    m_r=r;
+    m_g=g;
+    m_b=b;
+    m_a=a;
 }
 
 void DsEditView::drawLine(float x0,float y0,float x1,float y1,float width)
 {
-	glLineWidth(width);
+    glLineWidth(width);
 
     glColor4f(m_r,m_g,m_b,m_a);
     glDisable(GL_TEXTURE_2D);
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     float vertex[4]=
-	{
-		x0,y0,
-		x1,y1
-	};
+    {
+        x0,y0,
+        x1,y1
+    };
 
-	glVertexPointer(2,GL_FLOAT,0,vertex);
+    glVertexPointer(2,GL_FLOAT,0,vertex);
     glDrawArrays(GL_LINES,0,2);
     glEnable(GL_TEXTURE_2D);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
 }	
+void DsEditView::drawDashLine(float x0,float y0,float x1,float y1,float width)
+{
+    glLineStipple(1,0x66666666);
+    glLineWidth(width);
+    glEnable(GL_LINE_STIPPLE);
+
+    glColor4f(m_r,m_g,m_b,m_a);
+    glDisable(GL_TEXTURE_2D);
+    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    float vertex[4]=
+    {
+        x0,y0,
+        x1,y1
+    };
+
+    glVertexPointer(2,GL_FLOAT,0,vertex);
+    glDrawArrays(GL_LINES,0,2);
+    glEnable(GL_TEXTURE_2D);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    glDisable(GL_LINE_STIPPLE);
+}
 
 void DsEditView::drawFrameImageDecorate(DsFrameImage* image)
 {
@@ -382,13 +491,49 @@ void DsEditView::transformToRealCoord(float* x,float* y)
     *x=(rx-m_tx)/m_scale;
     *y=(ry-m_ty)/m_scale;
 }
+void DsEditView::transformToWidgetCoord(float* x,float *y)
+{
+    float rx=*x;
+    float ry=*y;
+    QSize  wsize=size();
+    rx=rx*m_scale+m_tx;
+    ry=ry*m_scale+m_ty;
+    rx=rx+wsize.width()/2;
+    ry=wsize.height()/2-ry;
+
+    *x=rx;
+    *y=ry;
+}
 
 void DsEditView::changeToState(DsEditState* target)
 {
+    if(m_curState==target)
+    {
+        return;
+    }
     m_curState->onExit(target);
     target->onEnter(m_curState);
     m_curState=target;
 }
+
+void DsEditView::slotAddFrameImage(const std::string& path,const std::string& name)
+{
+    if(m_curState==&m_stateNotEdit)
+    {
+        return;
+    }
+
+    std::string full_path=path+name;
+
+    DsFrameImage* frame_image=DsFrameImage::create(full_path);
+
+    m_stateAddImage.setFrameImage(frame_image);
+    changeToState(&m_stateAddImage);
+}
+
+
+
+
 
 
 

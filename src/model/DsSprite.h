@@ -12,13 +12,14 @@ class DsSprite
 
 
 	public:
-		DsSprite(const std::string& name);
+		DsSprite();
 		~DsSprite();
 	public:
-		std::string getName(){return m_name;}
 		void addAnimation(DsAnimation* anim);
 		void removeAnimation(const std::string& name);
+
 		DsAnimation* getAnimation(const std::string& name);
+		DsAnimation* getAnimation(int index);
 		int getAnimationNu(){return m_animations.size();}
 
 
@@ -27,7 +28,6 @@ class DsSprite
 
 
 	private:
-		std::string m_name;
 		std::vector<DsAnimation*> m_animations;
 };
 

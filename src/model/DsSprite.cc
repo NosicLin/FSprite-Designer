@@ -2,9 +2,8 @@
 #include "DsSprite.h"
 #include "DsAnimation.h"
 
-DsSprite::DsSprite(const std::string& name)
+DsSprite::DsSprite()
 {
-	m_name=name;
 }
 
 void DsSprite::addAnimation(DsAnimation* anim)
@@ -38,6 +37,12 @@ DsAnimation* DsSprite::getAnimation(const std::string& name)
 	}
     assert(0); /*never reach here*/
     return NULL;
+}
+
+DsAnimation* DsSprite::getAnimation(int index)
+{
+    assert(index>=0&&index<=m_animations.size());
+	return m_animations[index];
 }
 
 

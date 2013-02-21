@@ -12,6 +12,13 @@ DsAnimation::DsAnimation(const std::string& name)
 	m_name=name;
 	m_fps=m_defaulFps;
 }
+DsAnimation* DsAnimation::createWithFirstFrame(const std::string& name)
+{
+    DsAnimation* ret=new DsAnimation(name);
+    DsKeyFrame* zero=new DsKeyFrame(0);
+    ret->pushFrame(zero);
+    return ret;
+}
 
 DsAnimation::~DsAnimation()
 {
@@ -69,22 +76,32 @@ void DsAnimation::insertEmptyKeyFrame(int index)
 	insertFrameTypeKey(index,true);
 }
 
-void DsAnimation::insertTweenFrame(int index)
+void DsAnimation::insertTween(int index)
 {
 	int keyid=toKeyFramePos(index);
 
-	assert(keyid>0);
-	assert(m_keyFrames[keyid]->getFrameId()!=index);
-	assert(index<m_keyFrames.size()-1);
+    assert(keyid>=0);
+	assert(m_keyFrames[keyid]->getFrameId()<index);
+	assert(keyid<m_keyFrames.size()-1);
 	assert(m_keyFrames[keyid+1]->getType()==DsFrame::FRAME_KEY);
-	assert(m_keyFrames[keyid-1]->getType()==DsFrame::FRAME_KEY);
+	assert(m_keyFrames[keyid]->getType()==DsFrame::FRAME_KEY);
 
 	DsTweenFrame* tween=new DsTweenFrame(
-            (DsKeyFrame*)m_keyFrames[keyid-1],
+            (DsKeyFrame*)m_keyFrames[keyid],
             (DsKeyFrame*)m_keyFrames[keyid+1],
-            m_keyFrames[keyid-1]->getFrameId()+1
+            m_keyFrames[keyid]->getFrameId()+1
             );
 	rawInsertFrame(tween);
+}
+void DsAnimation::removeTween(int index)
+{
+    int keyid=toKeyFramePos(index);
+    assert(keyid>0);
+    assert(m_keyFrames[keyid]->getType()==DsFrame::FRAME_TWEEN);
+    assert(keyid<m_keyFrames.size()-1);
+    assert(m_keyFrames[keyid+1]->getType()==DsFrame::FRAME_KEY);
+    assert(m_keyFrames[keyid-1]->getType()==DsFrame::FRAME_KEY);
+    rawRemoveFrame(m_keyFrames[keyid]);
 }
 
 void DsAnimation::removeKeyFrame(int index)
@@ -174,8 +191,9 @@ void DsAnimation::removeKeyFrame(int index)
 			/* ...k k t k  */
 			else if((prev->getType()==DsFrame::FRAME_KEY)
 					&&(next->getType()==DsFrame::FRAME_TWEEN))
-			{
-				rawRemoveFrame(remove_frame);
+            {
+                DsDebug<<"Heresss"<<endl;
+                rawRemoveFrame(remove_frame);
 				rawRemoveFrame(next);
 			}
 			/*        _      */
@@ -355,7 +373,14 @@ int DsAnimation::toKeyFramePos(int index)
 
 int DsAnimation::getFrameNu()
 {
-	return m_keyFrames[m_keyFrames.size()-1]->getFrameId()+1;
+    if(m_keyFrames.size()==0)
+    {
+        return 0;
+    }
+    else
+    {
+        return m_keyFrames[m_keyFrames.size()-1]->getFrameId()+1;
+    }
 }
 
 void DsAnimation::rawInsertFrame(DsFrame* frame)
@@ -381,10 +406,10 @@ void DsAnimation::rawRemoveFrame(DsFrame* frame)
 	Iterator iter=m_keyFrames.begin();
 	for(;iter!=m_keyFrames.end();++iter)
 	{
-		if(*iter=frame)
+        if(*iter==frame)
 		{
 			delete *iter;
-			m_keyFrames.erase(iter);
+            m_keyFrames.erase(iter);
 			return;
 		}
 	}

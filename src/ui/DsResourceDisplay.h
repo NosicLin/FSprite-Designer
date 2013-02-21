@@ -29,11 +29,13 @@ class DsResourceDisplay:public QWidget
     private:
         QDirModel *m_model;
         QTreeWidget *m_tree;
-        QString m_dir; // 用于保存上次打开的路径
-        QString GetDirFromItem(QTreeWidgetItem *currentTreeItem); // 返回的路径末尾固定有'/'
+        QString m_dir;
+        QString GetDirFromItem(QTreeWidgetItem *currentTreeItem);
         QString GetParentDirFromItem(QTreeWidgetItem *currentTreeItem);
+
         int AddFileItem(QString strDir, QTreeWidgetItem *currentItem); // strDir的末尾最好有'/'
         void DeleteItem(QTreeWidgetItem *currentTreeItem); // 删除一些列节点
+
 
     private slots:
         void addSomething(void);

@@ -11,11 +11,10 @@ class  DsAnimation
 		typedef std::vector<DsFrame*>::iterator Iterator;
 		static void setDefaultFps(int fps){m_defaulFps=fps;}
 		static int getDefaultFps(){return m_defaulFps;}
-
-
 	public:
 		DsAnimation(const std::string& name);
-		~DsAnimation();
+        ~DsAnimation();
+        static DsAnimation* createWithFirstFrame(const std::string& name);
 
 	public:
 		std::string getName(){return m_name;}
@@ -32,7 +31,8 @@ class  DsAnimation
 		void removeKeyFrame(int index);
 		void insertKeyFrame(int index);
 		void insertEmptyKeyFrame(int index);
-		void insertTweenFrame(int index);
+        void insertTween(int index);
+        void removeTween(int index);
 		int getKeyFrameNu(){return m_keyFrames.size();};
 
 		void setFps(int fps) {m_fps=fps;}

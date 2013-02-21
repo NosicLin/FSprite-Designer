@@ -1,3 +1,4 @@
+#include <assert.h>
 #include "DsDataOperator.h"
 
 DsDataOperator::DsDataOperator()
@@ -5,9 +6,9 @@ DsDataOperator::DsDataOperator()
 	m_data=DsData::shareData();
 }
 
-void DsDataOperator::setCurProject(DsProject* prog)
+void DsDataOperator::setCurProject(const std::string& name)
 {
-	m_data->setCurProject(prog);
+    m_data->setCurProject(name);
     m_data->emitSignal(DsData::SG_CUR_PROJECT_CHANGE);
 }
 
@@ -27,6 +28,21 @@ void DsDataOperator::setCurFrameImage(const std::string& anim)
 {
 	m_data->setCurFrameImage(anim);
     m_data->emitSignal(DsData::SG_CUR_FRAME_IMAGE_CHANGE);
+}
+
+void DsDataOperator::addFrameImage(DsFrameImage* image)
+{
+    DsFrame* frame=m_data->getCurFrame();
+    if(frame)
+    {
+        if(frame->getType()==DsFrame::FRAME_KEY)
+        {
+            ((DsKeyFrame*)frame)->insertFrameImage(image,0);
+            m_data->emitSignal(DsData::SG_FRAME_PROPERTY_CHANGE);
+
+        }
+    }
+
 }
 
 void DsDataOperator::addAnimation(const std::string& name)
@@ -71,12 +87,120 @@ void DsDataOperator::insertKeyFrame(int index)
     }
 }
 
+void DsDataOperator::insertEmptyKeyFrame(int index)
+{
+    DsAnimation* anim=m_data->getCurAnimation();
+    if(anim)
+    {
+        anim->insertEmptyKeyFrame(index);
+        m_data->emitSignal(DsData::SG_ANIMATION_PROPERTY_CHANGE);
+    }
+}
+
+
+void DsDataOperator::removeKeyFrame(int index)
+{
+    DsAnimation* anim=m_data->getCurAnimation();
+    if(anim)
+    {
+        anim->removeKeyFrame(index);
+        m_data->emitSignal(DsData::SG_ANIMATION_PROPERTY_CHANGE);
+    }
+}
+void DsDataOperator::removeRangeFrame(int from,int to)
+{
+    DsAnimation* anim=m_data->getCurAnimation();
+    if(anim)
+    {
+        for(int i=from;i<=to;i++)
+        {
+            DsFrame* frame=anim->getFrame(i);
+            if(frame==NULL)
+            {
+                continue;
+            }
+            if(frame->getType()==DsFrame::FRAME_KEY)
+            {
+                if(frame->getFrameId()==i)
+                {
+                    anim->removeKeyFrame(i);
+                }
+            }
+        }
+        m_data->emitSignal(DsData::SG_ANIMATION_PROPERTY_CHANGE);
+    }
+}
+
+
+ void DsDataOperator::insertTween(int index)
+ {
+     DsAnimation* anim=m_data->getCurAnimation();
+     if(anim)
+     {
+         anim->insertTween(index);
+         m_data->emitSignal(DsData::SG_ANIMATION_PROPERTY_CHANGE);
+     }
+ }
+
+ void DsDataOperator::removeTween(int index)
+ {
+     DsAnimation* anim=m_data->getCurAnimation();
+     if(anim)
+     {
+         anim->removeTween(index);
+         m_data->emitSignal(DsData::SG_ANIMATION_PROPERTY_CHANGE);
+     }
+ }
+ void DsDataOperator::tweenToKeyFrame(int index)
+ {
+     DsAnimation* anim=m_data->getCurAnimation();
+     if(anim)
+     {
+         DsFrame* frame=anim->getFrame(index);
+         assert(frame);
+         assert(frame->getType()==DsFrame::FRAME_TWEEN);
+         DsTweenFrame* tween=(DsTweenFrame*)frame;
+         int from=tween->getFromKeyFrame()->getFrameId();
+         int to=tween->getToKeyFrame()->getFrameId();
+         for(int i=from+1;i<to;i++)
+         {
+             anim->insertKeyFrame(i);
+         }
+         m_data->emitSignal(DsData::SG_ANIMATION_PROPERTY_CHANGE);
+     }
+ }
 
 
 
+void DsDataOperator::setCurFrameImagePos(float x,float y)
+{
+    DsFrameImage* img=m_data->getCurFrameImage();
+    if(img)
+    {
+        img->setPos(x,y);
+         m_data->emitSignal(DsData::SG_FRAME_IMAGE_PROPERTY_CHANGE);
+    }
+}
 
+void DsDataOperator::setCurFrameImageScale(float x,float y)
+{
+    DsFrameImage* img=m_data->getCurFrameImage();
+    if(img)
+    {
+        img->setScale(x,y);
+         m_data->emitSignal(DsData::SG_FRAME_IMAGE_PROPERTY_CHANGE);
+    }
+}
 
-
+void DsDataOperator::setCurFrameImageAngle(float angle)
+{
+    DsFrameImage* img=m_data->getCurFrameImage();
+    if(img)
+    {
+        img->setAngle(angle);
+         m_data->emitSignal(DsData::SG_FRAME_IMAGE_PROPERTY_CHANGE);
+    }
+}
 
 
 
