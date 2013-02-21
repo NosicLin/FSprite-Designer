@@ -1,10 +1,17 @@
+#include <stdio.h>
 #include <assert.h>
+
+#include "util/DsUtil.h"
 #include "DsSprite.h"
 #include "DsAnimation.h"
+#include "DsSprite.h"
 
-DsSprite::DsSprite()
+DsSprite::DsSprite(std::string name)
 {
+	m_name="untile";
+	m_id=DsUtil::uniqueStringID();
 }
+
 
 void DsSprite::addAnimation(DsAnimation* anim)
 {
@@ -56,6 +63,8 @@ DsAnimation* DsSprite::getAnimation(int index)
     assert(index>=0&&index<=m_animations.size());
 	return m_animations[index];
 }
+
+
 
 
 

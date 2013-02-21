@@ -57,10 +57,10 @@ DsProject* DsSpriteUtil::loadProject(const std::string& path,std::string& msg)
 		{
 			sprite->addAnimation(anim);
 		}
-	}
-    DsProject* proj=new DsProject(sprite,proj_name);;
-
-	return proj;
+    }
+    return NULL;
+    //DsProject* proj=new DsProject(sprite,proj_name);;
+    //return proj;
 }
 DsAnimation* DsSpriteUtil::loadAnimation(QDomNode node)
 {
@@ -139,20 +139,22 @@ DsFrameImage* DsSpriteUtil::loadFrameImage(QDomNode node)
 
 void DsSpriteUtil::saveProject(DsProject* proj,QXmlStreamWriter& writer)
 {
+    /*
 	writer.writeStartDocument();
 	writer.writeStartElement("FSpriteDesigner");
 	writer.writeAttribute("version","v1.0");
-	writer.writeAttribute("type","sprite");
-	writer.writeAttribute("name",proj->getRealName().c_str());
+    writer.writeAttribute("type","sprite");
+    writer.writeAttribute("name",proj->getRealName().c_str());
 
-	DsSprite* sprite=proj->getSprite();
+    DsSprite* sprite=proj->getSprite();
 
     for(int i=0;i<sprite->getAnimationNu();i++)
 	{
         DsAnimation* animation=sprite->getAnimation(i);
 		writeAnimation(animation,writer);
 	}
-	writer.writeEndElement();
+    writer.writeEndElement();
+    */
 
 }
 void DsSpriteUtil::writeAnimation(DsAnimation* animation,QXmlStreamWriter& writer)

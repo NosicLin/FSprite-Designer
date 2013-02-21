@@ -17,6 +17,7 @@ class  DsAnimation
         static DsAnimation* createWithFirstFrame(const std::string& name);
 
 	public:
+		std::string getID(){return m_id;}
 		std::string getName(){return m_name;}
 		void setName(const std::string& name){m_name=name;}
 
@@ -53,6 +54,8 @@ class  DsAnimation
 	private:
 		std::vector<DsFrame*> m_keyFrames;
 		std::string m_name;
+		std::string m_id;
+
 		int m_fps;
         static int m_defaulFps;
 };

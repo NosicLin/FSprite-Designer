@@ -2,14 +2,12 @@
 #include "DsDataOperator.h"
 #include "util/DsDebug.h"
 
-void DsDataOperator::newProject()
+void DsDataOperator::newSprite()
 {
-	DsSprite* sprite=new DsSprite;
-	DsProject* proj=new DsProject(sprite,"untitled");
-	m_data->addProject(proj);
-	m_data->emitSignal(DsData::SG_DATA_PROPERTY_CHANGE);
-	m_data->setCurProject(proj->getName());
-	m_data->emitSignal(DsData::SG_CUR_PROJECT_CHANGE);
+    DsSprite* sprite=new DsSprite;
+    m_data->addSprite(sprite);
+    m_data->setCurSprite(sprite->getID());
+    m_data->emitSignal(DsData::SG_PROJECT_PROPERTY_CHANGE);
 }
 
 
@@ -276,7 +274,7 @@ void DsDataOperator::newAnimation()
                 anim=DsAnimation::createWithFirstFrame(name);
                 sprite->addAnimation(anim);
                 m_data->emitSignal(DsData::SG_PROJECT_PROPERTY_CHANGE);
-                m_data->setCurAnimation(name);
+                m_data->setCurAnimationByID(anim->getID());
                 m_data->emitSignal(DsData::SG_CUR_ANIMATION_CHANGE);
 				break;
 			}

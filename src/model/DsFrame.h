@@ -74,6 +74,7 @@ class DsKeyFrame:public DsFrame
 		void duplicateFrameImage(const std::string& src_name,const std::string& dst_name);
 
         int getFrameImageNu(){return m_images.size();}
+        DsFrameImage* getFrameImageByID(const std::string& id);
         DsFrameImage* getFrameImage(int index);
         int getFrameImagePos(const std::string& name);
 

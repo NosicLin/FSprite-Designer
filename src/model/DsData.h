@@ -5,12 +5,11 @@
 #include <QImage>
 #include <QObject>
 
-#include "DsProject.h"
+class DsProject;
 class DsSprite;
 class DsAnimation;
 class DsFrame;
 class DsFrameImage;
-
 
 class DsImage
 {
@@ -35,8 +34,8 @@ class DsData:public QObject
 public:
     enum
     {
-		SG_DATA_PROPERTY_CHANGE,
         SG_CUR_PROJECT_CHANGE,
+        SG_CUR_SPRITE_CHANGE,
         SG_CUR_ANIMATION_CHANGE,
         SG_CUR_FRAME_CHANGE,
         SG_CUR_FRAME_IMAGE_CHANGE,
@@ -53,23 +52,26 @@ public:
     DsData();
     ~DsData();
 public:
-	/* project */
-    DsProject* getCurProject();
-    void setCurProject(const std::string& name);
-	DsProject* getProject(const std::string& name);
-	DsProject* getProject(int index);
-    void addProject(DsProject* project);
-	void removeProject(const std::string& name);
-	int getProjectNu();
-    void renameProject(const std::string& name,const std::string& target);
 
-	/* sprite */
+    void setProject(DsProject* proj);
+    DsProject* getProject(){return m_curProject;}
+
+
+    DsSprite* getSprite(int index);
+    int getSpriteNu();
+
+
+    void addSprite(DsProject* project);
+    void removeSpriteByID(const std::string& id);
+    void renameSpriteByID(const std::string& id,const std::string& target);
+
+    void setCurSpriteByID(const std::string& id);
     DsSprite* getCurSprite();
 
 
 	/* animation */
     DsAnimation* getCurAnimation();
-    void setCurAnimation(const std::string& anim);
+    void setCurAnimationByID(const std::string& anim);
 	void dropCurAnimation();
 	bool renameAnimation(const std::string& project,const std::string& animation,const std::string& target);
 
@@ -82,14 +84,13 @@ public:
 
 	/* frame image */
     DsFrameImage* getCurFrameImage();
-    void  setCurFrameImage(const std::string& name);
+    void  setCurFrameImageByID(const std::string& name);
 	void dropCurFrameImage();
-
     void emitSignal(int type);
 
 signals:
-    void signalDataPropertyChange();
     void signalCurProjectChange();
+    void signalCurSpriteChange();
     void signalCurAnimationChange();
     void signalCurFrameChange();
     void signalCurFrameImageChange();
@@ -101,7 +102,6 @@ signals:
 
 private:
     DsProject* m_curProject;
-	std::vector<DsProject*> m_projects;
 };
 #endif /*_DS_DATA_H_*/
 

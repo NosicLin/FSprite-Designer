@@ -1,81 +1,85 @@
-#ifndef _DS_PROJECT_H_
+#ifndef _DS_PROJECT_H_ 
 #define _DS_PROJECT_H_
+#include <vector>
 
-#include <string>
+class DsSprite;
+class DsAnimation;
+class DsFrameImage;
+class DsFrame;
 
-#include "DsSprite.h"
-#include "DsAnimation.h"
-#include "DsFrame.h"
-#include "DsFrameImage.h"
-
-
-
-/* Note: DsProjectState Is Used For Undo and Redo, Every Time Project Property Change,
-         Opeartor will save the state of the project, this method is so easy, but will
-         used too many memory
-*/
-
-class DsProjectState
-{
-    DsSprite* m_sprite;
-    int m_curFrameIndex;
-    std::string m_curAnimation;
-    std::string m_curFrameImage;
-};
-
-class DsProject
+class DsProject 
 {
 	public:
-        DsProject(DsSprite* sprite,std::string name);
+		class DsSpriteInfo
+		{
+			public:
+				DsSprite* m_sprite;
+				int m_curFrameIndex;
+				DsAnimation* m_curAnimation;
+				DsFrameImage* m_curFrameImage;
+
+			public:
+				void setCurAnimationByID(const std::string& id);
+				void setCurFrameIndex(int index);
+				void setCurFrameImageByID(const std::string& id);
+				void dropCurAnimation();
+				void dropCurFrameIndex();
+				void dropCurFrameImage();
+				DsAnimation* getCurAnimation();
+				DsFrameImage* getCurFrameImage();
+				DsFrame* getCurFrame();
+				int getCurFrameIndex();
+
+				DsSpriteInfo(DsSprite* sprite);
+				~DsSpriteInfo();
+		};
+
 	public:
-        DsSprite* getSprite(){return m_sprite;}
-        std::string getName(){return m_name;}
-        std::string getRealName(){return m_realName;}
-        void setName(const std::string& name){m_name=name;}
+		static DsProject* loadFromFile(const std::string& filename);
 
-        /* path */
-        std::string getFileName(){return m_fileName;}
-        void setFileName(const std::string& filename){m_fileName=filename;}
+	public:
+		DsProject();
+		~DsProject();
 
-
+	public:
 		/* animation */
-        DsAnimation* getCurAnimation(){return m_curAnimation;}
-        void setCurAnimation(const std::string& anim);
+        DsSprite* getCurSprite();
+		void setCurSpriteByID(const std::string& id);
+
+		/* animation*/
+		DsAnimation* getCurAnimation();
+		void setCurAnimationByID(const std::string& id);
 		void dropCurAnimation();
 
-		/* Frame */
-        DsFrame* getCurFrame();
-		int getCurFrameIndex(){return m_curFrameIndex;}
+		/* frame */
+		DsFrame* getCurFrame();
+		int getCurFrameIndex();
 		void setCurFrameIndex(int framenu);
 		void dropCurFrameIndex();
-		
-		/* Frame image */
-		DsFrameImage* getCurFrameImage(){return m_curFrameImage;}
-        void setCurFrameImage(const std::string& name);
-        void dropCurFrameImage();
 
-        /* undo/ redo */
-        int curStateIndex();
-        int saveStateNu();
-        void pushState();
-        void popState();
+		/* frame image */
+		DsFrameImage* getCurFrameImage();
+		void setCurFrameImageByID(const std::string& name);
+		void dropCurFrameImage();
+	public:
+		DsSprite* getSprite(int index);
+		DsSprite* getSpriteByID(const std::string& id);
+		int getSpriteNu(){return m_sprites.size();}
+
 
 	private:
-        std::string m_name;
-        std::string m_realName;
-        std::string m_fileName;
+		DsSpriteInfo* m_curSprite;
+		std::vector<DsSpriteInfo*> m_sprites;
 
-		DsSprite* m_sprite;
-		int m_curFrameIndex;
-		DsAnimation* m_curAnimation;
-        DsFrameImage* m_curFrameImage;
-
-        /* used for undo/redo */
-        std::vector<DsProjectState*> m_savedState;
-        int m_curStateIndex;
+		std::string m_projectDir;
+		std::string m_projectFile;
 };
 
 #endif /*_DS_PROJECT_H_*/
+
+
+
+
 
 
 
