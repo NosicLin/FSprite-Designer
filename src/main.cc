@@ -12,10 +12,6 @@
 #include <QDesktopWidget>
 
 
-void initProject();
-void createProjectDog();
-void createProjectCat();
-void createProjectFromFile(const char* filename);
 
 int main(int argc, char *argv[])
 {
@@ -41,115 +37,9 @@ int main(int argc, char *argv[])
     main_frame.setWindowIcon(QIcon(DS_MS_WINDOW_ICON));
     main_frame.showMaximized();
 
-    initProject();
 
     return app.exec();
 }
-
-void initProject()
-{
-    //createProjectDog();
-    //createProjectCat();
-    //createProjectFromFile("dog.xml");
-
-    DsData::shareData()->emitSignal(DsData::SG_DATA_PROPERTY_CHANGE);
-
-    /*
-    DsDataOperator& op=DsOperator::data;
-    op.setCurProject("bird##0");
-    op.setCurAnimation("jump");
-  //  op.setCurFrameIndex(20);
-  */
-}
-
-
-void createProjectDog()
-{
-    DsSprite* sp=new DsSprite();
-
-    DsAnimation* anim=new DsAnimation("jump");
-
-    DsKeyFrame* frame10=new DsKeyFrame(10);
-    DsKeyFrame* frame15=new DsKeyFrame(15);
-    DsKeyFrame* frame20=new DsKeyFrame(20);
-    DsTweenFrame* frame21_39= new DsTweenFrame(NULL,NULL,21);
-    DsKeyFrame* frame40=new DsKeyFrame(40);
-
-    DsFrameImage* img_head=DsFrameImage::create("head.png");
-    img_head->setPos(0,120);
-
-    DsFrameImage* img_body=DsFrameImage::create("body.png");
-
-    DsFrameImage* img_leg=DsFrameImage::create("leg.png");
-    img_leg->setPos(0,-80);
-    DsFrameImage* img_larm=DsFrameImage::create("larm.png");
-
-    img_larm->setPos(-200,0);
-
-    DsFrameImage* img_rarm=DsFrameImage::create("rarm.png");
-    img_rarm->setPos(200,0);
-    DsFrameImage* img_rarm1=DsFrameImage::create("rarm.png");
-    img_rarm1->setPos(-200,0);
-
-    img_rarm->setPos(200,0);
-
-    DsFrameImage* f20_img1=DsFrameImage::create("rarm.png");
-    f20_img1->setPos(200,0);
-    f20_img1->setAngle(-300);
-
-    DsFrameImage* f40_img1=DsFrameImage::create("rarm.png");
-    f40_img1->setPos(300,0);
-
-
-    frame10->pushFrameImage(img_body);
-    frame10->pushFrameImage(img_rarm1);
-    frame10->pushFrameImage(img_rarm);
-
-    frame15->pushFrameImage(img_larm);
-    frame20->pushFrameImage(f20_img1);
-
-    frame40->pushFrameImage(f40_img1);
-
-    anim->pushFrame(frame10);
-    anim->pushFrame(frame15);
-    anim->pushFrame(frame20);
-    anim->pushFrame(frame21_39);
-    anim->pushFrame(frame40);
-
-    sp->addAnimation(anim);
-
-    DsProject* project=new DsProject(sp,"bird");
-    DsData::shareData()->addProject(project);
-}
-
-void createProjectCat()
-{
-    DsSprite* sp=new DsSprite();
-    DsAnimation* anim_jump=DsAnimation::createWithFirstFrame("jump");
-    DsAnimation* anim_run=DsAnimation::createWithFirstFrame("run");
-    DsAnimation* anim_dead=DsAnimation::createWithFirstFrame("dead");
-    sp->addAnimation(anim_jump);
-    sp->addAnimation(anim_run);
-    sp->addAnimation(anim_dead);
-
-    DsProject* project=new DsProject(sp,"cat");
-    DsData::shareData()->addProject(project);
-}
-
-void createProjectFromFile(const char* filename)
-{
-    std::string msg;
-    DsProject* proj=DsSpriteUtil::loadProject(filename,msg);
-    if(proj==NULL)
-    {
-        DsDebug<<"Load Project Failed("<<filename<<","<<msg.c_str()<<")"<<endl;
-    }
-    else
-    {
-        DsData::shareData()->addProject(proj);
-    }
-}
-
 
 
 #endif // MAIN_CC

@@ -6,9 +6,11 @@
 
 class DsUtil
 {
-    public:
-    static QString stoq(const std::string str);
-    static std::string qtos(const QString& q);
+	public:
+		static std::string integerToHexStr(long value);
+		static QString stoq(const std::string str);
+		static std::string qtos(const QString& q);
+		static std::string uniqueStringID();
 };
 
 #endif /*_DS_UTIL_H_*/

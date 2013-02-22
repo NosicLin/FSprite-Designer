@@ -11,7 +11,7 @@ class DsOperator
         static DsIoOperator* io();
 
         /* it a mistake to use static data here */
-        static DsDataOperator data;
+        static DsDataOperator* data();
 };
 
 

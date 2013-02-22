@@ -24,7 +24,7 @@
 	createToolBar();
 	createResourceDisplay();
 	createEditSpace();
-	createSpriteDisplay();
+    createSpriteDisplay();
 	createPropertyDisplay();
 	createDialog();
 	initLayout();
@@ -44,7 +44,7 @@ void DsMainFrame::createEditSpace()
 
 void DsMainFrame::createSpriteDisplay()
 {
-    m_spriteDisplay=new DsSpriteDisplay(m_clientArea);
+  //  m_spriteDisplay=new DsSpriteDisplay(m_clientArea);
 }
 void DsMainFrame::createPropertyDisplay()
 {
@@ -59,25 +59,26 @@ void DsMainFrame::createMenuBar()
 	QMenu* mn_file=menuBar()->addMenu("&File");
 	{	
 		/* new */
-		ms_new=new QAction(QPixmap(DS_MS_NEW),"&New...",this);
-		mn_file->addAction(ms_new);
-		connect(ms_new,SIGNAL(triggered()),this,SLOT(onNew()));
+        ms_newProject=new QAction(QPixmap(DS_MS_NEW),"&New Project",this);
+        mn_file->addAction(ms_newProject);
+        connect(ms_newProject,SIGNAL(triggered()),this,SLOT(onNewProject()));
 
 
 		/* open */
-		ms_open=new QAction(QPixmap(DS_MS_OPEN),"&Open...",this);
-		mn_file->addAction(ms_open);
-		connect(ms_open,SIGNAL(triggered()),this,SLOT(onOpen()));
+        ms_openProject=new QAction(QPixmap(DS_MS_OPEN),"&Open Project",this);
+        mn_file->addAction(ms_openProject);
+        connect(ms_openProject,SIGNAL(triggered()),this,SLOT(onOpenProject()));
+
+
+        ms_newSprite=new QAction(QPixmap(DS_MS_NEW),"&New Sprite",this);
+        mn_file->addAction(ms_newSprite);
+        connect(ms_newSprite,SIGNAL(triggered()),this,SLOT(onNewSprite()));
 
 		/* save */
 		ms_save=new QAction(QPixmap(DS_MS_SAVE),"&Save",this);
 		mn_file->addAction(ms_save);
 		connect(ms_save,SIGNAL(triggered()),this,SLOT(onSave()));
 
-		/* save as */
-		ms_save_as=new QAction(QPixmap(DS_MS_SAVE_AS),"&Save As...",this);
-		mn_file->addAction(ms_save_as);
-		connect(ms_save_as,SIGNAL(triggered()),this,SLOT(onSaveAs()));
 
 		/* close */
 		ms_close=new QAction(QPixmap(DS_MS_CLOSE),"&Close",this);
@@ -238,16 +239,8 @@ void DsMainFrame::createToolBar()
 	addToolBar(Qt::RightToolBarArea,m_toolBar);
 
 	/* New File */
-	tl_new=m_toolBar->addAction(QIcon(DS_TL_NEW),"New File");
-	connect(tl_new,SIGNAL(triggered()),this,SLOT(onNew()));
-
-	/* Open File */
-	tl_open=m_toolBar->addAction(QIcon(DS_TL_OPEN),"Open File");
-	connect(tl_open,SIGNAL(triggered()),this,SLOT(onOpen()));
-
-	/* Save file */
-	tl_save=m_toolBar->addAction(QIcon(DS_TL_SAVE),"Save File");
-	connect(tl_save,SIGNAL(triggered()),this,SLOT(onSave()));
+    tl_new=m_toolBar->addAction(QIcon(DS_TL_NEW),"New Sprite");
+    connect(tl_new,SIGNAL(triggered()),this,SLOT(onNewSprite()));
 
 	m_toolBar->addSeparator();
 
@@ -337,7 +330,7 @@ void DsMainFrame::initLayout()
 
     hlayout->addWidget(left);
     hlayout->addWidget(m_editSpace,1);
-    hlayout->addWidget(m_spriteDisplay);
+    //hlayout->addWidget(m_spriteDisplay);
     //hlayout->setStretchFactor(1,1);
 
     //hsplitter->addWidget(m_spriteDisplay);
@@ -413,9 +406,12 @@ void DsMainFrame::onStop()
     DsOperator::animation()->animationStop();
 }
 
-void DsMainFrame::onOpen()
+void DsMainFrame::onOpenProject()
 {
     DsOperator::io()->loadProject();
+}
+void DsMainFrame::onNewSprite()
+{
 }
 
 void DsMainFrame::onSave()
@@ -423,35 +419,35 @@ void DsMainFrame::onSave()
     DsOperator::io()->saveProject();
 }
 
-void DsMainFrame::onNew()
+void DsMainFrame::onNewProject()
 {
-	DsOperator::data.newProject();
+    DsOperator::data()->newProject();
 }
 
 void DsMainFrame::onAddAnimation()
 {
     DsDebug<<"create Animation"<<endl;
-    DsOperator::data.newAnimation();
+    DsOperator::data()->newAnimation();
 }
 
 void DsMainFrame::onMoveUp()
 {
-    DsOperator::data.frameImageMoveUp();
+    DsOperator::data()->frameImageMoveUp();
 }
 
 void DsMainFrame::onMoveDown()
 {
-    DsOperator::data.frameImageMoveDown();
+    DsOperator::data()->frameImageMoveDown();
 }
 
 void DsMainFrame::onMoveFront()
 {
-    DsOperator::data.frameImageMoveFront();
+    DsOperator::data()->frameImageMoveFront();
 }
 
 void DsMainFrame::onMoveEnd()
 {
-    DsOperator::data.frameImageMoveEnd();
+    DsOperator::data()->frameImageMoveEnd();
 }
 
 

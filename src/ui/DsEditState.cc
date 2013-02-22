@@ -73,8 +73,8 @@ void DsEditStateIdel::mousePressEvent(QMouseEvent* event)
 		{
 			if((*iter)->hit(x,y))
 			{
-                DsDebug<<"hit:"<<(*iter)->getName().c_str()<<endl;
-				DsOperator::data.setCurFrameImage((*iter)->getName());
+                DsDebug<<"hit:"<<(*iter)->getID().c_str()<<endl;
+                DsOperator::data()->setCurFrameImage((*iter)->getID());
                 m_editView->changeToState(&m_editView->m_stateSelect);
                 return;
 			}
@@ -131,13 +131,13 @@ void DsEditStateSelect::mousePressEvent(QMouseEvent* event)
 		{
 			if((*iter)->hit(x,y))
 			{
-                DsDebug<<"hit:"<<(*iter)->getName().c_str()<<endl;
-				DsOperator::data.setCurFrameImage((*iter)->getName());
+                DsDebug<<"hit:"<<(*iter)->getID().c_str()<<endl;
+                DsOperator::data()->setCurFrameImage((*iter)->getID());
 				return;
 			}
 		}
     }
-    DsOperator::data.dropCurFrameImage();
+    DsOperator::data()->dropCurFrameImage();
 
     m_editView->changeToState(&m_editView->m_stateIdel);
 }
@@ -157,7 +157,7 @@ void DsEditStateSelect::keyPressEvent(QKeyEvent* event)
     }
     else if(event->key()==Qt::Key_Delete)
     {
-        DsOperator::data.removeCurFrameImage();
+        DsOperator::data()->removeCurFrameImage();
 
     }
 }
@@ -308,7 +308,7 @@ void DsEditStateTranslate::mousePressEvent(QMouseEvent* event)
             x+=m_movex;
             y+=m_movey;
         }
-        DsOperator::data.setCurFrameImagePos(x,y);
+        DsOperator::data()->setCurFrameImagePos(x,y);
         m_editView->changeToState(&m_editView->m_stateSelect);
 
     }
@@ -550,7 +550,7 @@ void DsEditStateScale::mousePressEvent(QMouseEvent* event)
             sx*=scale;
             sy*=scale;
         }
-        DsOperator::data.setCurFrameImageScale(sx,sy);
+        DsOperator::data()->setCurFrameImageScale(sx,sy);
         m_editView->changeToState(&m_editView->m_stateSelect);
     }
     else if(event->buttons()&Qt::RightButton)
@@ -690,7 +690,7 @@ void DsEditStateRotate::mousePressEvent(QMouseEvent* event)
         assert(cur_frameImg);
 
         float g=cur_frameImg->getAngle();
-        DsOperator::data.setCurFrameImageAngle(g+m_angle);
+        DsOperator::data()->setCurFrameImageAngle(g+m_angle);
         m_editView->changeToState(&m_editView->m_stateSelect);
     }
 
@@ -806,8 +806,8 @@ void DsEditStateAddImage::mousePressEvent(QMouseEvent* event)
 {
     if(event->buttons()&Qt::LeftButton)
     {
-        DsOperator::data.addFrameImage(m_image);
-        DsOperator::data.setCurFrameImage(m_image->getName());
+        DsOperator::data()->addFrameImage(m_image);
+        DsOperator::data()->setCurFrameImage(m_image->getID());
         m_editView->toDefaultState();
 
     }

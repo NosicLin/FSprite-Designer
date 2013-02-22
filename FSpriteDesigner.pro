@@ -6,7 +6,6 @@ SOURCES += \
     src/ui/DsEditView.cc \
     src/ui/DsEditSpace.cc \
     src/operator/DsDataOperator.cc \
-    src/model/DsSprite.cc \
     src/model/DsResourceMgr.cc \
     src/model/DsProject.cc \
     src/model/DsFrame.cc \
@@ -21,7 +20,8 @@ SOURCES += \
     src/operator/DsAnimationOperator.cc \
     src/util/DsSpriteUtil.cc \
     src/util/DsUtil.cc \
-    src/operator/DsIoOperator.cc
+    src/operator/DsIoOperator.cc \
+    src/model/DsSprite.cc
 
 HEADERS += \
     src/ui/DsSpriteDisplay.h \
@@ -34,7 +34,6 @@ HEADERS += \
     src/operator/DsDataOperator.h \
     src/model/DsSprite.h \
     src/model/DsResourceMgr.h \
-    src/model/DsProject.h \
     src/model/DsFrameImage.h \
     src/model/DsFrame.h \
     src/model/DsData.h \
@@ -47,7 +46,8 @@ HEADERS += \
     src/operator/DsAnimationOperator.h \
     src/util/DsSpriteUtil.h \
     src/util/DsUtil.h \
-    src/operator/DsIoOperator.h
+    src/operator/DsIoOperator.h \
+    src/model/DsProject.h
 
 INCLUDEPATH +=src/
 

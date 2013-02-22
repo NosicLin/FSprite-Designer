@@ -17,6 +17,7 @@ class  DsAnimation
         static DsAnimation* createWithFirstFrame(const std::string& name);
 
 	public:
+		std::string getID(){return m_id;}
 		std::string getName(){return m_name;}
 		void setName(const std::string& name){m_name=name;}
 
@@ -33,7 +34,7 @@ class  DsAnimation
 		void insertEmptyKeyFrame(int index);
         void insertTween(int index);
         void removeTween(int index);
-		int getKeyFrameNu(){return m_keyFrames.size();};
+        int getKeyFrameNu(){return m_keyFrames.size();}
 
 		void setFps(int fps) {m_fps=fps;}
 		int getFps(){return m_fps;}
@@ -53,6 +54,8 @@ class  DsAnimation
 	private:
 		std::vector<DsFrame*> m_keyFrames;
 		std::string m_name;
+		std::string m_id;
+
 		int m_fps;
         static int m_defaulFps;
 };

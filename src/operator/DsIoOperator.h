@@ -7,10 +7,10 @@ class DsIoOperator
 	public:
 		DsIoOperator();
 	public:
-        void saveProject(const std::string& name);
         void saveProject();
         void loadProject();
-		void exportFSprite(const std::string& name);
+        void exportFSpriteByID(const std::string& id);
+
 	private:
 		QWidget* m_mainWidget;
 		QDialog* m_saveDialog;

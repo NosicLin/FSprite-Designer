@@ -1,29 +1,28 @@
-#include <stdio.h>
 #include <assert.h>
-
 #include "DsProject.h"
-#include "DsAnimation.h"
 #include "DsSprite.h"
+#include "DsAnimation.h"
+#include "DsFrame.h"
+#include "DsFrameImage.h"
 
-DsProject::DsProject(DsSprite* sprite,std::string name)
+
+DsProject::DsSpriteInfo::DsSpriteInfo(DsSprite* sprite)
 {
-    static int s_id=0;
-    char buf[128];
-
-    sprintf(buf,"##%d",s_id++);
-    m_realName=name;
-
-    m_name=name+std::string(buf);
-
-    m_sprite=sprite;
-    m_curAnimation=NULL;
     m_curFrameIndex=-1;
+    m_curAnimation=0;
     m_curFrameImage=NULL;
+    m_sprite=sprite;
+
 }
 
-void DsProject::setCurAnimation(const std::string& name)
+DsProject::DsSpriteInfo::~DsSpriteInfo()
 {
-    m_curAnimation=m_sprite->getAnimation(name);
+    delete m_sprite;
+}
+
+void DsProject::DsSpriteInfo::setCurAnimation(const std::string& id)
+{
+    m_curAnimation=m_sprite->getAnimation(id);
     assert(m_curAnimation);
 
     if(m_curAnimation->getFrameNu()>0)
@@ -37,7 +36,8 @@ void DsProject::setCurAnimation(const std::string& name)
     m_curFrameImage=NULL;
 }
 
-void DsProject::setCurFrameIndex(int frame)
+
+void DsProject::DsSpriteInfo::setCurFrameIndex(int frame)
 {
     if(!m_curAnimation)
     {
@@ -47,38 +47,40 @@ void DsProject::setCurFrameIndex(int frame)
     m_curFrameImage=NULL;
 }
 
-void DsProject::setCurFrameImage(const std::string& name)
+void DsProject::DsSpriteInfo::setCurFrameImage(const std::string& id)
 {
     if(m_curFrameIndex==-1)
     {
         return;
     }
     DsFrame* frame=m_curAnimation->getFrame(m_curFrameIndex);
+
     assert(frame);
     assert(frame->getType()==DsFrame::FRAME_KEY);
-    m_curFrameImage=((DsKeyFrame*)frame)->getFrameImage(name);
+    m_curFrameImage=((DsKeyFrame*)frame)->getFrameImage(id);
     assert(m_curFrameImage);
 }
 
 
-void DsProject::dropCurAnimation()
+void DsProject::DsSpriteInfo::dropCurAnimation()
 {
     m_curAnimation=NULL;
     m_curFrameIndex=-1;
     m_curFrameImage=NULL;
 }
-void DsProject::dropCurFrameIndex()
+
+void DsProject::DsSpriteInfo::dropCurFrameIndex()
 {
     m_curFrameIndex=-1;
     m_curFrameImage=NULL;
 }
-void DsProject::dropCurFrameImage()
+
+void DsProject::DsSpriteInfo::dropCurFrameImage()
 {
     m_curFrameImage=NULL;
 }
 
-
-DsFrame* DsProject::getCurFrame()
+DsFrame* DsProject::DsSpriteInfo::getCurFrame()
 {
     if(!m_curAnimation)
     {
@@ -88,9 +90,268 @@ DsFrame* DsProject::getCurFrame()
     {
         return NULL;
     }
-
     return m_curAnimation->getFrame(m_curFrameIndex);
 }
+
+DsAnimation* DsProject::DsSpriteInfo::getCurAnimation()
+{
+	return m_curAnimation;
+}
+
+DsFrameImage* DsProject::DsSpriteInfo::getCurFrameImage()
+{
+	return m_curFrameImage;
+}
+
+int DsProject::DsSpriteInfo::getCurFrameIndex()
+{
+	return m_curFrameIndex;
+}
+
+
+
+
+
+
+DsProject::DsProject()
+{
+    m_curSprite=NULL;
+}
+
+DsProject::~DsProject()
+{
+    for(int i=0;i<m_sprites.size();i++)
+    {
+        delete m_sprites[i];
+    }
+    m_sprites.clear();
+}
+
+DsSprite* DsProject::getCurSprite()
+{
+	if(m_curSprite)
+	{
+		return m_curSprite->m_sprite;
+	}
+	return NULL;
+}
+
+void DsProject::setCurSprite(const std::string& id)
+{
+	for(int i=0;i<m_sprites.size();i++)
+	{
+        if(m_sprites[i]->m_sprite->getID()==id)
+		{
+			m_curSprite=m_sprites[i];
+			return;
+		}
+	}
+	assert(0); /*never reach here */
+}
+
+DsAnimation* DsProject::getCurAnimation()
+{
+	if(m_curSprite)
+	{
+		return m_curSprite->getCurAnimation();
+	}
+	return NULL;
+}
+
+void DsProject::setCurAnimation(const std::string& id)
+{
+	if(m_curSprite)
+	{
+        m_curSprite->setCurAnimation(id);
+	}
+}
+void DsProject::dropCurAnimation()
+{
+	if(m_curSprite)
+	{
+		m_curSprite->dropCurAnimation();
+	}
+}
+
+DsFrame* DsProject::getCurFrame()
+{
+	if(m_curSprite)
+	{
+		m_curSprite->getCurFrame();
+    }
+    return NULL;
+}
+
+int DsProject::getCurFrameIndex()
+{
+	if(m_curSprite)
+	{
+		m_curSprite->getCurFrameIndex();
+	}
+	return -1;
+}
+void DsProject::setCurFrameIndex(int index)
+{
+	if(m_curSprite)
+	{
+		m_curSprite->setCurFrameIndex(index);
+	}
+}
+void DsProject::dropCurFrameIndex()
+{
+	if(m_curSprite)
+	{
+		m_curSprite->dropCurFrameIndex();
+	}
+}
+
+
+DsFrameImage* DsProject::getCurFrameImage()
+{
+	if(m_curSprite)
+	{
+		return m_curSprite->getCurFrameImage();
+	}
+	return NULL;
+}
+
+void DsProject::setCurFrameImage(const std::string& id)
+{
+	if(m_curSprite)
+	{
+        return m_curSprite->setCurFrameImage(id);
+	}
+}
+
+void DsProject::dropCurFrameImage()
+{
+	if(m_curSprite)
+	{
+		m_curSprite->dropCurFrameImage();
+	}
+}
+
+
+DsSprite* DsProject::getSprite(int index)
+{
+	assert(index>=0&&index<m_sprites.size());
+	return m_sprites[index]->m_sprite;
+}
+
+DsSprite* DsProject::getSprite(const std::string& id)
+{
+	for(int i=0;i<m_sprites.size();i++)
+	{
+        if(m_sprites[i]->m_sprite->getID()==id)
+		{
+			return m_sprites[i]->m_sprite;
+		}
+	}
+	assert(0); /*never reach here */
+	return NULL;
+}
+
+
+void DsProject::addSprite(DsSprite* sprite)
+{
+    m_sprites.push_back(new DsSpriteInfo(sprite));
+}
+
+bool DsProject::hasSpriteWithName(const std::string& name)
+{
+    for(int i=0;i<m_sprites.size();i++)
+    {
+        if(m_sprites[i]->m_sprite->getName()==name)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

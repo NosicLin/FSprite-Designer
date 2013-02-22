@@ -5,6 +5,7 @@
 #include "DsResourceMgr.h"
 #include "DsData.h"
 #include "util/DsDebug.h"
+#include "util/DsUtil.h"
 
 
 DsFrameImage::~DsFrameImage()
@@ -14,18 +15,14 @@ DsFrameImage::~DsFrameImage()
 DsFrameImage* DsFrameImage::create(const std::string& img_name)
 {
     DsImage* image=DsResourceMgr::loadImage(img_name);
-    DsFrameImage* ret=new DsFrameImage(img_name);
+    DsFrameImage* ret=new DsFrameImage;
     ret->setImage(image);
     return ret;
 }
 
-static int s_id=0;
-DsFrameImage::DsFrameImage(const std::string& name)
+DsFrameImage::DsFrameImage()
 {
-    char buf[128];
-    sprintf(buf,"%d",s_id++);
-    std::string unique=std::string("##")+std::string(buf);
-    m_name=name+unique;
+    m_id=DsUtil::uniqueStringID();
     m_image=NULL;
     m_width=0;
     m_height=0;
@@ -42,13 +39,7 @@ DsFrameImage::DsFrameImage(const std::string& name)
 
 void DsFrameImage::setImage(DsImage* img)
 {
-    char buf[128];
-    sprintf(buf,"%d",s_id++);
-    std::string unique=std::string("##")+std::string(buf);
-
     m_image=img;
-    m_name=img->name+unique;
-
     m_width=img->image->width();
     m_height=img->image->height();
 }
@@ -78,12 +69,9 @@ bool DsFrameImage::hit(float x,float y)
 
 DsFrameImage* DsFrameImage::clone()
 {
-    DsFrameImage* ret=new DsFrameImage(m_name);
+    DsFrameImage* ret=new DsFrameImage;
     *ret=*this;
     ret->setImage(this->m_image);
     return ret;
 }
-
-
-
 
