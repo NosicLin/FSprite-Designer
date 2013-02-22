@@ -24,6 +24,15 @@ DsData::~DsData()
 {
 }
 
+void DsData::setProject(DsProject* proj)
+{
+    if(m_curProject)
+    {
+        delete m_curProject;
+    }
+    m_curProject=proj;
+}
+
 
 DsSprite* DsData::getCurSprite()
 {
@@ -34,13 +43,10 @@ DsSprite* DsData::getCurSprite()
 	return NULL;
 }
 
-void DsData::setCurSpriteByID(const std::string& id)
+void DsData::setCurSprite(const std::string& id)
 {
-	m_curProject->setCurSpriteByID(id);
+    m_curProject->setCurSprite(id);
 }
-
-
-
 
 
 
@@ -94,11 +100,11 @@ DsAnimation* DsData::getCurAnimation()
 	return NULL;
 }
 
-void DsData::setCurAnimationByID(const std::string& id)
+void DsData::setCurAnimation(const std::string& id)
 {
 	if(m_curProject)
 	{
-        m_curProject->setCurAnimationByID(id);
+        m_curProject->setCurAnimation(id);
 	}
 }
 
@@ -119,6 +125,8 @@ DsFrame* DsData::getCurFrame()
 	return NULL;
 }
 
+
+
 int DsData::getCurFrameIndex()
 {
 	if(m_curProject)
@@ -127,6 +135,8 @@ int DsData::getCurFrameIndex()
 	}
 	return -1;
 }
+
+
 
 void DsData::setCurFrameIndex(int framenu)
 {
@@ -171,11 +181,11 @@ DsFrameImage* DsData::getCurFrameImage()
 	return NULL;
 }
 
-void  DsData::setCurFrameImageByID(const std::string& id)
+void  DsData::setCurFrameImage(const std::string& id)
 {
 	if(m_curProject)
 	{
-        m_curProject->setCurFrameImageByID(id);
+        m_curProject->setCurFrameImage(id);
 	}
 }
 

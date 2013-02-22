@@ -45,7 +45,7 @@ void DsAnimationOperator::scheduledTimer()
 			cur_frame=0;
 		}
 
-        DsOperator::data.setCurFrameIndex(cur_frame);
+        DsOperator::data()->setCurFrameIndex(cur_frame);
 		m_timer->start(1000/fps);
 	}
 }

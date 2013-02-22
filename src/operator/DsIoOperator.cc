@@ -7,7 +7,6 @@
 #include "DsOperator.h"
 #include "util/DsSpriteUtil.h"
 
-
 DsIoOperator::DsIoOperator()
 {
 	m_mainWidget=NULL;
@@ -18,7 +17,8 @@ DsIoOperator::DsIoOperator()
 
 
 
-void DsIoOperator::saveProject(const std::string& name)
+/*
+void DsIoOperator::saveProject()
 {
     DsProject*  proj=m_data->getProject(name);
     assert(proj);
@@ -39,8 +39,10 @@ void DsIoOperator::saveProject(const std::string& name)
     proj->setFileName(fileName.toStdString());
 }
 
+*/
 void DsIoOperator::loadProject()
 {
+	/*
     QString file=QFileDialog::getOpenFileName(
                 m_mainWidget,
                 QString("Open FSprite Project"),
@@ -63,15 +65,18 @@ void DsIoOperator::loadProject()
     proj->setFileName(file.toStdString());
     m_data->setCurProject(proj);
     m_data->emitSignal(DsData::SG_CUR_PROJECT_CHANGE);
+	*/
 }
 
 void DsIoOperator::saveProject()
 {
+	/*
     DsProject* project=DsData::shareData()->getCurProject();
     if(project!=NULL)
     {
         saveProject(project->getName());
     }
+	*/
 }
 
 

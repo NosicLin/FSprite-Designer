@@ -48,7 +48,7 @@ DsProject* DsSpriteUtil::loadProject(const std::string& path,std::string& msg)
         return NULL;
     }
     std::string proj_name=DsUtil::qtos(root.attribute("name"));
-	DsSprite* sprite=new DsSprite;
+    DsSprite* sprite=new DsSprite("fsf");
     QDomNodeList anims=doc.elementsByTagName("animation");
     for(int i=0;i<anims.count();i++)
 	{

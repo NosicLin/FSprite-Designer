@@ -19,9 +19,10 @@ class DsProject
 				DsFrameImage* m_curFrameImage;
 
 			public:
-				void setCurAnimationByID(const std::string& id);
+                void setCurAnimation(const std::string& id);
 				void setCurFrameIndex(int index);
-				void setCurFrameImageByID(const std::string& id);
+                void setCurFrameImage(const std::string& id);
+
 				void dropCurAnimation();
 				void dropCurFrameIndex();
 				void dropCurFrameImage();
@@ -42,13 +43,17 @@ class DsProject
 		~DsProject();
 
 	public:
-		/* animation */
+        /* animation */
+        void addSprite(DsSprite* sprite);
+        bool hasSpriteWithName(const std::string& name);
+
         DsSprite* getCurSprite();
-		void setCurSpriteByID(const std::string& id);
+        void setCurSprite(const std::string& id);
+
 
 		/* animation*/
 		DsAnimation* getCurAnimation();
-		void setCurAnimationByID(const std::string& id);
+        void setCurAnimation(const std::string& id);
 		void dropCurAnimation();
 
 		/* frame */
@@ -59,13 +64,13 @@ class DsProject
 
 		/* frame image */
 		DsFrameImage* getCurFrameImage();
-		void setCurFrameImageByID(const std::string& name);
+        void setCurFrameImage(const std::string& name);
 		void dropCurFrameImage();
 	public:
 		DsSprite* getSprite(int index);
-		DsSprite* getSpriteByID(const std::string& id);
-		int getSpriteNu(){return m_sprites.size();}
+        int getSpriteNu(){return m_sprites.size();}
 
+        DsSprite* getSprite(const std::string& id);
 
 	private:
 		DsSpriteInfo* m_curSprite;

@@ -52,26 +52,23 @@ public:
     DsData();
     ~DsData();
 public:
-
     void setProject(DsProject* proj);
     DsProject* getProject(){return m_curProject;}
-
 
     DsSprite* getSprite(int index);
     int getSpriteNu();
 
 
-    void addSprite(DsProject* project);
-    void removeSpriteByID(const std::string& id);
-    void renameSpriteByID(const std::string& id,const std::string& target);
+    void removeSprite(const std::string& id);
+    void renameSprite(const std::string& id,const std::string& target);
 
-    void setCurSpriteByID(const std::string& id);
+    void setCurSprite(const std::string& id);
     DsSprite* getCurSprite();
 
 
 	/* animation */
     DsAnimation* getCurAnimation();
-    void setCurAnimationByID(const std::string& anim);
+    void setCurAnimation(const std::string& anim);
 	void dropCurAnimation();
 	bool renameAnimation(const std::string& project,const std::string& animation,const std::string& target);
 
@@ -84,7 +81,7 @@ public:
 
 	/* frame image */
     DsFrameImage* getCurFrameImage();
-    void  setCurFrameImageByID(const std::string& name);
+    void  setCurFrameImage(const std::string& name);
 	void dropCurFrameImage();
     void emitSignal(int type);
 

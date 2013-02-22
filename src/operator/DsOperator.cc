@@ -1,6 +1,10 @@
 #include "DsOperator.h"
 
-DsDataOperator DsOperator::data;
+
+
+
+
+static DsDataOperator* s_data=NULL;
 static DsAnimationOperator* s_animation=NULL;
 static DsIoOperator* s_io=NULL;
 
@@ -20,6 +24,14 @@ DsIoOperator* DsOperator::io()
         s_io=new DsIoOperator;
     }
     return s_io;
+}
+DsDataOperator* DsOperator::data()
+{
+    if(s_data==NULL)
+    {
+        s_data=new DsDataOperator;
+    }
+    return s_data;
 }
 
 

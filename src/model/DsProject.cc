@@ -5,9 +5,24 @@
 #include "DsFrame.h"
 #include "DsFrameImage.h"
 
-void DsProject::DsSpriteInfo::setCurAnimationByID(const std::string& id)
+
+DsProject::DsSpriteInfo::DsSpriteInfo(DsSprite* sprite)
 {
-    m_curAnimation=m_sprite->getAnimationByID(id);
+    m_curFrameIndex=-1;
+    m_curAnimation=0;
+    m_curFrameImage=NULL;
+    m_sprite=sprite;
+
+}
+
+DsProject::DsSpriteInfo::~DsSpriteInfo()
+{
+    delete m_sprite;
+}
+
+void DsProject::DsSpriteInfo::setCurAnimation(const std::string& id)
+{
+    m_curAnimation=m_sprite->getAnimation(id);
     assert(m_curAnimation);
 
     if(m_curAnimation->getFrameNu()>0)
@@ -32,17 +47,17 @@ void DsProject::DsSpriteInfo::setCurFrameIndex(int frame)
     m_curFrameImage=NULL;
 }
 
-void DsProject::DsSpriteInfo::setCurFrameImageByID(const std::string& id)
+void DsProject::DsSpriteInfo::setCurFrameImage(const std::string& id)
 {
     if(m_curFrameIndex==-1)
     {
         return;
     }
-
     DsFrame* frame=m_curAnimation->getFrame(m_curFrameIndex);
+
     assert(frame);
     assert(frame->getType()==DsFrame::FRAME_KEY);
-    m_curFrameImage=((DsKeyFrame*)frame)->getFrameImageByID(id);
+    m_curFrameImage=((DsKeyFrame*)frame)->getFrameImage(id);
     assert(m_curFrameImage);
 }
 
@@ -98,6 +113,20 @@ int DsProject::DsSpriteInfo::getCurFrameIndex()
 
 
 
+DsProject::DsProject()
+{
+    m_curSprite=NULL;
+}
+
+DsProject::~DsProject()
+{
+    for(int i=0;i<m_sprites.size();i++)
+    {
+        delete m_sprites[i];
+    }
+    m_sprites.clear();
+}
+
 DsSprite* DsProject::getCurSprite()
 {
 	if(m_curSprite)
@@ -107,7 +136,7 @@ DsSprite* DsProject::getCurSprite()
 	return NULL;
 }
 
-void DsProject::setCurSpriteByID(const std::string& id)
+void DsProject::setCurSprite(const std::string& id)
 {
 	for(int i=0;i<m_sprites.size();i++)
 	{
@@ -129,11 +158,11 @@ DsAnimation* DsProject::getCurAnimation()
 	return NULL;
 }
 
-void DsProject::setCurAnimationByID(const std::string& id)
+void DsProject::setCurAnimation(const std::string& id)
 {
 	if(m_curSprite)
 	{
-		m_curSprite->setCurAnimationByID(id);
+        m_curSprite->setCurAnimation(id);
 	}
 }
 void DsProject::dropCurAnimation()
@@ -186,13 +215,14 @@ DsFrameImage* DsProject::getCurFrameImage()
 	return NULL;
 }
 
-void DsProject::setCurFrameImageByID(const std::string& id)
+void DsProject::setCurFrameImage(const std::string& id)
 {
 	if(m_curSprite)
 	{
-		return m_curSprite->setCurFrameImageByID(id);
+        return m_curSprite->setCurFrameImage(id);
 	}
 }
+
 void DsProject::dropCurFrameImage()
 {
 	if(m_curSprite)
@@ -208,7 +238,7 @@ DsSprite* DsProject::getSprite(int index)
 	return m_sprites[index]->m_sprite;
 }
 
-DsSprite* DsProject::getSpriteByID(const std::string& id)
+DsSprite* DsProject::getSprite(const std::string& id)
 {
 	for(int i=0;i<m_sprites.size();i++)
 	{
@@ -221,6 +251,23 @@ DsSprite* DsProject::getSpriteByID(const std::string& id)
 	return NULL;
 }
 
+
+void DsProject::addSprite(DsSprite* sprite)
+{
+    m_sprites.push_back(new DsSpriteInfo(sprite));
+}
+
+bool DsProject::hasSpriteWithName(const std::string& name)
+{
+    for(int i=0;i<m_sprites.size();i++)
+    {
+        if(m_sprites[i]->m_sprite->getName()==name)
+        {
+            return true;
+        }
+    }
+    return false;
+}
 
 
 

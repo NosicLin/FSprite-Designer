@@ -14,8 +14,9 @@ class DsSprite
 	public:
 		typedef std::vector<DsAnimation*>::iterator Iterator;
 
-	public:
+    public:
         DsSprite();
+        DsSprite(const std::string& name);
 	public:  
 		std::string getID(){return m_id;}
         std::string getName(){return m_name;}
@@ -25,12 +26,12 @@ class DsSprite
         void addAnimation(DsAnimation* anim);
 		void removeAnimation(const std::string& name);
 
-        DsAnimation* getAnimationByID(const std::string& id);
-        DsAnimation* getAnimation(const std::string& name);
-		DsAnimation* getAnimation(int index);
+        DsAnimation* getAnimation(const std::string& id);
+        DsAnimation* getAnimationWithName(const std::string& name);
+        DsAnimation* getAnimation(int index);
 
         int getAnimationNu(){return m_animations.size();}
-        bool hasAnimation(const std::string& name);
+        bool hasAnimationWithName(const std::string& name);
 
 		Iterator begin(){return m_animations.begin();}
         Iterator end(){return m_animations.end();}

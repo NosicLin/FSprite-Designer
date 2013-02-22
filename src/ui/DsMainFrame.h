@@ -50,11 +50,12 @@ class DsMainFrame:public QMainWindow
 
         public slots:
             /* file */
-        void onNew();
-        void onOpen();
+        void onNewProject();
+        void onOpenProject();
         void onSave();
-		void onSaveAs(){}
-		void onClose(){}
+        void onClose(){}
+        void onNewSprite();
+
 		void onExport(){}
 		void onQuit(){}
 
@@ -98,10 +99,12 @@ class DsMainFrame:public QMainWindow
 
 	private:
 		/* file */
-		QAction* ms_new;
-		QAction* ms_open;
-		QAction* ms_save;
-		QAction* ms_save_as;
+        QAction* ms_newProject;
+        QAction* ms_openProject;
+        QAction* ms_newSprite;
+
+        QAction* ms_save;
+
 		QAction* ms_close;
 		QAction* ms_export;
 		QAction* ms_quit;

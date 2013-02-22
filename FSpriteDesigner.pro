@@ -20,7 +20,8 @@ SOURCES += \
     src/operator/DsAnimationOperator.cc \
     src/util/DsSpriteUtil.cc \
     src/util/DsUtil.cc \
-    src/operator/DsIoOperator.cc
+    src/operator/DsIoOperator.cc \
+    src/model/DsSprite.cc
 
 HEADERS += \
     src/ui/DsSpriteDisplay.h \
@@ -45,7 +46,8 @@ HEADERS += \
     src/operator/DsAnimationOperator.h \
     src/util/DsSpriteUtil.h \
     src/util/DsUtil.h \
-    src/operator/DsIoOperator.h
+    src/operator/DsIoOperator.h \
+    src/model/DsProject.h
 
 INCLUDEPATH +=src/
 

@@ -19,6 +19,7 @@
 //Turn off debug output
 //#define QT_NO_DEBUG_OUTPUT
 
+#if 0
 #ifdef QT_NO_DEBUG_OUTPUT
 #define qDebug while(false)qDebug
 #endif
@@ -686,3 +687,4 @@ void DsFrameTreeWidget::slotItemClicked(QTreeWidgetItem* item,int column)
             this,SLOT(slotProjectRefresh()));
 
 }
+#endif

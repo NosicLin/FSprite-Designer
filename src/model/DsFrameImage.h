@@ -11,7 +11,7 @@ class DsFrameImage
 		~DsFrameImage();
 
     public:
-        std::string getName(){return m_name;}
+        std::string getID(){return m_id;}
         DsImage* getImage(){return m_image;}
 		void setImage(DsImage* img);
 
@@ -62,10 +62,10 @@ class DsFrameImage
 
 
 	protected:
-		DsFrameImage(const  std::string& name);
+        DsFrameImage();
 
 	private:
-        std::string m_name;
+        std::string m_id;
         DsImage* m_image;
 
 		int m_width,m_height;
