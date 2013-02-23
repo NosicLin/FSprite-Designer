@@ -43,6 +43,7 @@ class DsSpriteTreeWidget:public QTreeWidget
     public slots:
         void slotProjectInited();
         void slotCurProjectChange();
+        void slotCurSpriteChange();
         void slotCurAnimationChange();
         void slotCurrentItemChanged ( QTreeWidgetItem * current, QTreeWidgetItem * previous);
 

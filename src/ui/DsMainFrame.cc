@@ -44,7 +44,7 @@ void DsMainFrame::createEditSpace()
 
 void DsMainFrame::createSpriteDisplay()
 {
-  //  m_spriteDisplay=new DsSpriteDisplay(m_clientArea);
+    m_spriteDisplay=new DsSpriteDisplay(m_clientArea);
 }
 void DsMainFrame::createPropertyDisplay()
 {
@@ -330,7 +330,7 @@ void DsMainFrame::initLayout()
 
     hlayout->addWidget(left);
     hlayout->addWidget(m_editSpace,1);
-    //hlayout->addWidget(m_spriteDisplay);
+    hlayout->addWidget(m_spriteDisplay);
     //hlayout->setStretchFactor(1,1);
 
     //hsplitter->addWidget(m_spriteDisplay);
