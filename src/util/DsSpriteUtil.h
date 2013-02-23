@@ -14,13 +14,13 @@
 class DsSpriteUtil
 {
 public:
-    static DsProject* loadProject(const std::string& path,std::string& msg);
-    static void saveProject(DsProject* proj,QXmlStreamWriter& writer);
+    static DsProject* loadProject(const std::string& path);
+    static void saveProject(DsProject* proj,const std::string& path);
+
 protected:
     static DsFrame* loadFrame(QDomNode node);
     static DsAnimation* loadAnimation(QDomNode node);
     static DsFrameImage* loadFrameImage(QDomNode node);
-
 	static void writeFrame(DsFrame* frame,QXmlStreamWriter& writer);
 	static void writeFrameImage(DsFrameImage* image,QXmlStreamWriter& writer);
 	static void writeAnimation(DsAnimation* image,QXmlStreamWriter& writer);

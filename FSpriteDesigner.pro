@@ -18,10 +18,10 @@ SOURCES += \
     src/operator/DsOperator.cc \
     src/ui/DsAnmationEdit.cc \
     src/operator/DsAnimationOperator.cc \
-    src/util/DsSpriteUtil.cc \
     src/util/DsUtil.cc \
     src/operator/DsIoOperator.cc \
-    src/model/DsSprite.cc
+    src/model/DsSprite.cc \
+    src/util/DsUtilLoader.cc
 
 HEADERS += \
     src/ui/DsSpriteDisplay.h \
@@ -44,10 +44,11 @@ HEADERS += \
     src/ui/DsAnimationEdit.h \
     src/util/DsDebug.h \
     src/operator/DsAnimationOperator.h \
-    src/util/DsSpriteUtil.h \
     src/util/DsUtil.h \
     src/operator/DsIoOperator.h \
-    src/model/DsProject.h
+    src/model/DsProject.h \
+    src/util/DsUtilLoader.h \
+    src/model/DsModel.h
 
 INCLUDEPATH +=src/
 

@@ -3,12 +3,6 @@
 #include "util/DsDebug.h"
 
 
-void DsDataOperator::newProject()
-{
-    DsProject* proj=new DsProject;
-    m_data->setProject(proj);
-}
-
 void DsDataOperator::newSprite()
 {
     DsProject* proj=m_data->getProject();

@@ -18,7 +18,8 @@ class DsSprite
         DsSprite();
         DsSprite(const std::string& name);
 	public:  
-		std::string getID(){return m_id;}
+        std::string getID(){return m_id;}
+        void setID(const std::string& id){m_id=id;}
         std::string getName(){return m_name;}
         void setName(const std::string& name){m_name=name;}
 

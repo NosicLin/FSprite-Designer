@@ -164,6 +164,7 @@ void DsAnimationEdit::drawKeyFrames(QPainter& painter)
 void DsAnimationEdit::drawCurSelectFrame(QPainter& painter)
 {
     int cur_frame=DsData::shareData()->getCurFrameIndex();
+    DsDebug<<"curFrame:"<<cur_frame<<endl;
     if(cur_frame==-1)
     {
         return;

@@ -412,6 +412,7 @@ void DsMainFrame::onOpenProject()
 }
 void DsMainFrame::onNewSprite()
 {
+    DsOperator::data()->newSprite();
 }
 
 void DsMainFrame::onSave()
@@ -421,7 +422,7 @@ void DsMainFrame::onSave()
 
 void DsMainFrame::onNewProject()
 {
-    DsOperator::data()->newProject();
+    DsOperator::io()->newProject();
 }
 
 void DsMainFrame::onAddAnimation()

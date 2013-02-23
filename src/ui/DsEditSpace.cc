@@ -178,7 +178,7 @@ void DsEditSpace::slotTabbarCurrentChange(int index)
     DsSprite* sprite=DsData::shareData()->getCurSprite();
     DsAnimation* anim=sprite->getAnimation(index);
     assert(sprite&&anim);
-    DsOperator::data()->setCurAnimation(anim->getName());
+    DsOperator::data()->setCurAnimation(anim->getID());
 }
 
 
