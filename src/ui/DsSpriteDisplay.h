@@ -32,7 +32,7 @@ class DsSpriteDisplay:public QWidget
 
 };
 
-#if 0
+
 class DsSpriteTreeWidget:public QTreeWidget
 {
     Q_OBJECT
@@ -130,5 +130,4 @@ protected:
     //void setCurAnimation(std::string animtionName);
 };
 
-#endif
 #endif /*_DS_SPRITE_DISPLAY_H_*/

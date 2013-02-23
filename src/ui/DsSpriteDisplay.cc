@@ -20,7 +20,7 @@
 //Turn off debug output
 //#define QT_NO_DEBUG_OUTPUT
 
-#if 0
+
 #ifdef QT_NO_DEBUG_OUTPUT
 #define qDebug while(false)qDebug
 #endif
@@ -122,11 +122,11 @@ void DsSpriteTreeWidget::slotCurProjectChange()
         m_changedCausedByView = false;
         return ;
     }
-    if(DsData::shareData()->getCurProject() == NULL)
+    if(DsData::shareData()->getProject() == NULL)
     {
         return;
     }
-    std::string curProjectName = DsData::shareData()->getCurProject()->getName();
+    std::string curProjectName = DsData::shareData()->getProject()->getName();
     QList<QTreeWidgetItem* > itemList;
     itemList = this->findItems(s2q(curProjectName),Qt::MatchEndsWith|Qt::MatchCaseSensitive);
     //itemList = this->findItems("jump",Qt::MatchCaseSensitive);
@@ -250,7 +250,17 @@ void DsSpriteTreeWidget::slotCurrentItemChanged ( QTreeWidgetItem * current, QTr
 
 void DsSpriteTreeWidget::initView()
 {
-
+    int count = this->topLevelItemCount();
+    qDebug()<<"topLevelItemCount = "<<QString::number(count);
+    if(0==count)
+    {
+        return;
+    }
+    else
+    {
+        this->clear();
+    }
+    /*
     int count = this->topLevelItemCount();
     qDebug()<<"topLevelItemCount = "<<QString::number(count);
     if(0==count)
@@ -282,13 +292,137 @@ void DsSpriteTreeWidget::initView()
             qDebug()<<"destroy project:"<<item->text(0);
             delete item;
         }
-    }
+    }*/
 }
 
 //When project data get ready, build the Tree Item
 void DsSpriteTreeWidget::createView()
 {
-    int projectNum = 0;
+
+    DsProject* pro = DsData::shareData()->getProjectNu();
+    if(pro == NULL)
+    {
+        qDebug()<<"has no current project";
+        return;
+    }
+
+    int spriteNum = DsData::shareData()->getSpriteNu();
+    if(spriteNum == 0)
+    {
+        return;
+    }
+    qDebug()<<"spriteNum = "<<QString::number(spriteNum);
+
+    bool hasCurSprite = false;
+    bool hasCurAnimation = false;
+    DsSprite* pCurSprite;
+    DsAnimation* pCurAnimation;
+
+    pCurSprite = DsData::shareData()->getCurSprite;
+    if(pCurSprite != NULL)
+    {
+        qDebug()<<"has current sprite";
+        hasCurSprite = true;
+    }
+
+    pCurAnimation = DsData::shareData()->getCurAnimation();
+    if(pCurAnimation != NULL)
+    {
+        qDebug()<<"has current animation";
+        hasCurAnimation = true;
+    }
+
+
+    std::string curSpriteName ;
+    std::string curAnimationName;
+    if(hasCurProjet)
+    {
+        curProjectName = curProject->getName();
+    }
+    if(hasCurAnimation)
+    {
+        curAnimationName = curAnimaton->getName();
+    }
+
+
+    QList<QTreeWidgetItem *> rootList;
+    QTreeWidgetItem* projectItem = new QTreeWidgetItem(this,QStringList("Project"));
+    rootList<<projectItem;
+    DsSprite* sprite;
+    DsAnimation* animation;
+
+    std::vector<DsAnimation*>::iterator anIter;
+    std::vector<sprite*>::iterator sprIter;
+
+
+    std::string spriteName;
+    std::string spriteId;
+    std::string animationName;
+    std::string animationId;
+    QTreeWidgetItem* spriteItem;
+    QTreeWidgetItem* animationItem;
+    QStringList spriteItemList;
+    QStringList animationItemList;
+    bool bSetCurrentItem = false;
+
+    for(int i = 0 ; i <spriteNum ;i++)
+    {
+        sprite = DsData::shareData()->getSprite(i);
+
+        assert(sprite != NULL);
+        spriteName = sprite->getName();
+        spriteId = sprite->getID();
+
+        spriteItemList<<spriteName<<spriteId;
+        spriteItem = new QTreeWidgetItem(projectItem,spriteItemList);
+        spriteItem->setIcon(0,QIcon(DS_MS_TI_SPRITE));
+        spriteItem->setFlags(spriteItem->flags()|Qt::ItemIsEditable);
+        qDebug()<<"spriteItem Flags="<<QString::number(spriteItem->flags());
+        projectItem->addChild(spriteItem);
+        qDebug()<<"project"<<QString::number(i+1) <<" name = "<<s2q(spriteName);
+
+        if(!bSetCurrentItem)
+        {
+           if(!hasCurAnimation && hasCurSprite)
+           {
+               if(spriteName == curSpriteName)
+               {
+                    m_changedCausedByView = true;
+                    this->setCurrentItem(spriteItem);
+                    bSetCurrentItem = true;
+                }
+           }
+        }
+        for(anIter = sprite->begin();anIter != sprite->end(); anIter++)
+        {
+            animationName = (*anIter)->getName();
+            animationId = (*anIter)->getId();
+            animationItemList<<animationName<<animationId;
+            animationItem = new QTreeWidgetItem(spriteItem,animationItemList);
+            animationItem->setIcon(0,QIcon(DS_MS_TI_ANIMATION));
+            animationItem->setFlags(Qt::ItemIsEditable|animationItem->flags());
+            qDebug()<<"animationItem Flags="<<QString::number(animationItem->flags());
+
+            projectItem->addChild(animationItem);
+            if(!bSetCurrentItem)
+            {
+                if(hasCurProjet)
+                {
+                    if(spriteName == curSpriteName && animationName == curAnimatonName)
+                    {
+                        m_changedCausedByView = true;
+                        this ->setCurrentItem(animationItem);
+                        bSetCurrentItem = true;
+                    }
+                }
+            }
+        }//end for
+    }//end for
+    this->insertTopLevelItems(0,rootList);
+
+
+    //===========================
+    /*int projectNum = 0;
     projectNum = DsData::shareData()->getProjectNu();
 
     if(0 >= projectNum)
@@ -393,6 +527,7 @@ void DsSpriteTreeWidget::createView()
         }//end for
     }//end for
     this->insertTopLevelItems(0,rootList);
+    */
 }
 
 //updateView
@@ -437,7 +572,7 @@ void DsSpriteTreeWidget::contextMenuEvent(QContextMenuEvent *event)
         }
         else
         {
-            qDebug()<<"clicked item:"<<item->text(0);
+             qDebug()<<"clicked item:"<<item->text(0);
              qDebug()<<item->parent()->text(0);
              qDebug()<<"show m_animationMenus";
              m_animationMenus->popup(QCursor::pos());
@@ -645,7 +780,7 @@ void DsFrameTreeWidget::createView()
         pathName = frameImage->getImage()->name;
 
         index = pathName.find_last_of("/\\");
-        qDebug()<<"index = "<<QString::number(index);
+        qDebug()<<"find_last_of '\' index = "<<QString::number(index);
         if(-1 == index)
         {
             fileName = pathName;
