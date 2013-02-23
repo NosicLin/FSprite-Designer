@@ -11,7 +11,6 @@ class DsDataOperator
 	
 	public:
         /* project */
-        void newProject();
         void newSprite();
         void removeSprite(const std::string& id);
         bool renameSprite(const std::string& id,const std::string& name);

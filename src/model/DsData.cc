@@ -55,7 +55,9 @@ void DsData::emitSignal(int type)
 
 	switch(type)
 	{
-
+		case SG_CUR_PROJECT_CHANGE:
+			emit signalCurProjectChange();
+			break;
         case SG_CUR_SPRITE_CHANGE:
             emit signalCurSpriteChange();
 			break;
@@ -130,7 +132,7 @@ DsFrame* DsData::getCurFrame()
 int DsData::getCurFrameIndex()
 {
 	if(m_curProject)
-	{
+    {
 		return m_curProject->getCurFrameIndex();
 	}
 	return -1;

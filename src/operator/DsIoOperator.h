@@ -6,10 +6,11 @@ class DsIoOperator
 {
 	public:
 		DsIoOperator();
-	public:
+    public:
+        void newProject();
         void saveProject();
         void loadProject();
-        void exportFSpriteByID(const std::string& id);
+        void exportFSprite(const std::string& id);
 
 	private:
 		QWidget* m_mainWidget;

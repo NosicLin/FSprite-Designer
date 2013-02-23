@@ -1,4 +1,6 @@
 #include <assert.h>
+
+#include "util/DsDebug.h"
 #include "DsProject.h"
 #include "DsSprite.h"
 #include "DsAnimation.h"
@@ -43,6 +45,7 @@ void DsProject::DsSpriteInfo::setCurFrameIndex(int frame)
     {
         return;
     }
+    DsDebug<<"m_curframeIndex:"<<m_curFrameIndex<<endl;
     m_curFrameIndex=frame;
     m_curFrameImage=NULL;
 }
@@ -105,13 +108,8 @@ DsFrameImage* DsProject::DsSpriteInfo::getCurFrameImage()
 
 int DsProject::DsSpriteInfo::getCurFrameIndex()
 {
-	return m_curFrameIndex;
+    return m_curFrameIndex;
 }
-
-
-
-
-
 
 DsProject::DsProject()
 {
@@ -177,7 +175,7 @@ DsFrame* DsProject::getCurFrame()
 {
 	if(m_curSprite)
 	{
-		m_curSprite->getCurFrame();
+        return m_curSprite->getCurFrame();
     }
     return NULL;
 }
@@ -185,8 +183,8 @@ DsFrame* DsProject::getCurFrame()
 int DsProject::getCurFrameIndex()
 {
 	if(m_curSprite)
-	{
-		m_curSprite->getCurFrameIndex();
+    {
+        return m_curSprite->getCurFrameIndex();
 	}
 	return -1;
 }
@@ -240,7 +238,7 @@ DsSprite* DsProject::getSprite(int index)
 
 DsSprite* DsProject::getSprite(const std::string& id)
 {
-	for(int i=0;i<m_sprites.size();i++)
+    for(unsigned int i=0;i<m_sprites.size();i++)
 	{
         if(m_sprites[i]->m_sprite->getID()==id)
 		{
@@ -259,7 +257,7 @@ void DsProject::addSprite(DsSprite* sprite)
 
 bool DsProject::hasSpriteWithName(const std::string& name)
 {
-    for(int i=0;i<m_sprites.size();i++)
+    for(unsigned int i=0;i<m_sprites.size();i++)
     {
         if(m_sprites[i]->m_sprite->getName()==name)
         {

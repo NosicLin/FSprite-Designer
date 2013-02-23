@@ -40,7 +40,12 @@ class DsProject
 
 	public:
 		DsProject();
-		~DsProject();
+        ~DsProject();
+    public:
+        std::string getDirName(){return m_dirName;}
+        std::string getFileName(){return m_fileName;}
+        void setDirName(const std::string& name){m_dirName=name;}
+        void setFileName(const std::string& name){m_fileName=name;}
 
 	public:
         /* animation */
@@ -76,8 +81,8 @@ class DsProject
 		DsSpriteInfo* m_curSprite;
 		std::vector<DsSpriteInfo*> m_sprites;
 
-		std::string m_projectDir;
-		std::string m_projectFile;
+        std::string m_dirName;
+        std::string m_fileName;
 };
 
 #endif /*_DS_PROJECT_H_*/

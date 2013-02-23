@@ -5,7 +5,7 @@
 #include "DsFrame.h"
 #include "util/DsDebug.h"
 
-int DsAnimation::m_defaulFps=10;
+int DsAnimation::m_defaulFps=30;
 DsAnimation::DsAnimation(const std::string& name)
 {
     m_id=DsUtil::uniqueStringID();
