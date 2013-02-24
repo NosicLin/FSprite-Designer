@@ -119,6 +119,7 @@ public slots:
     void slotItemClicked(QTreeWidgetItem* item,int column);
     /*
     void slotCurProjectChange();
+    void slotCurSpriteChange();
     void slotCurAnimationChange();
     void slotCurrentItemChanged ( QTreeWidgetItem * current, QTreeWidgetItem * previous);
     */

@@ -748,12 +748,12 @@ DsFrameTreeWidget::DsFrameTreeWidget(QWidget* parent)
             this,SLOT(slotProjectRefresh()));
     connect(DsData::shareData(),SIGNAL(signalCurProjectChange()),
             this,SLOT(slotProjectRefresh()));
-
+    connect(DsData::shareData(),SIGNAL(signalCurSpriteChange()),
+            this,SLOT(slotProjectRefresh()));
     connect(DsData::shareData(),SIGNAL(signalCurAnimationChange()),
             this,SLOT(slotProjectRefresh()));
     connect(DsData::shareData(),SIGNAL(signalCurFrameChange()),
             this,SLOT(slotProjectRefresh()));
-
     connect(DsData::shareData(),SIGNAL(signalProjectPropertyChange()),
             this,SLOT(slotProjectRefresh()));
     connect(DsData::shareData(),SIGNAL(signalAnimationPropertyChange()),
@@ -886,7 +886,8 @@ void DsFrameTreeWidget::slotItemClicked(QTreeWidgetItem* item,int column)
             this,SLOT(slotProjectRefresh()));
     connect(DsData::shareData(),SIGNAL(signalCurProjectChange()),
             this,SLOT(slotProjectRefresh()));
-
+    connect(DsData::shareData(),SIGNAL(signalCurSpriteChange()),
+            this,SLOT(slotProjectRefresh()));
     connect(DsData::shareData(),SIGNAL(signalCurAnimationChange()),
             this,SLOT(slotProjectRefresh()));
     connect(DsData::shareData(),SIGNAL(signalCurFrameChange()),
