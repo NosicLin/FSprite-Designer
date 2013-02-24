@@ -113,6 +113,25 @@ void DsFrameImage::transformVertexL(float* x,float* y)
     *x=v1.x();
     *y=v1.y();
 }
+void DsFrameImage::transformVertexVL(float* x,float* y)
+{
+    float ks=sin(m_angle/180.0f*3.1415926);
+    float kc=cos(m_angle/180.0f*3.1415926);
+
+    QMatrix4x4 tf(m_sx*kc,-m_sy*ks,0, 0,
+                  m_sx*ks,m_sy*kc,0, 0,
+                  0,      0,      1, 0,
+                  0,      0,      0, 1);
+
+    QMatrix4x4 vtf=tf.inverted();
+
+    QVector3D v0(*x,*y,0);
+
+    QVector3D v1=vtf.map(v0);
+    *x=v1.x();
+    *y=v1.y();
+}
+
 void DsFrameImage::transformVertexW(float* x,float* y)
 {
     float ks=sin(m_angle/180.0f*3.1415926);
@@ -120,6 +139,21 @@ void DsFrameImage::transformVertexW(float* x,float* y)
 
     QMatrix4x4 tf(m_sx*kc,-m_sy*ks,0, m_tx,
                   m_sx*ks,m_sy*kc,0, m_ty,
+                  0,      0,      1, 0,
+                  0,      0,      0, 1);
+
+    QVector3D v0(*x,*y,0);
+    QVector3D v1=tf.map(v0);
+    *x=v1.x();
+    *y=v1.y();
+}
+void DsFrameImage::transformVertexVW(float* x,float* y)
+{
+    float ks=sin(m_angle/180.0f*3.1415926);
+    float kc=cos(m_angle/180.0f*3.1415926);
+
+    QMatrix4x4 tf(m_sx*kc,-m_sy*ks,0, 0,
+                  m_sx*ks,m_sy*kc,0, 0,
                   0,      0,      1, 0,
                   0,      0,      0, 1);
 
@@ -176,10 +210,10 @@ DsFrameImage* DsFrameImage::slerp(DsFrameImage* to,float t)
         this->getTextureArea(&ftx0,&fty0,&ftx1,&fty1);
         to->getTextureArea(&ttx0,&tty0,&ttx1,&tty1);
 
-        ftx0=ftx0*t+ftx0*(1-t);
-        ftx1=ftx1*t+ftx1*(1-t);
-        fty0=fty0*t+fty0*(1-t);
-        fty1=fty1*t+fty1*(1-t);
+        rtx0=ftx0*t+ttx0*(1-t);
+        rtx1=ftx1*t+ttx1*(1-t);
+        rty0=fty0*t+tty0*(1-t);
+        rty1=fty1*t+tty1*(1-t);
 
 
         /* offset */
@@ -194,7 +228,7 @@ DsFrameImage* DsFrameImage::slerp(DsFrameImage* to,float t)
         slerp->setScale(sx,sy);
         slerp->setOffset(fx,fy);
         slerp->setAlpha(alpha);
-        slerp->setTextureArea(ftx0,fty0,ftx1,fty1);
+        slerp->setTextureArea(rtx0,rty0,rtx1,rty1);
 
     }
     return slerp;

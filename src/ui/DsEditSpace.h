@@ -30,7 +30,7 @@ protected:
 public slots:
     void slotTabbarCurrentChange(int index);
 
-    void slotResetProject();
+    void slotResetSprite();
 
     void slotCurAnimationChange();
 

@@ -16,11 +16,15 @@ DsEditView::DsEditView(QWidget* parent)
 	m_tx=0;
     m_ty=0;
     m_scale=1;
-    m_r=1;
-    m_g=1;
-    m_b=1;
-    m_a=1;
+    m_lr=1;
+    m_lg=1;
+    m_lb=1;
+    m_la=1;
 
+    m_pr=1;
+    m_pg=1;
+    m_pb=1;
+    m_pa=1;
 
 	/* axis and grid */
     m_showAxis=true;
@@ -34,7 +38,8 @@ DsEditView::DsEditView(QWidget* parent)
 
     setFocusPolicy(Qt::StrongFocus);
     setMouseTracking(true);
-	initState();
+    initState();
+
 }
 void DsEditView::initState()
 {
@@ -48,6 +53,7 @@ void DsEditView::initState()
     m_statePlay.setEditView(this);
     m_stateMoveCoord.setEditView(this);
     m_stateMoveOffset.setEditView(this);
+    m_stateTextureArea.setEditView(this);
     m_curState=&m_stateIdel;
     toDefaultState();
 
@@ -89,6 +95,7 @@ void DsEditView::slotCurAnimationChange()
 void DsEditView::slotCurFrameChange()
 {
     toDefaultState();
+    setFocus();
 }
 
 void DsEditView::initializeGL()
@@ -364,6 +371,25 @@ void DsEditView::drawFrameImage(DsFrameImage* image)
     glPopMatrix();
 }
 
+void DsEditView::drawFrameImageWithColor(DsFrameImage* image,float r,float g,float b,float a)
+{
+    glPushMatrix();
+    setFrameImageTransform(image);
+    rawDrawFrameImage(image,r,g,b,a);
+    glPopMatrix();
+
+}
+void DsEditView::drawFrameImageWithGray(DsFrameImage* image,float /*gray*/)
+{
+    glPushMatrix();
+    setFrameImageTransform(image);
+
+    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE ,GL_DECAL);
+    rawDrawFrameImage(image,0.299f,0.587f,0.114f,0.5);
+    glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);
+    glPopMatrix();
+}
+
 void DsEditView::setFrameImageTransform(DsFrameImage* image)
 {
     float x,y,sx,sy,angle;
@@ -406,7 +432,7 @@ void DsEditView::drawFrameImageCenter(DsFrameImage* image)
 }
 
 
-void DsEditView::rawDrawFrameImage(DsFrameImage* image)
+void DsEditView::rawDrawFrameImage(DsFrameImage* image,float r,float g,float b,float a)
 {
     float width=image->getWidth();
     float height=image->getHeight();
@@ -426,7 +452,7 @@ void DsEditView::rawDrawFrameImage(DsFrameImage* image)
     alpha=image->getAlpha();
 
 
-    glColor4f(1.0,1.0,1.0,alpha);
+    glColor4f(r,g,b,a*alpha);
     glBindTexture(GL_TEXTURE_2D,ds_img->texture);
 
     float vertex[8]=
@@ -485,7 +511,7 @@ void DsEditView::drawLine(float x0,float y0,float x1,float y1,float width)
 {
     glLineWidth(width);
 
-    glColor4f(m_r,m_g,m_b,m_a);
+    glColor4f(m_lr,m_lg,m_lb,m_la);
     glDisable(GL_TEXTURE_2D);
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     float vertex[4]=
@@ -506,7 +532,7 @@ void DsEditView::drawDashLine(float x0,float y0,float x1,float y1,float width)
     glLineWidth(width);
     glEnable(GL_LINE_STIPPLE);
 
-    glColor4f(m_r,m_g,m_b,m_a);
+    glColor4f(m_lr,m_lg,m_lb,m_la);
     glDisable(GL_TEXTURE_2D);
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     float vertex[4]=

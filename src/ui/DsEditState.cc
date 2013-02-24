@@ -4,6 +4,7 @@
 #include "DsEditView.h"
 #include "operator/DsOperator.h"
 #include "util/DsDebug.h"
+#include "util/DsUtil.h"
 
 void DsEditState::onEnter(DsEditState* )
 {
@@ -108,7 +109,6 @@ void DsEditStateIdel::draw()
 /* DsEditStateSelect */
 DsEditStateSelect::DsEditStateSelect()
 {
-    m_showTexarea=false;
 }
 
 void DsEditStateSelect::mousePressEvent(QMouseEvent* event)
@@ -165,7 +165,7 @@ void DsEditStateSelect::keyPressEvent(QKeyEvent* event)
     }
     else if(event->key()==Qt::Key_T)
     {
-        m_showTexarea=!m_showTexarea;
+        m_editView->changeToState(&m_editView->m_stateTextureArea);
     }
     else if(event->key()==Qt::Key_Delete)
     {
@@ -197,38 +197,6 @@ void DsEditStateSelect::draw()
             m_editView->drawFrameImageCenter(image);
         }
     }
-
-    if(m_showTexarea)
-    {
-        drawTexarea();
-    }
-}
-void DsEditStateSelect::drawTexarea()
-{
-    DsData* data=DsData::shareData();
-    DsFrameImage* cur_frameImg=data->getCurFrameImage();
-
-    float cx0,cy0,cx1,cy1;
-    cur_frameImg->getTextureArea(&cx0,&cy0,&cx1,&cy1);
-
-    float vx0=1,vy0=1,vx1=200,vy1=200;
-
-    m_editView->transformToRealCoord(&vx0,&vy0);
-    m_editView->transformToRealCoord(&vx1,&vy1);
-    m_editView->transformToRealCoord(&cx0,&cy0);
-    m_editView->transformToRealCoord(&cx1,&cy1);
-
-    m_editView->setPointColor(1.0,0.0,0.0);
-    m_editView->drawPoint(cx0,cy0,5);
-
-    m_editView->setPointColor(0.0,1.0,0.0);
-    m_editView->drawPoint(cx1,cy1,5);
-
-    m_editView->setLineColor(0.0,0.0,1.0);
-    m_editView->drawLine(vx0,vy0,vx1,vy0);
-    m_editView->drawLine(vx1,vy0,vx1,vy1);
-    m_editView->drawLine(vx1,vy1,vx0,vy1);
-    m_editView->drawLine(vx0,vy1,vx0,vy0);
 
 }
 
@@ -928,6 +896,194 @@ void DsEditStateMoveOffset::draw()
 }
 
 
+DsEditStateTextureArea::DsEditStateTextureArea()
+{
+    m_movevx0=0;
+    m_movevy0=0;
+    m_movevx1=0;
+    m_movevy1=0;
+    m_direction=DsEditState::DIRECTION_BOTH;
+}
+
+void DsEditStateTextureArea::onEnter(DsEditState* prev)
+{
+    m_movevx0=0;
+    m_movevy0=0;
+    m_movevx1=0;
+    m_movevy1=0;
+    m_direction=DsEditState::DIRECTION_BOTH;
+}
+
+void DsEditStateTextureArea::mouseMoveEvent(QMouseEvent* event)
+{
+    QPoint last_pos=m_editView->m_lastpos;
+    float dx=event->x()-last_pos.x();
+    float dy=event->y()-last_pos.y();
+    dx/=m_editView->m_scale;
+    dy/=m_editView->m_scale;
+
+    if(m_direction==DsEditState::DIRECTION_A)
+    {
+        m_movevx0+=dx;
+        m_movevy0+=-dy;
+    }
+    else if(m_direction==DsEditState::DIRECTION_B)
+    {
+        m_movevx1+=dx;
+        m_movevy1+=-dy;
+    }
+    else if(m_direction=DsEditState::DIRECTION_BOTH)
+    {
+        m_movevx0+=dx;
+        m_movevy0+=-dy;
+        m_movevx1+=dx;
+        m_movevy1+=-dy;
+    }
+}
+
+void DsEditStateTextureArea::mousePressEvent(QMouseEvent* event)
+{
+    if(event->buttons()&Qt::LeftButton)
+    {
+        DsData* data=DsData::shareData();
+        DsKeyFrame* cur_frame=(DsKeyFrame*)data->getCurFrame();
+        assert(((DsFrame*)cur_frame)->getType()==DsFrame::FRAME_KEY);
+
+        DsFrameImage* cur_frameImg=data->getCurFrameImage();
+        assert(cur_frameImg);
+        float cx0,cy0,cx1,cy1;
+        cur_frameImg->getTextureArea(&cx0,&cy0,&cx1,&cy1);
+        float mvx0=m_movevx0,mvy0=m_movevy0,mvx1=m_movevx1,mvy1=m_movevy1;
+
+        cur_frameImg->transformVertexVL(&mvx0,&mvy0);
+        cur_frameImg->transformVertexVL(&mvx1,&mvy1);
+
+        mvx0/=cur_frameImg->getWidth();
+        mvx1/=cur_frameImg->getWidth();
+        mvy0/=cur_frameImg->getHeight();
+        mvy1/=cur_frameImg->getHeight();
+
+        cx0+=mvx0;
+        cx1+=mvx1;
+        cy0+=mvy0;
+        cy1+=mvy1;
+        cx0=DsUtil::clamp(cx0,0,1);
+        cx1=DsUtil::clamp(cx1,0,1);
+        cy0=DsUtil::clamp(cy0,0,1);
+        cy1=DsUtil::clamp(cy1,0,1);
+
+        cur_frameImg->setTextureArea(cx0,cy0,cx1,cy1);
+
+        m_editView->changeToState(&m_editView->m_stateSelect);
+    }
+    else if(event->buttons()&Qt::RightButton)
+    {
+        m_editView->changeToState(&m_editView->m_stateSelect);
+    }
+}
+
+void DsEditStateTextureArea::keyPressEvent(QKeyEvent* event)
+{
+    if(m_direction==DsEditState::DIRECTION_BOTH)
+    {
+        if(event->key()==Qt::Key_A)
+        {
+            m_direction=DsEditState::DIRECTION_A;
+        }
+        else if(event->key()==Qt::Key_B)
+        {
+            m_direction=DsEditState::DIRECTION_B;
+        }
+        else if(event->key()==Qt::Key_Escape)
+        {
+            m_editView->changeToState(&m_editView->m_stateSelect);
+        }
+    }
+    else if(m_direction==DsEditState::DIRECTION_A)
+    {
+        if(event->key()==Qt::Key_B)
+        {
+            m_direction=DsEditState::DIRECTION_B;
+        }
+        else if(event->key()==Qt::Key_Escape)
+        {
+            m_direction=DsEditState::DIRECTION_BOTH;
+        }
+    }
+    else if(m_direction==DsEditState::DIRECTION_B)
+    {
+        if(event->key()==Qt::Key_A)
+        {
+            m_direction=DsEditState::DIRECTION_A;
+        }
+        else if(event->key()==Qt::Key_Escape)
+        {
+            m_direction=DsEditState::DIRECTION_BOTH;
+        }
+    }
+
+}
+
+void DsEditStateTextureArea::draw()
+{
+    DsData* data=DsData::shareData();
+    DsKeyFrame* cur_frame=(DsKeyFrame*)data->getCurFrame();
+    assert(((DsFrame*)cur_frame)->getType()==DsFrame::FRAME_KEY);
+
+    DsFrameImage* cur_frameImg=data->getCurFrameImage();
+    assert(cur_frameImg);
+
+    int image_nu=cur_frame->getFrameImageNu();
+
+    for(int i=image_nu-1;i>=0;i--)
+    {
+        DsFrameImage* image=cur_frame->getFrameImage(i);
+
+        if(image==cur_frameImg)
+        {
+
+            DsFrameImage* temp=cur_frameImg->clone();
+
+            float cx0,cy0,cx1,cy1;
+
+            float fx0=m_movevx0,fy0=m_movevy0;
+            float fx1=m_movevx1,fy1=m_movevy1;
+
+            temp->getTextureArea(&cx0,&cy0,&cx1,&cy1);
+            temp->setTextureArea(0,0,1,1);
+            m_editView->drawFrameImageWithGray(temp);
+
+            temp->transformVertexVL(&fx0,&fy0);
+            temp->transformVertexVL(&fx1,&fy1);
+
+            fx0=fx0/temp->getWidth();
+            fy0=fy0/temp->getHeight();
+            fx1=fx1/temp->getWidth();
+            fy1=fy1/temp->getHeight();
+
+            cx0+=fx0;
+            cy0+=fy0;
+            cx1+=fx1;
+            cy1+=fy1;
+
+            cx0=DsUtil::clamp(cx0,0,1);
+            cy0=DsUtil::clamp(cy0,0,1);
+            cx1=DsUtil::clamp(cx1,0,1);
+            cy1=DsUtil::clamp(cy1,0,1);
+
+            temp->setTextureArea(cx0,cy0,cx1,cy1);
+            m_editView->drawFrameImage(temp);
+            m_editView->drawFrameImageBorder(temp);
+            m_editView->drawFrameImageCenter(temp);
+            delete temp;
+        }
+        else
+        {
+            m_editView->drawFrameImage(image);
+        }
+
+    }
+}
 
 
 

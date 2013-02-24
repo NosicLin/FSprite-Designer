@@ -36,12 +36,17 @@ DsEditSpace::DsEditSpace(QWidget* parent)
     connect(DsData::shareData(),
             SIGNAL(signalCurProjectChange()),
             this,
-            SLOT(slotResetProject()));
+            SLOT(slotResetSprite()));
 
     connect(DsData::shareData(),
             SIGNAL(signalProjectPropertyChange()),
             this,
-            SLOT(slotResetProject()));
+            SLOT(slotResetSprite()));
+
+    connect(DsData::shareData(),
+            SIGNAL(signalCurSpriteChange()),
+            this,
+            SLOT(slotResetSprite()));
 
     connect(DsData::shareData(),
             SIGNAL(signalCurAnimationChange()),
@@ -103,14 +108,11 @@ void DsEditSpace::clearTab()
     }
 }
 
-void DsEditSpace::slotResetProject()
+void DsEditSpace::slotResetSprite()
 {
-    DsDebug<<"ResetProject"<<endl;
     reTabAnimation();
-
     m_editView->slotCurFrameChange();
     m_editView->update();
-
     m_animationEdit->update();
 
 }

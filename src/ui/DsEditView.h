@@ -77,7 +77,9 @@ class DsEditView:public QGLWidget
 		void drawGrid();
 
         void drawFrameImage(DsFrameImage* image);
-        void rawDrawFrameImage(DsFrameImage* image);
+        void drawFrameImageWithColor(DsFrameImage* image,float r,float g,float b,float a);
+        void drawFrameImageWithGray(DsFrameImage* image,float gray=1.0);
+        void rawDrawFrameImage(DsFrameImage* image,float r=1.0,float g=1.0,float b=1.0,float a=1.0);
         void setFrameImageTransform(DsFrameImage* image);
         void drawFrameImageBorder(DsFrameImage* image);
         void drawFrameImageCenter(DsFrameImage* image);
@@ -106,7 +108,8 @@ class DsEditView:public QGLWidget
 		bool m_imageLocalCoord;
 
 		/* gl infomation */
-		float m_r,m_g,m_b,m_a;
+        float m_lr,m_lg,m_lb,m_la;
+        float m_pr,m_pg,m_pb,m_pa;
 
 		/* state information */
         DsEditState* m_curState;
@@ -127,6 +130,7 @@ class DsEditView:public QGLWidget
 		DsEditStatePlay m_statePlay;
         DSEditStateMoveCoord m_stateMoveCoord;
         DsEditStateMoveOffset m_stateMoveOffset;
+        DsEditStateTextureArea m_stateTextureArea;
 
 
 	public:
@@ -141,6 +145,7 @@ class DsEditView:public QGLWidget
 		friend class DsEditStatePlay;
         friend class DSEditStateMoveCoord;
         friend class DsEditStateMoveOffset;
+        friend class DsEditStateTextureArea;
 };
 
 

@@ -39,7 +39,9 @@ class DsFrameImage
         }
         void getVertex(float* vx0,float* vy0,float* vx1,float* vy1);
         void transformVertexL(float* x,float* y);
+        void transformVertexVL(float* x,float* y);
         void transformVertexW(float* x,float* y);
+        void transformVertexVW(float* x,float* y);
 
 		void setPos(float x,float y)
 		{
