@@ -20,7 +20,12 @@ std::string DsUtil::qtos(const QString& q)
     return std::string(q.toLatin1().data());
 }
 
-
+float DsUtil::clamp(float value,float min,float max)
+{
+    if(value<min) return min;
+    if(value>max) return max;
+    return value;
+}
 std::string DsUtil::uniqueStringID()
 {
     return QUuid::createUuid().toString().toStdString();
@@ -101,14 +106,14 @@ bool DsUtil::saveProjectFile(DsProject* proj)
 	writer.writeStartElement("FSpriteDesigner");
 	writer.writeAttribute("version","v1.0");
     writer.writeAttribute("type","FSpriteProject");
-	writer.writeStartElement("Sprites");
+    writer.writeStartElement("sprites");
 
 	for(int i=0;i<proj->getSpriteNu();i++)
 	{
 		DsSprite* sprite=proj->getSprite(i);
 		std::string spriteName=std::string("sprites/")+sprite->getName()+"-"+sprite->getID();
-		writer.writeStartElement("Sprite");
-        writer.writeTextElement("url",spriteName.c_str());
+        writer.writeStartElement("sprite");
+        writer.writeAttribute("url",spriteName.c_str());
 		writer.writeEndElement();
 	}
 	writer.writeEndElement();
@@ -169,7 +174,18 @@ bool DsUtil::saveSpriteFile(const std::string& dir_name,const std::string& file_
 					writer.writeTextElement("areax0",QString::number(ax0));
 					writer.writeTextElement("areay0",QString::number(ay0));
 					writer.writeTextElement("areax1",QString::number(ax1));
-					writer.writeTextElement("areay1",QString::number(ay1));
+                    writer.writeTextElement("areay1",QString::number(ay1));
+
+                    float fx,fy;
+                    fx=image->getOffsetX();
+                    fy=image->getOffsetY();
+
+                    writer.writeTextElement("offsetx",QString::number(fx));
+                    writer.writeTextElement("offsety",QString::number(fy));
+
+                    float alpha=image->getAlpha();
+                    writer.writeTextElement("alpha",QString::number(alpha));
+
 					writer.writeEndElement();
 				}
 			}

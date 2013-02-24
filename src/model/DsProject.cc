@@ -15,6 +15,8 @@ DsProject::DsSpriteInfo::DsSpriteInfo(DsSprite* sprite)
     m_curFrameImage=NULL;
     m_sprite=sprite;
 
+	m_copyFrameImage=NULL;
+	m_copyFrame=NULL;
 }
 
 DsProject::DsSpriteInfo::~DsSpriteInfo()
@@ -72,6 +74,8 @@ void DsProject::DsSpriteInfo::dropCurAnimation()
     m_curFrameImage=NULL;
 }
 
+
+
 void DsProject::DsSpriteInfo::dropCurFrameIndex()
 {
     m_curFrameIndex=-1;
@@ -110,6 +114,9 @@ int DsProject::DsSpriteInfo::getCurFrameIndex()
 {
     return m_curFrameIndex;
 }
+
+
+
 
 DsProject::DsProject()
 {

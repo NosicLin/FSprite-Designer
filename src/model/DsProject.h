@@ -18,6 +18,12 @@ class DsProject
 				DsAnimation* m_curAnimation;
 				DsFrameImage* m_curFrameImage;
 
+				/* copy FrameImage */
+				DsFrameImage* m_copyFrameImage;
+				
+				/* DsFrame*/
+				DsFrame* m_copyFrame;
+
 			public:
                 void setCurAnimation(const std::string& id);
 				void setCurFrameIndex(int index);
@@ -30,6 +36,12 @@ class DsProject
 				DsFrameImage* getCurFrameImage();
 				DsFrame* getCurFrame();
 				int getCurFrameIndex();
+				
+				/* copy and past */
+				DsFrameImage* getCopyFrameImage();
+				void setCopyFrameImage(DsFrameImage* image);
+				void setCopyFrame(DsFrame* frame);
+				DsFrame* getCopyFrame();
 
 				DsSpriteInfo(DsSprite* sprite);
 				~DsSpriteInfo();
@@ -53,6 +65,7 @@ class DsProject
         bool hasSpriteWithName(const std::string& name);
 
         DsSprite* getCurSprite();
+		DsSpriteInfo* getCurSpriteInfo();
         void setCurSprite(const std::string& id);
 
 

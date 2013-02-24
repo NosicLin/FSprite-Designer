@@ -88,6 +88,9 @@ void DsIoOperator::loadProject()
     std::string log_msg;
     DsProject* proj=DsUtil::loadProject(dir_name.toStdString(),file_name.toStdString(),log_msg);
 
+    DsDebug<<"--------projNu:"<<proj->getSpriteNu()<<endl;
+
+
     if(proj==NULL)
     {
         QMessageBox::information(NULL,"LoadProject",QString("Load Sprite Failed:")+log_msg.c_str(),QMessageBox::Yes);

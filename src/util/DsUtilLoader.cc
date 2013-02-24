@@ -75,7 +75,7 @@ DsProject* DsProjectLoader::loadProject()
 		if(sprite==NULL)
 		{
             QMessageBox::information(NULL,"loadProject",
-                    QString("Load Sprites Failed(")+url.c_str()+")",
+                    QString("Load Sprites Failed(")+url.c_str()+"):"+loader.getLogMsg().c_str(),
                     QMessageBox::Yes
                     ) ;
 		}
@@ -132,7 +132,7 @@ DsSprite* DsSpriteLoader::loadSprite()
 		m_logMsg="version not support";
 		return NULL;
 	}
-	if(elm_root.attribute("type")!=QString("SpriteMorph"))
+    if(elm_root.attribute("type")!=QString("FSpriteMorph"))
 	{
 		m_logMsg="Error File:Not FSpriteDesigner Project File";
 		return NULL;
@@ -155,6 +155,7 @@ DsSprite* DsSpriteLoader::loadSprite()
 			sprite->addAnimation(anim);
 		}
     }
+    return sprite;
 }
 
 DsAnimation* DsSpriteLoader::loadAnimation(QDomNode& node)
@@ -209,6 +210,8 @@ DsFrameImage* DsSpriteLoader::loadFrameImage(QDomNode& node)
 {
     float tx=0,ty=0,sx=1,sy=1,angle=0;
     float areax0=0,areay0=0,areax1=1,areay1=1;
+    float offsetx,offsety;
+    float alpha;
     std::string url;
     tx=node.firstChildElement("posx").text().toFloat();
     ty=node.firstChildElement("posy").text().toFloat();
@@ -220,13 +223,21 @@ DsFrameImage* DsSpriteLoader::loadFrameImage(QDomNode& node)
     areay0=node.firstChildElement("areay0").text().toFloat();
     areax1=node.firstChildElement("areax1").text().toFloat();
     areay1=node.firstChildElement("areay1").text().toFloat();
+
+    offsetx=node.firstChildElement("offsetx").text().toFloat();
+    offsety=node.firstChildElement("offsety").text().toFloat();
+    alpha=node.firstChildElement("alpha").text().toFloat();
+
     url=node.firstChildElement("url").text().toStdString();
 
-    DsFrameImage* ret=DsFrameImage::create(m_dir+url);
+    //DsFrameImage* ret=DsFrameImage::create(m_dir+url);
+    DsFrameImage* ret=DsFrameImage::create(url);
     ret->setPos(tx,ty);
     ret->setAngle(angle);
     ret->setScale(sx,sy);
     ret->setTextureArea(areax0,areay0,areax1,areay1);
+    ret->setOffset(offsetx,offsety);
+    ret->setAlpha(alpha);
     return ret;
 }
 

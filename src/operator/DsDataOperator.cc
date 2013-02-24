@@ -267,6 +267,15 @@ void DsDataOperator::setCurFrameImageAngle(float angle)
         m_data->emitSignal(DsData::SG_FRAME_IMAGE_PROPERTY_CHANGE);
     }
 }
+void DsDataOperator::setCurFrameImageOffset(float fx,float fy)
+{
+    DsFrameImage* img=m_data->getCurFrameImage();
+    if(img)
+    {
+        img->setOffset(fx,fy);
+        m_data->emitSignal(DsData::SG_FRAME_IMAGE_PROPERTY_CHANGE);
+    }
+}
 
 void DsDataOperator::newAnimation()
 {
