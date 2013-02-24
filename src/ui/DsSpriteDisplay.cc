@@ -41,7 +41,7 @@ std::string q2s(const QString &s)
 DsSpriteDisplay::DsSpriteDisplay(QWidget* parent)
     :QWidget(parent)
 {
-
+/*
     //add Dock to MainWindow
     m_Dock = new QDockWidget(tr("SpriteDisplay"),parent);
     m_Dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
@@ -61,7 +61,7 @@ DsSpriteDisplay::DsSpriteDisplay(QWidget* parent)
 
     QMainWindow* MainWindow = (QMainWindow*)parent->parent();
     MainWindow->addDockWidget(Qt::RightDockWidgetArea, m_Dock);
-/*
+*/
     m_tabWidget = new QTabWidget;
 
     QVBoxLayout* vLayout = new QVBoxLayout;
@@ -72,7 +72,7 @@ DsSpriteDisplay::DsSpriteDisplay(QWidget* parent)
     m_tabWidget->addTab(m_frameTreeWidget,tr("Frame"));
     vLayout->addWidget(m_tabWidget);
     setLayout(vLayout);
-*/
+
 }
 
 
@@ -84,14 +84,14 @@ DsSpriteTreeWidget::DsSpriteTreeWidget(QWidget* parent)
     m_changedCausedByView = false;
     m_markCurProjectChange = false;
 
-    connect(DsData::shareData(),SIGNAL(signalDataPropertyChange()),
-            this,SLOT(slotProjectInited()));
+  //  connect(DsData::shareData(),SIGNAL(signalDataPropertyChange()),
+    //        this,SLOT(slotProjectInited()));
 
     connect(DsData::shareData(),SIGNAL(signalProjectPropertyChange()),
             this,SLOT(slotProjectInited()));
 
     connect(DsData::shareData(),SIGNAL(signalCurProjectChange()),
-            this,SLOT(slotCurProjectChange()));
+            this,SLOT(slotProjectInited()));
 
     connect(DsData::shareData(),SIGNAL(signalCurSpriteChange()),
             this,SLOT(slotCurSpriteChange()));
@@ -103,7 +103,8 @@ DsSpriteTreeWidget::DsSpriteTreeWidget(QWidget* parent)
             this,SLOT(slotCurrentItemChanged ( QTreeWidgetItem * , QTreeWidgetItem * )));
 
 
-    this->setColumnCount(2);
+    //just show the first col
+    this->setColumnCount(1);
     this->setHeaderHidden(true);
 
     //only the DsSpriteTreeWidget had been built ,it's menus can create.
@@ -359,10 +360,7 @@ void DsSpriteTreeWidget::createView()
     }
 
     int spriteNum = pro->getSpriteNu();
-    if(spriteNum == 0)
-    {
-        return;
-    }
+
     qDebug()<<"spriteNum = "<<QString::number(spriteNum);
 
     bool hasCurSprite = false;
@@ -398,10 +396,11 @@ void DsSpriteTreeWidget::createView()
 
 
     QList<QTreeWidgetItem *> rootList;
-    QTreeWidgetItem* projectItem = new QTreeWidgetItem(this,QStringList("Project"));
+    std::string projectName = pro->getFileName();
+    QTreeWidgetItem* projectItem = new QTreeWidgetItem(this,QStringList(s2q(projectName)));
     rootList<<projectItem;
     DsSprite* sprite;
-    DsAnimation* animation;
+  //  DsAnimation* animation;
 
     std::vector<DsAnimation*>::iterator anIter;
     std::vector<DsSprite*>::iterator sprIter;
@@ -783,6 +782,7 @@ DsFrameTreeWidget::DsFrameTreeWidget(QWidget* parent)
             this,SLOT(slotCurrentItemChanged ( QTreeWidgetItem * , QTreeWidgetItem * )));
 
 */
+    //just show the first col
     this->setColumnCount(1);
     this->setHeaderHidden(true);
 }
@@ -826,6 +826,8 @@ void DsFrameTreeWidget::createView()
     QTreeWidgetItem* iamgeItem;
     DsFrameImage* frameImage;
     DsImage* image;
+
+    std::string frameImageId;
     std::string imageName;
     QStringList stringList;
 
@@ -836,9 +838,10 @@ void DsFrameTreeWidget::createView()
     for(int i=0;i<imageNum;i++)
     {
         frameImage = ((DsKeyFrame*)curFrame)->getFrameImage(i);
-        image = frameImage->getImage();
-        imageName = image->name;
 
+        image = frameImage->getImage();
+        frameImageId = frameImage->getID();
+        imageName = image->name;
         pathName = frameImage->getImage()->name;
 
         index = pathName.find_last_of("/\\");
@@ -852,7 +855,7 @@ void DsFrameTreeWidget::createView()
             fileName = pathName.substr(index+1);
         }
 
-        stringList<< s2q(fileName)<<s2q(imageName);
+        stringList<< s2q(fileName)<<s2q(frameImageId);
         iamgeItem = new QTreeWidgetItem(this,stringList);
         stringList.clear();
         iamgeItem->setIcon(0,QIcon(s2q(pathName)));
