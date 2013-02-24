@@ -39,23 +39,10 @@ DsKeyFrame* DsTweenFrame::slerpToKeyFrame(int index)
 	{
 		DsFrameImage* from=m_from->getFrameImage(i);
 		DsFrameImage* to=m_to->getFrameImage(i);
-
-		DsFrameImage* slerp=from->clone();
-		if(from->getImage()==to->getImage())
-        {
-			float x=from->getPosX()*t+to->getPosX()*(1-t);
-			float y=from->getPosY()*t+to->getPosY()*(1-t);
-
-			float angle=from->getAngle()*t+to->getAngle()*(1-t);
-			float sx=from->getScaleX()*t+to->getScaleX()*(1-t);
-			float sy=from->getScaleY()*t+to->getScaleY()*(1-t);
-			slerp->setPos(x,y);
-			slerp->setAngle(angle);
-			slerp->setScale(sx,sy);
-            DsDebug<<"x:"<<x<<" y:"<<y<<" angle:"<<angle<<" sx:"<<sx<<" sy:"<<sy<<endl;
-        }
+        DsFrameImage* slerp=from->slerp(to,t);
 		ret->pushFrameImage(slerp);
-	}
+    }
+
     for(int i=image_nu;i<m_from->getFrameImageNu();i++)
 	{
 		DsFrameImage* img=m_from->getFrameImage(i);

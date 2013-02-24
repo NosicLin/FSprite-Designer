@@ -154,14 +154,34 @@ private:
     float m_angle;
 };
 
+class DsEditStateMoveOffset:public DsEditState
+{
+    public:
+        DsEditStateMoveOffset();
+    public:
+        virtual void onEnter(DsEditState* prev);
+        virtual void mouseMoveEvent(QMouseEvent* event);
+        virtual void mousePressEvent(QMouseEvent* event);
+        virtual void draw();
+
+    private:
+        float m_movex;
+        float m_movey;
+
+};
+
 
 class DsEditStateSelect :public DsEditState 
 {
 public:
+    DsEditStateSelect();
+public:
     virtual void mousePressEvent(QMouseEvent* event);
     virtual void keyPressEvent(QKeyEvent* event);
     void draw();
-
+    void drawTexarea();
+private:
+    bool m_showTexarea;
 };
 
 class DsEditStatePlay:public DsEditState

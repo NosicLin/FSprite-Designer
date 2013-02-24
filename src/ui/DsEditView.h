@@ -78,8 +78,14 @@ class DsEditView:public QGLWidget
 
         void drawFrameImage(DsFrameImage* image);
         void rawDrawFrameImage(DsFrameImage* image);
+        void setFrameImageTransform(DsFrameImage* image);
+        void drawFrameImageBorder(DsFrameImage* image);
+        void drawFrameImageCenter(DsFrameImage* image);
 
         void drawFrameImageDecorate(DsFrameImage* image);
+
+        void drawPoint(float x,float y,float size);
+        void setPointColor(float r,float g,float b,float a=1.0);
 		void setLineColor(float r,float g,float b,float a=1.0);
 		void drawLine(float x0,float y0,float x1,float y1,float width=1.0f);
         void drawDashLine(float x0,float y0,float x1,float y1,float width=1.0f);
@@ -119,7 +125,8 @@ class DsEditView:public QGLWidget
 		DsEditStateRotate m_stateRotate;
 		DsEditStateSelect m_stateSelect;
 		DsEditStatePlay m_statePlay;
-		DSEditStateMoveCoord m_stateMoveCoord;
+        DSEditStateMoveCoord m_stateMoveCoord;
+        DsEditStateMoveOffset m_stateMoveOffset;
 
 
 	public:
@@ -132,7 +139,8 @@ class DsEditView:public QGLWidget
 		friend class DsEditStateRotate;
 		friend class DsEditStateSelect;
 		friend class DsEditStatePlay;
-		friend class DSEditStateMoveCoord;
+        friend class DSEditStateMoveCoord;
+        friend class DsEditStateMoveOffset;
 };
 
 

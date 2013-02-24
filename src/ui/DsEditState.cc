@@ -106,6 +106,10 @@ void DsEditStateIdel::draw()
 
 
 /* DsEditStateSelect */
+DsEditStateSelect::DsEditStateSelect()
+{
+    m_showTexarea=false;
+}
 
 void DsEditStateSelect::mousePressEvent(QMouseEvent* event)
 {
@@ -155,6 +159,14 @@ void DsEditStateSelect::keyPressEvent(QKeyEvent* event)
     {
         m_editView->changeToState(&m_editView->m_stateRotate);
     }
+    else if(event->key()==Qt::Key_M)
+    {
+        m_editView->changeToState(&m_editView->m_stateMoveOffset);
+    }
+    else if(event->key()==Qt::Key_T)
+    {
+        m_showTexarea=!m_showTexarea;
+    }
     else if(event->key()==Qt::Key_Delete)
     {
         DsOperator::data()->removeCurFrameImage();
@@ -178,31 +190,46 @@ void DsEditStateSelect::draw()
 	for(int i=image_nu-1;i>=0;i--)
 	{
 		DsFrameImage* image=cur_frame->getFrameImage(i);
-		m_editView->drawFrameImage(image);
+        m_editView->drawFrameImage(image);
 		if(image==cur_frameImg)
-		{
-			glPushMatrix();
-			float x,y,width,height,sx,sy,angle;
-			x=image->getPosX();
-			y=image->getPosY();
-			width=image->getWidth();
-			height=image->getHeight();
-			sx=image->getScaleX();
-			sy=image->getScaleY();
-			angle=image->getAngle();
-			width*=sx;
-            height*=sy;
-			glTranslatef(x,y,0);
-            glRotatef(angle,0,0,1);
+        {
+            m_editView->drawFrameImageBorder(image);
+            m_editView->drawFrameImageCenter(image);
+        }
+    }
 
-			m_editView->setLineColor(1.0,0.0,0.0);
-			m_editView->drawLine(-width/2,-height/2,width/2,-height/2);
-			m_editView->drawLine(width/2,-height/2,width/2,height/2);
-			m_editView->drawLine(-width/2,height/2,width/2,height/2);
-			m_editView->drawLine(-width/2,height/2,-width/2,-height/2);
-			glPopMatrix();
-		}
-	}
+    if(m_showTexarea)
+    {
+        drawTexarea();
+    }
+}
+void DsEditStateSelect::drawTexarea()
+{
+    DsData* data=DsData::shareData();
+    DsFrameImage* cur_frameImg=data->getCurFrameImage();
+
+    float cx0,cy0,cx1,cy1;
+    cur_frameImg->getTextureArea(&cx0,&cy0,&cx1,&cy1);
+
+    float vx0=1,vy0=1,vx1=200,vy1=200;
+
+    m_editView->transformToRealCoord(&vx0,&vy0);
+    m_editView->transformToRealCoord(&vx1,&vy1);
+    m_editView->transformToRealCoord(&cx0,&cy0);
+    m_editView->transformToRealCoord(&cx1,&cy1);
+
+    m_editView->setPointColor(1.0,0.0,0.0);
+    m_editView->drawPoint(cx0,cy0,5);
+
+    m_editView->setPointColor(0.0,1.0,0.0);
+    m_editView->drawPoint(cx1,cy1,5);
+
+    m_editView->setLineColor(0.0,0.0,1.0);
+    m_editView->drawLine(vx0,vy0,vx1,vy0);
+    m_editView->drawLine(vx1,vy0,vx1,vy1);
+    m_editView->drawLine(vx1,vy1,vx0,vy1);
+    m_editView->drawLine(vx0,vy1,vx0,vy0);
+
 }
 
 
@@ -381,52 +408,44 @@ void DsEditStateTranslate::draw()
         if(image==cur_frameImg)
         {
 
-            glPushMatrix();
+            DsFrameImage* temp=cur_frameImg->clone();
+            float x,y;
+            x=temp->getPosX();
+            y=temp->getPosY();
+
             if(m_direction==DsEditState::DIRECTION_X)
             {
-                glTranslatef(m_movex,0,0);
-
+                temp->setPos(x+m_movex,y);
             }
             else if(m_direction==DsEditState::DIRECTION_Y)
             {
-                glTranslatef(0,m_movey,0);
+                temp->setPos(x,y+m_movey);
             }
             else
             {
-                glTranslatef(m_movex,m_movey,0);
+                temp->setPos(x+m_movex,y+m_movey);
             }
 
-            m_editView->drawFrameImage(image);
+            m_editView->drawFrameImage(temp);
+            m_editView->drawFrameImageBorder(temp);
+            m_editView->drawFrameImageCenter(temp);
 
-            float x,y,width,height,sx,sy,angle;
-            x=image->getPosX();
-            y=image->getPosY();
-            width=image->getWidth();
-            height=image->getHeight();
-            sx=image->getScaleX();
-            sy=image->getScaleY();
-            angle=image->getAngle();
-            glTranslatef(x,y,0);
+            x=temp->getPosX();
+            y=temp->getPosY();
+
             if(m_direction==DsEditState::DIRECTION_X)
             {
 
                 m_editView->setLineColor(0.0,0.0,1.0);
-                m_editView->drawLine(-100000,0,100000,0);
+                m_editView->drawLine(-100000,y,100000,y);
             }
             else if(m_direction==DsEditState::DIRECTION_Y)
             {
                 m_editView->setLineColor(0.0,0.0,1.0);
-                m_editView->drawLine(0,100000,0,-100000);
+                m_editView->drawLine(x,100000,x,-100000);
             }
-            glScalef(sx,sy,1);
-            glRotatef(angle,0,0,1);
 
-            m_editView->setLineColor(1.0,0.0,0.0);
-            m_editView->drawLine(-width/2,-height/2,width/2,-height/2);
-            m_editView->drawLine(width/2,-height/2,width/2,height/2);
-            m_editView->drawLine(-width/2,height/2,width/2,height/2);
-            m_editView->drawLine(-width/2,height/2,-width/2,-height/2);
-            glPopMatrix();
+            delete temp;
         }
         else
         {
@@ -577,39 +596,35 @@ void DsEditStateScale::draw()
 
         if(image==cur_frameImg)
         {
+            DsFrameImage* temp=cur_frameImg->clone();
             float scale=getScale();
             glPushMatrix();
+            float x,y,sx,sy,angle;
 
-            float x,y,width,height,sx,sy,angle;
-            x=image->getPosX();
-            y=image->getPosY();
-
-            sx=image->getScaleX();
-            sy=image->getScaleY();
-            width=image->getWidth();
-            height=image->getHeight();
-
-            angle=image->getAngle();
+            x=temp->getPosX();
+            y=temp->getPosY();
+            sx=temp->getScaleX();
+            sy=temp->getScaleY();
 
             if(m_direction==DsEditState::DIRECTION_X)
             {
-                sx*=scale;
+                temp->setScale(sx*scale,sy);
             }
             else if(m_direction==DsEditState::DIRECTION_Y)
             {
-                sy*=scale;
+                temp->setScale(sx,scale*sy);
             }
             else
             {
-                sx*=scale;
-                sy*=scale;
+                temp->setScale(sx*scale,sy*scale);
             }
 
-            glTranslatef(x,y,0);
-            glRotatef(angle,0,0,1);
-            glScalef(sx,sy,1);
+            m_editView->drawFrameImage(temp);
+            m_editView->drawFrameImageBorder(temp);
+            m_editView->drawFrameImageCenter(temp);
 
-            m_editView->rawDrawFrameImage(image);
+            glPushMatrix();
+            m_editView->setFrameImageTransform(temp);
 
             if(m_direction==DsEditState::DIRECTION_X)
             {
@@ -621,13 +636,9 @@ void DsEditStateScale::draw()
                 m_editView->setLineColor(0.0,0.0,1.0);
                 m_editView->drawLine(0,100000,0,-100000);
             }
-            m_editView->setLineColor(1.0,0.0,0.0);
-            m_editView->drawLine(-width/2,-height/2,width/2,-height/2);
-            m_editView->drawLine(width/2,-height/2,width/2,height/2);
-            m_editView->drawLine(-width/2,height/2,width/2,height/2);
-            m_editView->drawLine(-width/2,height/2,-width/2,-height/2);
-
             glPopMatrix();
+
+            delete temp;
         }
         else
         {
@@ -721,33 +732,15 @@ void DsEditStateRotate::draw()
 
         if(image==cur_frameImg)
         {
-            glPushMatrix();
-
-            float x,y,width,height,sx,sy,angle;
-            x=image->getPosX();
-            y=image->getPosY();
-
-            sx=image->getScaleX();
-            sy=image->getScaleY();
-            width=image->getWidth();
-            height=image->getHeight();
-
-            angle=image->getAngle();
+            DsFrameImage* temp=cur_frameImg->clone();
+            float angle;
+            angle=temp->getAngle();
             angle+=m_angle;
-
-            glTranslatef(x,y,0);
-            glRotatef(angle,0,0,1);
-            glScalef(sx,sy,1);
-
-            m_editView->rawDrawFrameImage(image);
-
-            m_editView->setLineColor(1.0,0.0,0.0);
-            m_editView->drawLine(-width/2,-height/2,width/2,-height/2);
-            m_editView->drawLine(width/2,-height/2,width/2,height/2);
-            m_editView->drawLine(-width/2,height/2,width/2,height/2);
-            m_editView->drawLine(-width/2,height/2,-width/2,-height/2);
-
-            glPopMatrix();
+            temp->setAngle(angle);
+            m_editView->drawFrameImage(temp);
+            m_editView->drawFrameImageBorder(temp);
+            m_editView->drawFrameImageCenter(temp);
+            delete temp;
         }
         else
         {
@@ -838,6 +831,101 @@ void DsEditStateAddImage::leaveEvent(QEvent* )
     m_draw=false;
 }
 
+
+DsEditStateMoveOffset::DsEditStateMoveOffset()
+{
+    m_movex=0;
+    m_movey=0;
+}
+
+void DsEditStateMoveOffset::onEnter(DsEditState* prev)
+{
+    m_movex=0;
+    m_movey=0;
+}
+
+void DsEditStateMoveOffset::mouseMoveEvent(QMouseEvent* event)
+{
+    QPoint last_pos=m_editView->m_lastpos;
+    float dx=event->x()-last_pos.x();
+    float dy=event->y()-last_pos.y();
+    dx/=m_editView->m_scale;
+    dy/=m_editView->m_scale;
+
+    m_movex+=dx;
+    m_movey+=-dy;
+}
+
+void DsEditStateMoveOffset::mousePressEvent(QMouseEvent* event)
+{
+    if(event->buttons()&Qt::LeftButton)
+    {
+        DsData* data=DsData::shareData();
+        DsKeyFrame* cur_frame=(DsKeyFrame*)data->getCurFrame();
+        assert(((DsFrame*)cur_frame)->getType()==DsFrame::FRAME_KEY);
+
+        DsFrameImage* cur_frameImg=data->getCurFrameImage();
+        assert(cur_frameImg);
+        float x=cur_frameImg->getOffsetX();
+        float y=cur_frameImg->getOffsetY();
+
+        cur_frameImg->transformVertexW(&x,&y);
+        x+=m_movex;
+        y+=m_movey;
+        cur_frameImg->transformVertexL(&x,&y);
+
+
+        DsOperator::data()->setCurFrameImageOffset(x,y);
+        m_editView->changeToState(&m_editView->m_stateSelect);
+    }
+    else if(event->buttons()&Qt::RightButton)
+    {
+        m_editView->changeToState(&m_editView->m_stateSelect);
+    }
+}
+
+void DsEditStateMoveOffset::draw()
+{
+    DsData* data=DsData::shareData();
+    DsKeyFrame* cur_frame=(DsKeyFrame*)data->getCurFrame();
+    assert(((DsFrame*)cur_frame)->getType()==DsFrame::FRAME_KEY);
+
+    DsFrameImage* cur_frameImg=data->getCurFrameImage();
+    assert(cur_frameImg);
+
+    int image_nu=cur_frame->getFrameImageNu();
+
+    for(int i=image_nu-1;i>=0;i--)
+    {
+        DsFrameImage* image=cur_frame->getFrameImage(i);
+
+        if(image==cur_frameImg)
+        {
+
+            DsFrameImage* temp=cur_frameImg->clone();
+            float x,y;
+            x=temp->getOffsetX();
+            y=temp->getOffsetY();
+
+            temp->transformVertexW(&x,&y);
+            x+=m_movex;
+            y+=m_movey;
+            temp->transformVertexL(&x,&y);
+
+            temp->setOffset(x,y);
+
+            m_editView->drawFrameImage(temp);
+            m_editView->drawFrameImageBorder(temp);
+            m_editView->drawFrameImageCenter(temp);
+            delete temp;
+        }
+        else
+        {
+            m_editView->drawFrameImage(image);
+        }
+
+    }
+}
 
 
 

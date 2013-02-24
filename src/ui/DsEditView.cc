@@ -47,6 +47,7 @@ void DsEditView::initState()
     m_stateSelect.setEditView(this);
     m_statePlay.setEditView(this);
     m_stateMoveCoord.setEditView(this);
+    m_stateMoveOffset.setEditView(this);
     m_curState=&m_stateIdel;
     toDefaultState();
 
@@ -358,13 +359,17 @@ void DsEditView::drawGrid()
 void DsEditView::drawFrameImage(DsFrameImage* image)
 {
     glPushMatrix();
-    float x,y,width,height,sx,sy,angle;
+    setFrameImageTransform(image);
+	rawDrawFrameImage(image);
+    glPopMatrix();
+}
+
+void DsEditView::setFrameImageTransform(DsFrameImage* image)
+{
+    float x,y,sx,sy,angle;
 
     x=image->getPosX();
     y=image->getPosY();
-
-    width=image->getWidth();
-    height=image->getHeight();
 
     sx=image->getScaleX();
     sy=image->getScaleY();
@@ -375,39 +380,61 @@ void DsEditView::drawFrameImage(DsFrameImage* image)
     glTranslatef(x,y,0);
     glRotatef(angle,0,0,1);
     glScalef(sx,sy,1);
+}
 
-	rawDrawFrameImage(image);
+
+void DsEditView::drawFrameImageBorder(DsFrameImage* image)
+{
+    float vx0,vy0,vx1,vy1;
+    glPushMatrix();
+    setFrameImageTransform(image);
+    image->getVertex(&vx0,&vy0,&vx1,&vy1);
+    setLineColor(1.0,0.0,0.0);
+    drawLine(vx0,vy0,vx1,vy0);
+    drawLine(vx1,vy0,vx1,vy1);
+    drawLine(vx1,vy1,vx0,vy1);
+    drawLine(vx0,vy1,vx0,vy0);
     glPopMatrix();
 }
+void DsEditView::drawFrameImageCenter(DsFrameImage* image)
+{
+    float x,y;
+    x=image->getPosX();
+    y=image->getPosY();
+    setPointColor(1.0,0.0,0.0,1.0);
+    drawPoint(x,y,5.0);
+}
+
 
 void DsEditView::rawDrawFrameImage(DsFrameImage* image)
 {
     float width=image->getWidth();
     float height=image->getHeight();
     float cx0,cy0,cx1,cy1;
+    float vx0,vy0,vx1,vy1;
+    float alpha;
+    float fx,fy;
+
     image->getTextureArea(&cx0,&cy0,&cx1,&cy1);
+    image->getVertex(&vx0,&vy0,&vx1,&vy1);
 
     DsImage* ds_img=image->getImage();
     if(ds_img->texture==0)
     {
         ds_img->texture=bindTexture(*ds_img->image);
     }
-    /*
-    out<<"wdith:"<<ds_img->image->width()<<" height:"<<ds_img->image->height()<<endl;
+    alpha=image->getAlpha();
 
-    out<<"DrawImage:"<<image->getName().c_str()<<" x:"<<x<<" y:"<<y<<" width:"<<width<<" height:"<<height;
-    out<<" sx:"<<sx<<" sy:"<<sy;
-    out<<" tex:"<<ds_img->texture<<" tx0:"<<cx0<<" cy0:"<<cy0<<" cx1:"<<cx1<<" cy1:"<<cy1<<endl;
-    */
-    glColor3f(1.0,1.0,1.0);
+
+    glColor4f(1.0,1.0,1.0,alpha);
     glBindTexture(GL_TEXTURE_2D,ds_img->texture);
 
     float vertex[8]=
     {
-        -width/2,-height/2,
-        width/2,-height/2,
-        width/2,height/2,
-        -width/2,height/2
+        vx0,vy0,
+        vx1,vy0,
+        vx1,vy1,
+        vx0,vy1
     };
     float texcoord[8]=
     {
@@ -421,12 +448,37 @@ void DsEditView::rawDrawFrameImage(DsFrameImage* image)
 
     glDrawArrays(GL_QUADS,0,4);
 }
+
+void DsEditView::drawPoint(float x,float y,float size)
+{
+    glPointSize(size);
+    glColor4f(m_pr,m_pg,m_pb,m_pa);
+    glDisable(GL_TEXTURE_2D);
+    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    glDisableClientState(GL_VERTEX_ARRAY);
+
+    glBegin(GL_POINTS);
+        glVertex2f(x,y);
+    glEnd();
+
+    glEnable(GL_TEXTURE_2D);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    glEnableClientState(GL_VERTEX_ARRAY);
+}
+
+void DsEditView::setPointColor(float r,float g,float b,float a)
+{
+    m_pr=r;
+    m_pg=g;
+    m_pb=b;
+    m_pa=a;
+}
 void DsEditView::setLineColor(float r,float g,float b,float a)
 {
-    m_r=r;
-    m_g=g;
-    m_b=b;
-    m_a=a;
+    m_lr=r;
+    m_lg=g;
+    m_lb=b;
+    m_la=a;
 }
 
 void DsEditView::drawLine(float x0,float y0,float x1,float y1,float width)
