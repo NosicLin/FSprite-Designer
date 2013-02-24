@@ -32,7 +32,7 @@ class DsSpriteDisplay:public QWidget
 
 };
 
-#if 0
+
 class DsSpriteTreeWidget:public QTreeWidget
 {
     Q_OBJECT
@@ -43,6 +43,7 @@ class DsSpriteTreeWidget:public QTreeWidget
     public slots:
         void slotProjectInited();
         void slotCurProjectChange();
+        void slotCurSpriteChange();
         void slotCurAnimationChange();
         void slotCurrentItemChanged ( QTreeWidgetItem * current, QTreeWidgetItem * previous);
 
@@ -130,5 +131,4 @@ protected:
     //void setCurAnimation(std::string animtionName);
 };
 
-#endif
 #endif /*_DS_SPRITE_DISPLAY_H_*/
