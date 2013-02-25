@@ -5,11 +5,11 @@
 #include <QImage>
 #include <QObject>
 
-class DsProject;
-class DsSprite;
-class DsAnimation;
-class DsFrame;
-class DsFrameImage;
+#include "DsProject.h"
+#include "DsSprite.h"
+#include "DsAnimation.h"
+#include "DsFrame.h"
+#include "DsFrameImage.h"
 
 class DsImage
 {
@@ -64,6 +64,7 @@ public:
 
     void setCurSprite(const std::string& id);
     DsSprite* getCurSprite();
+    DsProject::DsSpriteInfo* getCurSpriteInfo();
 
 
 	/* animation */

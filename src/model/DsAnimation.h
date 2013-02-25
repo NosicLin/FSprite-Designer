@@ -30,7 +30,8 @@ class  DsAnimation
 
 		/* key frame function */
 		void removeKeyFrame(int index);
-		void insertKeyFrame(int index);
+        void insertKeyFrame(int index);
+        void insertKeyFrame(int index,DsFrame* frame);
 		void insertEmptyKeyFrame(int index);
         void insertTween(int index);
         void removeTween(int index);

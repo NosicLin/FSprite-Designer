@@ -8,7 +8,9 @@ class DsFrameImage
 {
 	public:
 		static DsFrameImage* create(const std::string& img_name);
-		~DsFrameImage();
+        ~DsFrameImage();
+        DsFrameImage& operator=(const DsFrameImage& image);
+
 
     public:
         std::string getID(){return m_id;}
