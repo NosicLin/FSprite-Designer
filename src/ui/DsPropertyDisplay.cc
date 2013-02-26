@@ -122,7 +122,7 @@ void DsPropertyDisplay::slotSetOffset()
 void DsPropertyDisplay::slotSetAlpha(double value)
 {
     disconnectDsDataSignal();
-    //add implement
+    DsOperator::data()->setCurFrameImageAlpha(value);
     connectDsDataSignal();
 }
 void DsPropertyDisplay::slotSetDoubleSpinBoxValue(int value)

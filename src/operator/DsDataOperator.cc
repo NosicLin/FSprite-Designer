@@ -285,6 +285,17 @@ void DsDataOperator::setCurFrameImageTextureArea(float cx0,float cy0,float cx1,f
         m_data->emitSignal(DsData::SG_FRAME_IMAGE_PROPERTY_CHANGE);
     }
 }
+
+void DsDataOperator::setCurFrameImageAlpha(float alpha)
+{
+    DsFrameImage* img=m_data->getCurFrameImage();
+    if(img)
+    {
+        img->setAlpha(alpha);
+        m_data->emitSignal(DsData::SG_FRAME_IMAGE_PROPERTY_CHANGE);
+    }
+}
+
 void DsDataOperator::newAnimation()
 {
     DsSprite* sprite=m_data->getCurSprite();
