@@ -314,10 +314,13 @@ void DsMainFrame::initLayout()
 {
 
 	m_clientArea->setSizePolicy(QSizePolicy::Expanding,
-			QSizePolicy::Expanding);
-	setCentralWidget(m_clientArea);
+            QSizePolicy::Expanding);
 
-    QHBoxLayout* hlayout= new QHBoxLayout(m_clientArea);
+    QSplitter* hsplitter=new QSplitter(Qt::Horizontal,m_clientArea);
+    setCentralWidget(hsplitter);
+
+    //QHBoxLayout* hlayout= new QHBoxLayout(m_clientArea);
+
 
     QTabWidget* left=new QTabWidget();
     left->setElideMode(Qt::ElideRight);
@@ -328,18 +331,26 @@ void DsMainFrame::initLayout()
 
 
 
+    /*
     hlayout->addWidget(left);
     hlayout->addWidget(m_editSpace,1);
     hlayout->addWidget(m_spriteDisplay);
+    */
+    hsplitter->addWidget(left);
+    hsplitter->addWidget(m_editSpace);
+    hsplitter->addWidget(m_spriteDisplay);
+
+    hsplitter->setStretchFactor(1,1);
+
     //hlayout->setStretchFactor(1,1);
 
     //hsplitter->addWidget(m_spriteDisplay);
 
-    //QHBoxLayout* hbox=new QHBoxLayout(m_clientArea);
+    QHBoxLayout* hbox=new QHBoxLayout(this);
+    hbox->addWidget(m_clientArea);
+    setLayout(hbox);
 
-
-    //hbox->addWidget(hlayout);
-    m_clientArea->setLayout(hlayout);
+    //m_clientArea->setLayout(hlayout);
 
 
 
