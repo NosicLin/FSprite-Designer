@@ -2,6 +2,11 @@
 #include <QVBoxLayout>
 #include "DsQrcMacros.h"
 #include "DsResourceDisplay.h"
+#include "src/model/DsData.h"
+#include "src/model/DsProject.h"
+#include <QFileIconProvider>
+
+extern DsData* s_shareData;
 
 DsResourceDisplay::DsResourceDisplay(QWidget* p)
     :QWidget(p)
@@ -13,36 +18,29 @@ DsResourceDisplay::DsResourceDisplay(QWidget* p)
     m_tree->setHeaderLabel("Path");
     m_tree->setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
     m_tree->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-    connect(m_tree, SIGNAL(clicked(const QModelIndex &)), this, SLOT(addSomething()));
+    connect(m_tree, SIGNAL(clicked(const QModelIndex &)), this, SLOT(selectSomething()));
     connect(m_tree, SIGNAL(itemExpanded(QTreeWidgetItem *)), this, SLOT(expandSomething(QTreeWidgetItem *)));
-
-    QPushButton *addButton = new QPushButton("add", this);
-    connect(addButton, SIGNAL(clicked()), this, SLOT(openSomething()));
-
-    QPushButton *deleteButton = new QPushButton("delete", this);
-    connect(deleteButton, SIGNAL(clicked()), this, SLOT(deleteSomething()));
 
     QVBoxLayout *topLayout = new QVBoxLayout;
     topLayout->addWidget(m_tree);
-    QVBoxLayout *downLeftLayout = new QVBoxLayout;
-    downLeftLayout->addWidget(addButton, 0, Qt::AlignHCenter);
-    QVBoxLayout *downRightLayout = new QVBoxLayout;
-    downRightLayout->addWidget(deleteButton, 0, Qt::AlignHCenter);
+
+    QPushButton *flushButton = new QPushButton("flush", this);
     QHBoxLayout *downLayout = new QHBoxLayout;
-    downLayout->addLayout(downLeftLayout, 0);
-    downLayout->addLayout(downRightLayout, 1);
+    downLayout->addWidget(flushButton, 0, Qt::AlignHCenter);
+
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->addLayout(topLayout, 0);
     mainLayout->addLayout(downLayout, 1);
     setLayout(mainLayout);
+
+    connect(DsData::shareData(), SIGNAL(signalCurProjectChange()), this, SLOT(addResFolder()));
 }
 
 void DsResourceDisplay::addResFolder(const std::string &folder)
 {
     char szdata[1024] = {'\0'};
     strcpy_s(szdata, 1024, folder.data()); //--// string to char*
-    QString strpath;
-    strpath = QTextCodec::codecForName("GBK")->toUnicode(szdata);
+    QString strpath(szdata);
     if (!strpath.isNull()) // user choiced folder
     {
         if (strpath.right(1) != QString('/'))
@@ -57,20 +55,15 @@ void DsResourceDisplay::addResFolder(const std::string &folder)
     }
 }
 
-void DsResourceDisplay::addSomething() // 点击图片图标，返回路径和文件名
+void DsResourceDisplay::selectSomething() // 点击图片图标，返回路径和文件名
 {
     int num = m_tree->currentItem()->childCount();
     if (num == 0)
     {
         QString dirTemp;
         QString fileName;
-        QByteArray byteTemp;
-        char szdata[1024] = {'\0'};
 
         fileName = m_tree->currentItem()->text(0);
-        byteTemp = fileName.toLocal8Bit();
-        strcpy_s(szdata, 1024, byteTemp.data());
-        std::string filename(szdata);
 
         if(fileName.right(4).compare(".jpg", Qt::CaseInsensitive) == 0 ||
                 fileName.right(4).compare(".bmp", Qt::CaseInsensitive) == 0 ||
@@ -78,9 +71,10 @@ void DsResourceDisplay::addSomething() // 点击图片图标，返回路径和�
                 fileName.right(4).compare(".png", Qt::CaseInsensitive) == 0)
         {
             dirTemp = GetParentDirFromItem(m_tree->currentItem());
-            byteTemp = dirTemp.toLocal8Bit();
-            strcpy_s(szdata, 1024, byteTemp.data());
-            std::string path(szdata); //--// char* to string
+
+            std::string path(qPrintable(dirTemp));
+            std::string filename(qPrintable(fileName));
+
             emit resFileSelect(path, filename);
         }
     }
@@ -120,7 +114,7 @@ void DsResourceDisplay::expandSomething(QTreeWidgetItem *treeItem)
     }
 }
 
-void DsResourceDisplay::openSomething()
+void DsResourceDisplay::openSomething() // add一个文件夹
 {
     QString filename = QFileDialog::getExistingDirectory(this, "Open Dir", m_dir, QFileDialog::ShowDirsOnly);
     if (!filename.isNull()) // user choiced folder
@@ -136,12 +130,7 @@ void DsResourceDisplay::openSomething()
         m_tree->addTopLevelItem(noteTemp);
         AddFileItem(m_dir, noteTemp);
 
-        QByteArray byteTemp;
-        char szdata[1024] = {'\0'};
-
-        byteTemp = m_dir.toLocal8Bit();
-        strcpy_s(szdata, 1024, byteTemp.data());
-        std::string path(szdata);
+        std::string path(qPrintable(m_dir));
 
         emit resFolderAdd(path);
     }
@@ -163,11 +152,7 @@ void DsResourceDisplay::deleteSomething()
             DeleteItem(currentItem);
             currentItem = NULL;
 
-            QByteArray byteTemp;
-            char szdata[1024] = {'\0'};
-            byteTemp = dirTemp.toLocal8Bit();
-            strcpy_s(szdata, 1024, byteTemp.data()); //--// QString to char*
-            std::string path(szdata);
+            std::string path(qPrintable(dirTemp));
 
             emit resFolderDelete(path);
         }
@@ -258,7 +243,6 @@ int DsResourceDisplay::AddFileItem(QString strDir, QTreeWidgetItem *currentItem)
         if (enableAddSign)
         {
             QTreeWidgetItem *noteTemp = new QTreeWidgetItem();
-            //--// char* to QString
             noteTemp->setText(0, fileInfo.fileName());
             currentItem->addChild(noteTemp);
             if (isDirSign)
@@ -268,8 +252,38 @@ int DsResourceDisplay::AddFileItem(QString strDir, QTreeWidgetItem *currentItem)
             else
             {
                 //添加图片图标
+                /*
                 QString fileNameTemp = GetDirFromItem(noteTemp);
                 QString fileName = fileNameTemp.left(fileNameTemp.length() - 1);
+
+                QPixmap filePixmap("E:/pictureWM/20101041112279040.jpg");
+                filePixmap.scaled(128, 128);
+                QIcon fileIcon;
+                fileIcon.addPixmap(filePixmap);
+                //fileIcon.addFile("E:/pictureWM/20101041112279040.jpg", QSize(64, 64));
+                noteTemp->setIcon(0, fileIcon);
+                */
+
+                /*
+                QFileIconProvider fileIcon;
+                noteTemp->setIcon(0, fileIcon.icon(fileInfo));
+                //*/
+
+                /*
+                QIcon fileIcon;
+                fileIcon.addFile(fileInfo.absoluteFilePath(), QSize(16, 16));
+                noteTemp->setIcon(0, fileIcon);
+                */
+
+                /*
+                QPixmap *filePixmap = new QPixmap("E:/pictureWM/20101041112279040.jpg");
+                filePixmap->scaled(16, 16);
+                QIcon *fileIcon = new QIcon(*filePixmap);
+                noteTemp->setIcon(0, *fileIcon);
+                //*/
+
+                //noteTemp->setIcon(0, QIcon("E:/pictureWM/20101041112279040.jpg"));
+
                 noteTemp->setIcon(0, QIcon(DS_TL_NEW)); // 待改进
 
             }
@@ -309,4 +323,23 @@ void DsResourceDisplay::debugSomething()
 {
     qDebug() << "Hello world";
     QMessageBox::information(this, "Document", "Hello World!", QMessageBox::Ok);
+}
+
+void DsResourceDisplay::addResFolder()
+{
+    QMessageBox::information(this, "Document", "Test OK", QMessageBox::Ok);
+    DsData *dsDataTemp = DsData::shareData();
+    if (dsDataTemp == NULL)
+    {
+        return;
+    }
+    else
+    {
+        DsProject *dsProjectTemp = dsDataTemp->getProject();
+        if (dsProjectTemp != NULL)
+        {
+            std::string strRes = dsProjectTemp->getDirName();
+            addResFolder(strRes);
+        }
+    }
 }

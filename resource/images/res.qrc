@@ -1,11 +1,9 @@
 <RCC>
     <qresource prefix="/images">
         <file>FAERIS_LOGO.png</file>
-        <file>IDI_SCALE.png</file>
         <file>IDI_ADD.png</file>
         <file>IDI_ADD_BKGND.png</file>
         <file>IDI_ANIMATION.png</file>
-        <file>IDI_UNDO.png</file>
         <file>IDI_CLOSE.png</file>
         <file>IDI_COORDINATE.png</file>
         <file>IDI_COPY.png</file>
@@ -27,17 +25,18 @@
         <file>IDI_PAST.png</file>
         <file>IDI_PERSITION.png</file>
         <file>IDI_PLAY.png</file>
+        <file>IDI_PROJECT.png</file>
         <file>IDI_RESIZE.png</file>
+        <file>IDI_ROTATE.png</file>
         <file>IDI_SAVE.png</file>
         <file>IDI_SAVE_AS.png</file>
+        <file>IDI_SCALE.png</file>
         <file>IDI_SOFTWARE.ico</file>
         <file>IDI_SPRITE.png</file>
+        <file>IDI_STOP.png</file>
         <file>IDI_TEAM_LOGO.png</file>
-        <file>IDI_ROTATE.png</file>
+        <file>IDI_UNDO.png</file>
         <file>IDI_ZOOM_IN.png</file>
         <file>IDI_ZOOM_OUT.png</file>
-        <file>IDI_STOP.png</file>
-        <file>SpriteTreeItem/IDI_ANIMATION.png</file>
-        <file>SpriteTreeItem/IDI_SPRITE.png</file>
     </qresource>
 </RCC>

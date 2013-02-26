@@ -68,4 +68,3 @@ FORMS += \
 
 QT+=opengl
 QT+=xml
-CONFIG+=release
