@@ -189,6 +189,27 @@ DsFrameImage* DsFrameImage::clone()
     return ret;
 }
 
+DsFrameImage& DsFrameImage::operator =(const DsFrameImage& image)
+{
+    this->m_image=image.m_image;
+    this->m_width=image.m_width;
+    this->m_height=image.m_height;
+    this->m_tx=image.m_tx;
+    this->m_ty=image.m_ty;
+    this->m_sx=image.m_sx;
+    this->m_sy=image.m_sy;
+    this->m_angle=image.m_angle;
+    this->m_areax0=image.m_areax0;
+    this->m_areay0=image.m_areay0;
+    this->m_areax1=image.m_areax1;
+    this->m_areay1=image.m_areay1;
+    this->m_alpha=image.m_alpha;
+    this->m_fx=image.m_fx;
+    this->m_fy=image.m_fy;
+    return *this;
+}
+
+
 DsFrameImage* DsFrameImage::slerp(DsFrameImage* to,float t)
 {
 

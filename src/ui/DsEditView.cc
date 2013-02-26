@@ -4,7 +4,7 @@
 #include <QTextStream>
 #include <vector>
 #include "util/DsDebug.h"
-
+#include "operator/DsOperator.h"
 
 
 
@@ -212,6 +212,12 @@ void DsEditView::keyPressEvent(QKeyEvent* event)
         m_sDPrevCursor=cursor();
         setCursor(Qt::ClosedHandCursor);
         break;
+    case Qt::Key_C:
+        DsOperator::aux()->copyFrameImage();
+        break;
+    case Qt::Key_V:
+        DsOperator::aux()->pasteFrameImage();
+
     default:
         break;
     }
@@ -328,17 +334,17 @@ void DsEditView::drawAxis()
 }
 void DsEditView::drawGrid()
 {
-	QSize wsize=size();
-	float x0,y0,x1,y1;
-	x0=0;
-	y0=0;
-	x1=wsize.width();
-	y1=wsize.height();
+    QSize wsize=size();
+    float x0,y0,x1,y1;
+    x0=0;
+    y0=0;
+    x1=wsize.width();
+    y1=wsize.height();
 
-	transformToRealCoord(&x0,&y0);
-	transformToRealCoord(&x1,&y1);
+    transformToRealCoord(&x0,&y0);
+    transformToRealCoord(&x1,&y1);
 
-	int vline_start=x0/m_gridWidth;
+    int vline_start=x0/m_gridWidth;
     int vline_end=x1/m_gridWidth+1;
 
     int hline_start=y0/m_gridHeight;
@@ -354,9 +360,9 @@ void DsEditView::drawGrid()
     DsDebug<<" x0:"<<vline_start<<" y0:"<<vline_end<<" x1:"<<hline_start<<" y1"<<hline_end<<endl;
 
     setLineColor(0.8f,0.8f,0.8f);
-	for(int i=vline_start;i<=vline_end;i++)
-	{
-		drawLine(i*m_gridWidth,-10000,i*m_gridWidth,10000);
+    for(int i=vline_start;i<=vline_end;i++)
+    {
+        drawLine(i*m_gridWidth,-10000,i*m_gridWidth,10000);
     }
     for(int i=hline_start;i<=hline_end;i++)
     {
@@ -367,7 +373,7 @@ void DsEditView::drawFrameImage(DsFrameImage* image)
 {
     glPushMatrix();
     setFrameImageTransform(image);
-	rawDrawFrameImage(image);
+    rawDrawFrameImage(image);
     glPopMatrix();
 }
 
@@ -484,7 +490,7 @@ void DsEditView::drawPoint(float x,float y,float size)
     glDisableClientState(GL_VERTEX_ARRAY);
 
     glBegin(GL_POINTS);
-        glVertex2f(x,y);
+    glVertex2f(x,y);
     glEnd();
 
     glEnable(GL_TEXTURE_2D);

@@ -1,6 +1,7 @@
 #ifndef _DS_AUX_OPERATOR_H_
 #define _DS_AUX_OPERATOR_H_
 
+#include "model/DsModel.h"
 class DsAuxOperator
 {
 	public:
@@ -12,9 +13,15 @@ class DsAuxOperator
 
 		void undo();
 		void redo();
+		bool canUndo();
+        bool canRedo();
 
-		void copyFrame();
-		void pastFrame();
+        void canCopyFrame();
+        void copyFrame();
+
+        void canPasteFrame();
+        void pasteFrame();
+
 	private:
 		DsData* m_data;
 };

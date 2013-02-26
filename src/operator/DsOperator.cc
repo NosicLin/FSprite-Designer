@@ -7,6 +7,7 @@
 static DsDataOperator* s_data=NULL;
 static DsAnimationOperator* s_animation=NULL;
 static DsIoOperator* s_io=NULL;
+static DsAuxOperator* s_aux=NULL;
 
 
 DsAnimationOperator* DsOperator::animation()
@@ -32,6 +33,14 @@ DsDataOperator* DsOperator::data()
         s_data=new DsDataOperator;
     }
     return s_data;
+}
+DsAuxOperator* DsOperator::aux()
+{
+    if(s_aux==NULL)
+    {
+        s_aux=new DsAuxOperator;
+    }
+    return  s_aux;
 }
 
 

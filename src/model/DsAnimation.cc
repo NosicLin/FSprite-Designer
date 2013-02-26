@@ -227,11 +227,11 @@ void DsAnimation::removeKeyFrame(int index)
 
 void DsAnimation::insertFrameTypeKey(int index,bool empty)
 {
-	int keypos=toKeyFramePos(index);
+    int keypos=toKeyFramePos(index);
 	if(keypos==-1)
 	{
-		DsFrame* insert_frame=new DsKeyFrame(index);
-		rawInsertFrame(insert_frame);
+        DsFrame* insert_frame=new DsKeyFrame(index);
+        rawInsertFrame(insert_frame);
 		return;
 	}
 

@@ -21,7 +21,8 @@ SOURCES += \
     src/util/DsUtil.cc \
     src/operator/DsIoOperator.cc \
     src/model/DsSprite.cc \
-    src/util/DsUtilLoader.cc
+    src/util/DsUtilLoader.cc \
+    src/operator/DsAuxOperator.cc
 
 HEADERS += \
     src/ui/DsSpriteDisplay.h \
@@ -48,7 +49,8 @@ HEADERS += \
     src/operator/DsIoOperator.h \
     src/model/DsProject.h \
     src/util/DsUtilLoader.h \
-    src/model/DsModel.h
+    src/model/DsModel.h \
+    src/operator/DsAuxOperator.h
 
 INCLUDEPATH +=src/
 

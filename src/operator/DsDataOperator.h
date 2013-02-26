@@ -64,7 +64,7 @@ class DsDataOperator
         void setCurFrameImageScale(float sx,float sy);
         void setCurFrameImageAngle(float angle);
         void setCurFrameImageOffset(float fx,float fy);
-		void setArea(float x0,float y0,float x1,float y1);
+	void setCurFrameImageTextureArea(float x0,float y0,float x1,float y1);
 	private:
 		DsData* m_data;
 

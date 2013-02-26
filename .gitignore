@@ -35,6 +35,7 @@ temp
 *.idb 
 *.manifest
 *.DLL
+*.dll
 
 *.swo
 
