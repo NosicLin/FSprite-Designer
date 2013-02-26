@@ -56,12 +56,6 @@ DsPropertyDisplay::DsPropertyDisplay(QWidget* parent)
     connect(alphaDoubleSpinBox,SIGNAL(valueChanged(double)),
             this,SLOT(slotSetAlpha(double)));
 
-    void setCurFrameImagePos(float tx,float ty);
-    void setCurFrameImageScale(float sx,float sy);
-    void setCurFrameImageAngle(float angle);
-    void setCurFrameImageOffset(float fx,float fy);
-    void setCurFrameImageTextureArea(float x0,float y0,float x1,float y1);
-
 
 }
 
@@ -242,8 +236,8 @@ void DsPropertyDisplay::createLayout()
     posYDoubleSpinbox->setSingleStep(1);
 
     //2 setup angle
-    angleLabel = new QLabel(tr("Angle:"));
-    angLabel = new QLabel(tr("An:"));
+    angleLabel = new QLabel(tr("Rotate:"));
+    angLabel = new QLabel(tr("Angle:"));
     angleSpinDoubleBox = new QDoubleSpinBox(this);
     angleSpinDoubleBox->setDecimals(4);
     angleSpinDoubleBox->setRange(-DBL_MAX,DBL_MAX);
@@ -258,11 +252,11 @@ void DsPropertyDisplay::createLayout()
     scaleYDoubleSpinBox = new QDoubleSpinBox(this);
 
     scaleXDoubleSpinBox->setDecimals(4);
-    scaleXDoubleSpinBox->setRange(-DBL_MAX,DBL_MAX);
+    scaleXDoubleSpinBox->setRange(0,DBL_MAX);
     scaleXDoubleSpinBox->setSingleStep(0.05);
 
     scaleYDoubleSpinBox->setDecimals(4);
-    scaleYDoubleSpinBox->setRange(-DBL_MAX,DBL_MAX);
+    scaleYDoubleSpinBox->setRange(0,DBL_MAX);
     scaleYDoubleSpinBox->setSingleStep(0.05);
 
     //4 setup TextureArea
@@ -278,18 +272,18 @@ void DsPropertyDisplay::createLayout()
     textureY1DoubleSpinBox = new QDoubleSpinBox(this);
 
     textureX0DoubleSpinBox->setDecimals(6);
-    textureX0DoubleSpinBox->setRange(-DBL_MAX,DBL_MAX);
-    textureX0DoubleSpinBox->setSingleStep(0.01);
+    textureX0DoubleSpinBox->setRange(0,1);
+    textureX0DoubleSpinBox->setSingleStep(0.05);
     textureY0DoubleSpinBox->setDecimals(6);
-    textureY0DoubleSpinBox->setRange(-DBL_MAX,DBL_MAX);
-    textureY0DoubleSpinBox->setSingleStep(0.01);
+    textureY0DoubleSpinBox->setRange(0,1);
+    textureY0DoubleSpinBox->setSingleStep(0.05);
 
     textureX1DoubleSpinBox->setDecimals(6);
-    textureX1DoubleSpinBox->setRange(-DBL_MAX,DBL_MAX);
-    textureX1DoubleSpinBox->setSingleStep(0.01);
+    textureX1DoubleSpinBox->setRange(0,1);
+    textureX1DoubleSpinBox->setSingleStep(0.05);
     textureY1DoubleSpinBox->setDecimals(6);
-    textureY1DoubleSpinBox->setRange(-DBL_MAX,DBL_MAX);
-    textureY1DoubleSpinBox->setSingleStep(0.01);
+    textureY1DoubleSpinBox->setRange(0,1);
+    textureY1DoubleSpinBox->setSingleStep(0.05);
 
     //5 setup offset
     offsetLabel = new QLabel(tr("Offset:"));
@@ -305,8 +299,8 @@ void DsPropertyDisplay::createLayout()
     offsetYDoubleSpinbox->setSingleStep(1);
 
     //6 setup alpha
-    alphaLabel = new QLabel(tr("Alpha:"));
-    alLabel = new QLabel(tr("Al:"));
+    alphaLabel = new QLabel(tr("Transparent:"));
+    alLabel = new QLabel(tr("Alpha:"));
     alphaDoubleSpinBox = new QDoubleSpinBox(this);
     alphaDoubleSpinBox->setDecimals(6);
     alphaDoubleSpinBox->setRange(0.0,1.0);
@@ -338,10 +332,10 @@ void DsPropertyDisplay::createLayout()
     QVBoxLayout* angMainLayout = new QVBoxLayout;
     QHBoxLayout* angButtonLayout = new QHBoxLayout;
     angButtonLayout->setSpacing(0);     //set both the vertical and horizontal spacing to spacing
-    angButtonLayout->addItem(new QSpacerItem(indentation,0));
+    angButtonLayout->addItem(new QSpacerItem(indentation-25,0));
     angButtonLayout->addWidget(angLabel,1);
-    angButtonLayout->addWidget(angleSpinDoubleBox,3);
-    angButtonLayout->addStretch(10);
+    angButtonLayout->addWidget(angleSpinDoubleBox,2);
+    angButtonLayout->addStretch(2);
 
     angMainLayout->addWidget(angleLabel);
     angMainLayout->addLayout(angButtonLayout);
@@ -427,7 +421,7 @@ void DsPropertyDisplay::createLayout()
     QVBoxLayout* alphaMainLayout = new QVBoxLayout();
     QHBoxLayout* alphaButtonLayout = new QHBoxLayout();
     alphaButtonLayout->setSpacing(0);     //set both the vertical and horizontal spacing to spacing
-    alphaButtonLayout->addItem(new QSpacerItem(indentation,0));
+    alphaButtonLayout->addItem(new QSpacerItem(indentation-30,0));
     alphaButtonLayout->addWidget(alLabel,1);
     alphaButtonLayout->addWidget(alphaDoubleSpinBox,3);
     alphaButtonLayout->addWidget(alphaSlider,10);
@@ -452,11 +446,24 @@ void DsPropertyDisplay::createLayout()
 
 void DsPropertyDisplay::connectDsDataSignal()
 {
+    connect(DsData::shareData(),SIGNAL(signalCurProjectChange()),
+            this,SLOT(slotFrameImagePropertyChange()));
+    connect(DsData::shareData(),SIGNAL(signalCurSpriteChange()),
+            this,SLOT(slotFrameImagePropertyChange()));
+    connect(DsData::shareData(),SIGNAL(signalCurAnimationChange()),
+            this,SLOT(slotFrameImagePropertyChange()));
+    connect(DsData::shareData(),SIGNAL(signalCurFrameChange()),
+            this,SLOT(slotFrameImagePropertyChange()));
+    connect(DsData::shareData(),SIGNAL(signalCurFrameImageChange()),
+            this,SLOT(slotFrameImagePropertyChange()));
+
+    connect(DsData::shareData(),SIGNAL(signalProjectPropertyChange()),
+            this,SLOT(slotFrameImagePropertyChange()));
+    connect(DsData::shareData(),SIGNAL(signalAnimationPropertyChange()),
+            this,SLOT(slotFrameImagePropertyChange()));
     connect(DsData::shareData(),SIGNAL(signalFramePropertyChange()),
             this,SLOT(slotFrameImagePropertyChange()));
     connect(DsData::shareData(),SIGNAL(signalFrameImagePropertyChange()),
-            this,SLOT(slotFrameImagePropertyChange()));
-    connect(DsData::shareData(),SIGNAL(signalCurFrameImageChange()),
             this,SLOT(slotFrameImagePropertyChange()));
 }
 
