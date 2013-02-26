@@ -17,8 +17,13 @@ private slots:
 
         //deal with FrameImage property change
         void slotFrameImagePropertyChange();
+        //set FrameImage property
+        void slotSetFrameImageProperty();
 private:
         void createLayout();
+
+signals:
+
 
 private:
     //position

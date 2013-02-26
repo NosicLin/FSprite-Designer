@@ -14,12 +14,17 @@ DsPropertyDisplay::DsPropertyDisplay(QWidget* parent)
 {
     createLayout();
 
+    //
     connect(DsData::shareData(),SIGNAL(signalFramePropertyChange()),
             this,SLOT(slotFrameImagePropertyChange()));
     connect(DsData::shareData(),SIGNAL(signalFrameImagePropertyChange()),
             this,SLOT(slotFrameImagePropertyChange()));
     connect(DsData::shareData(),SIGNAL(signalCurFrameImageChange()),
             this,SLOT(slotFrameImagePropertyChange()));
+
+
+    //set FrameImage property
+    slotSetFrameImageProperty()
 
 }
 
