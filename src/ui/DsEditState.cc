@@ -972,7 +972,7 @@ void DsEditStateTextureArea::mousePressEvent(QMouseEvent* event)
         cy0=DsUtil::clamp(cy0,0,1);
         cy1=DsUtil::clamp(cy1,0,1);
 
-        cur_frameImg->setTextureArea(cx0,cy0,cx1,cy1);
+        DsOperator::data()->setTextureArea(cx0,cy0,cx1,cy1);
 
         m_editView->changeToState(&m_editView->m_stateSelect);
     }
