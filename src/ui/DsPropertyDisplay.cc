@@ -7,6 +7,8 @@
 #include <QDebug>
 
 #include "model\DsData.h"
+#include "operator\DsDataOperator.h"
+#include "operator\DsOperator.h"
 #include "model\DsProject.h"
 #include "model\DsFrameImage.h"
 DsPropertyDisplay::DsPropertyDisplay(QWidget* parent)
@@ -14,16 +16,115 @@ DsPropertyDisplay::DsPropertyDisplay(QWidget* parent)
 {
     createLayout();
 
-    connect(DsData::shareData(),SIGNAL(signalFramePropertyChange()),
-            this,SLOT(slotFrameImagePropertyChange()));
-    connect(DsData::shareData(),SIGNAL(signalFrameImagePropertyChange()),
-            this,SLOT(slotFrameImagePropertyChange()));
-    connect(DsData::shareData(),SIGNAL(signalCurFrameImageChange()),
-            this,SLOT(slotFrameImagePropertyChange()));
+
+    connectDsDataSignal();
+
+    //set FrameImage property
+    //position
+    connect(posXDoubleSpinbox,SIGNAL(valueChanged(double)),
+            this,SLOT(slotSetPositon()));
+    connect(posYDoubleSpinbox,SIGNAL(valueChanged(double)),
+            this,SLOT(slotSetPositon()));
+
+    //angle
+    connect(angleSpinDoubleBox,SIGNAL(valueChanged(double)),
+            this,SLOT(slotSetAngle(double)));
+
+    //scale
+    connect(scaleXDoubleSpinBox,SIGNAL(valueChanged(double)),
+            this,SLOT(slotSetScale()));
+    connect(scaleYDoubleSpinBox,SIGNAL(valueChanged(double)),
+            this,SLOT(slotSetScale()));
+
+    //texture
+    connect(textureX0DoubleSpinBox,SIGNAL(valueChanged(double)),
+            this,SLOT(slotSetTextureArea()));
+    connect(textureY0DoubleSpinBox,SIGNAL(valueChanged(double)),
+            this,SLOT(slotSetTextureArea()));
+    connect(textureX1DoubleSpinBox,SIGNAL(valueChanged(double)),
+            this,SLOT(slotSetTextureArea()));
+    connect(textureY1DoubleSpinBox,SIGNAL(valueChanged(double)),
+            this,SLOT(slotSetTextureArea()));
+
+    //offset
+    connect(offsetXDoubleSpinbox,SIGNAL(valueChanged(double)),
+            this,SLOT(slotSetOffset()));
+    connect(offsetYDoubleSpinbox,SIGNAL(valueChanged(double)),
+            this,SLOT(slotSetOffset()));
+
+    //alpha
+    connect(alphaDoubleSpinBox,SIGNAL(valueChanged(double)),
+            this,SLOT(slotSetAlpha(double)));
+
+    void setCurFrameImagePos(float tx,float ty);
+    void setCurFrameImageScale(float sx,float sy);
+    void setCurFrameImageAngle(float angle);
+    void setCurFrameImageOffset(float fx,float fy);
+    void setCurFrameImageTextureArea(float x0,float y0,float x1,float y1);
+
 
 }
 
+/* set position */
+void DsPropertyDisplay::slotSetPositon()
+{
+    disconnectDsDataSignal();
+    DsOperator::data()->setCurFrameImagePos(
+                posXDoubleSpinbox->value(),
+                posYDoubleSpinbox->value());
+    connectDsDataSignal();
+}
 
+/* set angle */
+void DsPropertyDisplay::slotSetAngle(double value)
+{
+    disconnectDsDataSignal();
+    DsOperator::data()->setCurFrameImageAngle(value);
+    connectDsDataSignal();
+}
+
+/* set scale */
+void DsPropertyDisplay::slotSetScale()
+{
+    disconnectDsDataSignal();
+    DsOperator::data()->setCurFrameImageScale(
+                scaleXDoubleSpinBox->value(),
+                scaleYDoubleSpinBox->value());
+    connectDsDataSignal();
+}
+
+
+/* set texture */
+void DsPropertyDisplay::slotSetTextureArea()
+{
+    disconnectDsDataSignal();
+    DsOperator::data()->setCurFrameImageTextureArea(
+                textureX0DoubleSpinBox->value(),
+                textureY0DoubleSpinBox->value(),
+                textureX1DoubleSpinBox->value(),
+                textureY1DoubleSpinBox->value());
+    connectDsDataSignal();
+}
+
+/* set offset */
+void DsPropertyDisplay::slotSetOffset()
+{
+    disconnectDsDataSignal();
+    DsOperator::data()->setCurFrameImageOffset(
+                offsetXDoubleSpinbox->value(),
+                offsetYDoubleSpinbox->value()
+                );
+
+    connectDsDataSignal();
+}
+
+/* set alpha */
+void DsPropertyDisplay::slotSetAlpha(double value)
+{
+    disconnectDsDataSignal();
+    //add implement
+    connectDsDataSignal();
+}
 void DsPropertyDisplay::slotSetDoubleSpinBoxValue(int value)
 {
     qDebug()<<"set double spin box value:"<<QString::number((double)value/1000000);
@@ -134,10 +235,10 @@ void DsPropertyDisplay::createLayout()
     posXDoubleSpinbox = new QDoubleSpinBox(this);
     posYDoubleSpinbox = new QDoubleSpinBox(this);
     posXDoubleSpinbox->setDecimals(4);
-    posXDoubleSpinbox->setRange(DBL_MIN,DBL_MAX);
+    posXDoubleSpinbox->setRange(-DBL_MAX,DBL_MAX);
     posXDoubleSpinbox->setSingleStep(1);
     posYDoubleSpinbox->setDecimals(4);
-    posYDoubleSpinbox->setRange(DBL_MIN,DBL_MAX);
+    posYDoubleSpinbox->setRange(-DBL_MAX,DBL_MAX);
     posYDoubleSpinbox->setSingleStep(1);
 
     //2 setup angle
@@ -145,7 +246,7 @@ void DsPropertyDisplay::createLayout()
     angLabel = new QLabel(tr("An:"));
     angleSpinDoubleBox = new QDoubleSpinBox(this);
     angleSpinDoubleBox->setDecimals(4);
-    angleSpinDoubleBox->setRange(DBL_MIN,DBL_MAX);
+    angleSpinDoubleBox->setRange(-DBL_MAX,DBL_MAX);
     angleSpinDoubleBox->setSingleStep(1);
 
 
@@ -157,11 +258,11 @@ void DsPropertyDisplay::createLayout()
     scaleYDoubleSpinBox = new QDoubleSpinBox(this);
 
     scaleXDoubleSpinBox->setDecimals(4);
-    scaleXDoubleSpinBox->setRange(DBL_MIN,DBL_MAX);
+    scaleXDoubleSpinBox->setRange(-DBL_MAX,DBL_MAX);
     scaleXDoubleSpinBox->setSingleStep(0.05);
 
     scaleYDoubleSpinBox->setDecimals(4);
-    scaleYDoubleSpinBox->setRange(DBL_MIN,DBL_MAX);
+    scaleYDoubleSpinBox->setRange(-DBL_MAX,DBL_MAX);
     scaleYDoubleSpinBox->setSingleStep(0.05);
 
     //4 setup TextureArea
@@ -177,17 +278,17 @@ void DsPropertyDisplay::createLayout()
     textureY1DoubleSpinBox = new QDoubleSpinBox(this);
 
     textureX0DoubleSpinBox->setDecimals(6);
-    textureX0DoubleSpinBox->setRange(DBL_MIN,DBL_MAX);
+    textureX0DoubleSpinBox->setRange(-DBL_MAX,DBL_MAX);
     textureX0DoubleSpinBox->setSingleStep(0.01);
     textureY0DoubleSpinBox->setDecimals(6);
-    textureY0DoubleSpinBox->setRange(DBL_MIN,DBL_MAX);
+    textureY0DoubleSpinBox->setRange(-DBL_MAX,DBL_MAX);
     textureY0DoubleSpinBox->setSingleStep(0.01);
 
     textureX1DoubleSpinBox->setDecimals(6);
-    textureX1DoubleSpinBox->setRange(DBL_MIN,DBL_MAX);
+    textureX1DoubleSpinBox->setRange(-DBL_MAX,DBL_MAX);
     textureX1DoubleSpinBox->setSingleStep(0.01);
     textureY1DoubleSpinBox->setDecimals(6);
-    textureY1DoubleSpinBox->setRange(DBL_MIN,DBL_MAX);
+    textureY1DoubleSpinBox->setRange(-DBL_MAX,DBL_MAX);
     textureY1DoubleSpinBox->setSingleStep(0.01);
 
     //5 setup offset
@@ -197,10 +298,10 @@ void DsPropertyDisplay::createLayout()
     offsetXDoubleSpinbox = new QDoubleSpinBox(this);
     offsetYDoubleSpinbox = new QDoubleSpinBox(this);
     offsetXDoubleSpinbox->setDecimals(4);
-    offsetXDoubleSpinbox->setRange(DBL_MIN,DBL_MAX);
+    offsetXDoubleSpinbox->setRange(-DBL_MAX,DBL_MAX);
     offsetXDoubleSpinbox->setSingleStep(1);
     offsetYDoubleSpinbox->setDecimals(4);
-    offsetYDoubleSpinbox->setRange(DBL_MIN,DBL_MAX);
+    offsetYDoubleSpinbox->setRange(-DBL_MAX,DBL_MAX);
     offsetYDoubleSpinbox->setSingleStep(1);
 
     //6 setup alpha
@@ -349,3 +450,17 @@ void DsPropertyDisplay::createLayout()
 
 }
 
+void DsPropertyDisplay::connectDsDataSignal()
+{
+    connect(DsData::shareData(),SIGNAL(signalFramePropertyChange()),
+            this,SLOT(slotFrameImagePropertyChange()));
+    connect(DsData::shareData(),SIGNAL(signalFrameImagePropertyChange()),
+            this,SLOT(slotFrameImagePropertyChange()));
+    connect(DsData::shareData(),SIGNAL(signalCurFrameImageChange()),
+            this,SLOT(slotFrameImagePropertyChange()));
+}
+
+void DsPropertyDisplay::disconnectDsDataSignal()
+{
+    disconnect(DsData::shareData(),0,this,0);
+}

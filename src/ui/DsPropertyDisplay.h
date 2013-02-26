@@ -11,14 +11,32 @@ class DsPropertyDisplay:public QWidget
     Q_OBJECT
 public:
 		DsPropertyDisplay(QWidget* parent);
+
+
 private slots:
         void slotSetDoubleSpinBoxValue(int value);
         void slotSetSliderValue(double value);
 
         //deal with FrameImage property change
         void slotFrameImagePropertyChange();
+
+        //set FrameImage property
+        void slotSetPositon();
+        void slotSetAngle(double value);
+        void slotSetScale();
+
+        void slotSetTextureArea();
+
+        void slotSetOffset();
+
+        void slotSetAlpha(double value);
+
 private:
         void createLayout();
+        void connectDsDataSignal();
+        void disconnectDsDataSignal();
+signals:
+
 
 private:
     //position
