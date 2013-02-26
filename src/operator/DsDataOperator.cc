@@ -276,6 +276,25 @@ void DsDataOperator::setCurFrameImageOffset(float fx,float fy)
         m_data->emitSignal(DsData::SG_FRAME_IMAGE_PROPERTY_CHANGE);
     }
 }
+void DsDataOperator::setCurFrameImageTextureArea(float cx0,float cy0,float cx1,float cy1)
+{
+    DsFrameImage* img=m_data->getCurFrameImage();
+    if(img)
+    {
+        img->setTextureArea(cx0,cy0,cx1,cy1);
+        m_data->emitSignal(DsData::SG_FRAME_IMAGE_PROPERTY_CHANGE);
+    }
+}
+
+void DsDataOperator::setCurFrameImageAlpha(float alpha)
+{
+    DsFrameImage* img=m_data->getCurFrameImage();
+    if(img)
+    {
+        img->setAlpha(alpha);
+        m_data->emitSignal(DsData::SG_FRAME_IMAGE_PROPERTY_CHANGE);
+    }
+}
 
 void DsDataOperator::newAnimation()
 {

@@ -48,7 +48,7 @@ void DsMainFrame::createSpriteDisplay()
 }
 void DsMainFrame::createPropertyDisplay()
 {
-	m_propertyDisplay=new DsPropertyDisplay(m_clientArea);
+    m_propertyDisplay=new DsPropertyDisplay(m_clientArea);
 }
 
 void DsMainFrame::createMenuBar()

@@ -33,7 +33,7 @@ DsResourceDisplay::DsResourceDisplay(QWidget* p)
     mainLayout->addLayout(downLayout, 1);
     setLayout(mainLayout);
 
-    connect(s_shareData, SIGNAL(signalCurProjectChange()), this, SLOT(addResFolder()));
+    connect(DsData::shareData(), SIGNAL(signalCurProjectChange()), this, SLOT(addResFolder()));
 }
 
 void DsResourceDisplay::addResFolder(const std::string &folder)
