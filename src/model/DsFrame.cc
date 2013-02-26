@@ -39,23 +39,10 @@ DsKeyFrame* DsTweenFrame::slerpToKeyFrame(int index)
 	{
 		DsFrameImage* from=m_from->getFrameImage(i);
 		DsFrameImage* to=m_to->getFrameImage(i);
-
-		DsFrameImage* slerp=from->clone();
-		if(from->getImage()==to->getImage())
-        {
-			float x=from->getPosX()*t+to->getPosX()*(1-t);
-			float y=from->getPosY()*t+to->getPosY()*(1-t);
-
-			float angle=from->getAngle()*t+to->getAngle()*(1-t);
-			float sx=from->getScaleX()*t+to->getScaleX()*(1-t);
-			float sy=from->getScaleY()*t+to->getScaleY()*(1-t);
-			slerp->setPos(x,y);
-			slerp->setAngle(angle);
-			slerp->setScale(sx,sy);
-            DsDebug<<"x:"<<x<<" y:"<<y<<" angle:"<<angle<<" sx:"<<sx<<" sy:"<<sy<<endl;
-        }
+        DsFrameImage* slerp=from->slerp(to,t);
 		ret->pushFrameImage(slerp);
-	}
+    }
+
     for(int i=image_nu;i<m_from->getFrameImageNu();i++)
 	{
 		DsFrameImage* img=m_from->getFrameImage(i);
@@ -66,12 +53,12 @@ DsKeyFrame* DsTweenFrame::slerpToKeyFrame(int index)
 }
 
 
-DsFrameImage* DsKeyFrame::getFrameImage(const std::string& name)
+DsFrameImage* DsKeyFrame::getFrameImage(const std::string& id)
 {
 	Iterator iter=m_images.begin();
 	for(;iter!=m_images.end();++iter)
 	{
-        if((*iter)->getName()==name)
+        if((*iter)->getID()==id)
 		{
 			return (*iter);
 		}
@@ -119,15 +106,98 @@ DsKeyFrame* DsKeyFrame::clone()
 
 
 
+void DsKeyFrame::upFrameImage(const std::string& id)
+{
+    int pos=getFrameImagePos(id);
+    assert(pos!=-1);
+
+    if(pos==0)
+    {
+        return;
+    }
+
+    DsFrameImage* temp=m_images[pos];
+    m_images[pos]=m_images[pos-1];
+    m_images[pos-1]=temp;
+}
+void DsKeyFrame::downFrameImage(const std::string& id)
+{
+    int pos=getFrameImagePos(id);
+    assert(pos!=-1);
+    if(pos==m_images.size()-1)
+    {
+        return ;
+    }
+    DsFrameImage* temp=m_images[pos];
+    m_images[pos]=m_images[pos+1];
+    m_images[pos+1]=temp;
+}
+
+void DsKeyFrame::frameImageToEnd(const std::string& id)
+{
+    int pos=getFrameImagePos(id);
+    assert(pos!=-1);
+    DsFrameImage* temp=m_images[pos];
+
+    for(int i=pos;i<m_images.size()-1;i++)
+    {
+        m_images[i]=m_images[i+1];
+    }
+    m_images[m_images.size()-1]=temp;
+
+}
+
+void DsKeyFrame::frameImageToFront(const std::string& id)
+{
+    int pos=getFrameImagePos(id);
+    assert(pos!=-1);
+    DsFrameImage* temp=m_images[pos];
+
+    for(int i=pos;i>0;i--)
+    {
+        m_images[i]=m_images[i-1];
+    }
+    m_images[0]=temp;
+}
+
+int DsKeyFrame::getFrameImagePos(const std::string& id)
+{
+
+    int pos=-1;
+    for(int i=0;i<m_images.size();i++)
+    {
+        if(m_images[i]->getID()==id)
+        {
+            pos=i;
+            break;
+        }
+    }
+    return pos;
+}
 
 
+void DsKeyFrame::removeFrameImage(const std::string& id)
+{
+    Iterator iter;
+    for(iter=m_images.begin();iter!=end();++iter)
+    {
+        if((*iter)->getID()==id)
+        {
+            delete *iter;
+            m_images.erase(iter);
+            return ;
+        }
+    }
+    assert(0); /* never reached here */
+}
 
-
-
-
-
-
-
+DsKeyFrame::~DsKeyFrame()
+{
+    for(int i=0;i<m_images.size();i++)
+    {
+        delete m_images[i];
+    }
+}
 
 
 

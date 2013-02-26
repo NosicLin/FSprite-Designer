@@ -8,6 +8,8 @@
 
 #include "DsMainFrame.h"
 #include "DsQrcMacros.h"
+#include "operator/DsOperator.h"
+#include "util/DsDebug.h"
 
 /* auto gernert files */
 #include "ui_about.h"
@@ -16,13 +18,13 @@
 	DsMainFrame::DsMainFrame(QWidget* parent)
 :QMainWindow(parent)
 {
-	m_clientArea=new QWidget(this);
-	createMenuBar();
+    m_clientArea=new QWidget(this);
+    createMenuBar();
 	createStatusBar();
 	createToolBar();
 	createResourceDisplay();
 	createEditSpace();
-	createSpriteDisplay();
+    createSpriteDisplay();
 	createPropertyDisplay();
 	createDialog();
 	initLayout();
@@ -33,7 +35,7 @@
 
 void DsMainFrame::createResourceDisplay()
 {
-	m_resDisplay=new DsResourceDisplay(m_clientArea);
+    m_resDisplay=new DsResourceDisplay(m_clientArea);
 }
 void DsMainFrame::createEditSpace()
 {
@@ -57,25 +59,26 @@ void DsMainFrame::createMenuBar()
 	QMenu* mn_file=menuBar()->addMenu("&File");
 	{	
 		/* new */
-		ms_new=new QAction(QPixmap(DS_MS_NEW),"&New...",this);
-		mn_file->addAction(ms_new);
-		connect(ms_new,SIGNAL(triggered()),this,SLOT(onNew()));
+        ms_newProject=new QAction(QPixmap(DS_MS_NEW),"&New Project",this);
+        mn_file->addAction(ms_newProject);
+        connect(ms_newProject,SIGNAL(triggered()),this,SLOT(onNewProject()));
 
 
 		/* open */
-		ms_open=new QAction(QPixmap(DS_MS_OPEN),"&Open...",this);
-		mn_file->addAction(ms_open);
-		connect(ms_open,SIGNAL(triggered()),this,SLOT(onOpen()));
+        ms_openProject=new QAction(QPixmap(DS_MS_OPEN),"&Open Project",this);
+        mn_file->addAction(ms_openProject);
+        connect(ms_openProject,SIGNAL(triggered()),this,SLOT(onOpenProject()));
+
+
+        ms_newSprite=new QAction(QPixmap(DS_MS_NEW),"&New Sprite",this);
+        mn_file->addAction(ms_newSprite);
+        connect(ms_newSprite,SIGNAL(triggered()),this,SLOT(onNewSprite()));
 
 		/* save */
 		ms_save=new QAction(QPixmap(DS_MS_SAVE),"&Save",this);
 		mn_file->addAction(ms_save);
 		connect(ms_save,SIGNAL(triggered()),this,SLOT(onSave()));
 
-		/* save as */
-		ms_save_as=new QAction(QPixmap(DS_MS_SAVE_AS),"&Save As...",this);
-		mn_file->addAction(ms_save_as);
-		connect(ms_save_as,SIGNAL(triggered()),this,SLOT(onSaveAs()));
 
 		/* close */
 		ms_close=new QAction(QPixmap(DS_MS_CLOSE),"&Close",this);
@@ -109,6 +112,28 @@ void DsMainFrame::createMenuBar()
 		ms_redo=new QAction(QPixmap(DS_MS_REDO),"&Redo",this);
 		mn_edit->addAction(ms_redo);
 		connect(ms_redo,SIGNAL(triggered()),this,SLOT(onRedo()));
+
+		/* moveUp */
+		ms_moveUp=new QAction(QPixmap(DS_MS_MOVE_UP),"&MoveUp",this);
+		mn_edit->addAction(ms_moveUp);
+		connect(ms_moveUp,SIGNAL(triggered()),this,SLOT(onMoveUp()));
+
+		/* down */
+		ms_moveDown=new QAction(QPixmap(DS_MS_MOVE_DOWN),"&MoveDown",this);
+		mn_edit->addAction(ms_moveDown);
+		connect(ms_moveDown,SIGNAL(triggered()),this,SLOT(onMoveDown()));
+
+		/* tofront */
+		ms_moveFront=new QAction(QPixmap(DS_MS_MOVE_FRONT),"&MoveFront",this);
+		mn_edit->addAction(ms_moveFront);
+		connect(ms_moveFront,SIGNAL(triggered()),this,SLOT(onMoveFront()));
+
+		/* toend */
+		ms_moveEnd=new QAction(QPixmap(DS_MS_MOVE_END),"&MoveEnd",this);
+		mn_edit->addAction(ms_moveEnd);
+		connect(ms_moveEnd,SIGNAL(triggered()),this,SLOT(onMoveEnd()));
+
+
 
 		/* Paste */
 		ms_paste=new QAction(QPixmap(DS_MS_PASTE),"&Paste",this);
@@ -214,16 +239,8 @@ void DsMainFrame::createToolBar()
 	addToolBar(Qt::RightToolBarArea,m_toolBar);
 
 	/* New File */
-	tl_new=m_toolBar->addAction(QIcon(DS_TL_NEW),"New File");
-	connect(tl_new,SIGNAL(triggered()),this,SLOT(onNew()));
-
-	/* Open File */
-	tl_open=m_toolBar->addAction(QIcon(DS_TL_OPEN),"Open File");
-	connect(tl_open,SIGNAL(triggered()),this,SLOT(onOpen()));
-
-	/* Save file */
-	tl_save=m_toolBar->addAction(QIcon(DS_TL_SAVE),"Save File");
-	connect(tl_save,SIGNAL(triggered()),this,SLOT(onSave()));
+    tl_new=m_toolBar->addAction(QIcon(DS_TL_NEW),"New Sprite");
+    connect(tl_new,SIGNAL(triggered()),this,SLOT(onNewSprite()));
 
 	m_toolBar->addSeparator();
 
@@ -235,6 +252,23 @@ void DsMainFrame::createToolBar()
 	connect(tl_redo,SIGNAL(triggered()),this,SLOT(onRedo()));
 
 	m_toolBar->addSeparator();
+
+	/* Up */
+	tl_moveUp=m_toolBar->addAction(QIcon(DS_TL_MOVE_UP),"MoveUp");
+	connect(tl_moveUp,SIGNAL(triggered()),this,SLOT(onMoveUp()));
+
+	/* down */
+	tl_moveDown=m_toolBar->addAction(QIcon(DS_TL_MOVE_DOWN),"MoveDown");
+    connect(tl_moveDown,SIGNAL(triggered()),this,SLOT(onMoveDown()));
+
+	/* tofront */
+	tl_moveFront=m_toolBar->addAction(QIcon(DS_TL_MOVE_FRONT),"MoveFront");
+	connect(tl_moveFront,SIGNAL(triggered()),this,SLOT(onMoveFront()));
+
+	/* toEnd */
+	tl_moveEnd=m_toolBar->addAction(QIcon(DS_TL_MOVE_END),"MoveEnd");
+	connect(tl_moveEnd,SIGNAL(triggered()),this,SLOT(onMoveEnd()));
+
 
 	/* Play animation*/
 	tl_play=m_toolBar->addAction(QIcon(DS_TL_PLAY),"Play Animation");
@@ -285,11 +319,11 @@ void DsMainFrame::initLayout()
 
     QHBoxLayout* hlayout= new QHBoxLayout(m_clientArea);
 
-	QTabWidget* left=new QTabWidget();
-	left->setElideMode(Qt::ElideRight);
-	left->setMovable(1);
-	left->setDocumentMode(1);
-	left->addTab(m_resDisplay,QString("Resource"));
+    QTabWidget* left=new QTabWidget();
+    left->setElideMode(Qt::ElideRight);
+    left->setMovable(1);
+    left->setDocumentMode(1);
+    left->addTab(m_resDisplay,QString("Resource"));
     left->addTab(m_propertyDisplay,QString("Property"));
 
 
@@ -362,6 +396,59 @@ void DsMainFrame::onZoomOut()
 void DsMainFrame::onResetZoomTranslate()
 {
     m_editSpace->resetZoomTranslate();
+}
+void DsMainFrame::onPlay()
+{
+    DsOperator::animation()->animationPlay();
+}
+void DsMainFrame::onStop()
+{
+    DsOperator::animation()->animationStop();
+}
+
+void DsMainFrame::onOpenProject()
+{
+    DsOperator::io()->loadProject();
+}
+void DsMainFrame::onNewSprite()
+{
+    DsOperator::data()->newSprite();
+}
+
+void DsMainFrame::onSave()
+{
+    DsOperator::io()->saveProject();
+}
+
+void DsMainFrame::onNewProject()
+{
+    DsOperator::io()->newProject();
+}
+
+void DsMainFrame::onAddAnimation()
+{
+    DsDebug<<"create Animation"<<endl;
+    DsOperator::data()->newAnimation();
+}
+
+void DsMainFrame::onMoveUp()
+{
+    DsOperator::data()->frameImageMoveUp();
+}
+
+void DsMainFrame::onMoveDown()
+{
+    DsOperator::data()->frameImageMoveDown();
+}
+
+void DsMainFrame::onMoveFront()
+{
+    DsOperator::data()->frameImageMoveFront();
+}
+
+void DsMainFrame::onMoveEnd()
+{
+    DsOperator::data()->frameImageMoveEnd();
 }
 
 

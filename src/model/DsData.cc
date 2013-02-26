@@ -19,92 +19,41 @@ DsData::DsData()
 {
     m_curProject=NULL;
 }
+
 DsData::~DsData()
 {
 }
 
-
-DsProject* DsData::getCurProject(){
-    return m_curProject;
+void DsData::setProject(DsProject* proj)
+{
+    if(m_curProject)
+    {
+        delete m_curProject;
+    }
+    m_curProject=proj;
 }
 
 
-void DsData::setCurProject(const std::string& name)
+DsSprite* DsData::getCurSprite()
 {
-	for(int i=0;i<m_projects.size();i++)
+	if(m_curProject)
 	{
-		if(m_projects[i]->getName()==name)
-		{
-            m_curProject=m_projects[i];
-			return ;
-		}
+		return m_curProject->getCurSprite();
 	}
-	assert(0); /*never reached here */
-}
-DsProject* DsData::getProject(const std::string& name)
-{
-	for(int i=0;i<m_projects.size();i++)
-	{
-		if(m_projects[i]->getName()==name)
-		{
-			return m_projects[i];
-		}
-	}
-	assert(0); /*never reached here */
 	return NULL;
 }
-DsProject* DsData::getProject(int index)
+DsProject::DsSpriteInfo* DsData::getCurSpriteInfo()
 {
-	assert(index>=0&&index<m_projects.size());
-    return m_projects[index];
-}
-
-void DsData::addProject(DsProject* project)
-{
-	m_projects.push_back(project);
-}
-
-void DsData::removeProject(const std::string& name)
-{
-	std::vector<DsProject*>::iterator iter;
-	for(iter=m_projects.begin();iter!=m_projects.end();++iter)
-	{
-		if((*iter)->getName()==name)
-		{
-			if((*iter)==m_curProject)
-			{
-				m_curProject=NULL;
-			}
-			m_projects.erase(iter);
-			return ;
-		}
-	}
-	assert(0); /* never reached here */
-}
-
-int DsData::getProjectNu()
-{
-	return m_projects.size();
-}
-
-
-
-
-void DsData::renameProject(const std::string& name,const std::string& target)
-{
-	std::vector<DsProject*>::iterator iter;
-	for(iter=m_projects.begin();iter!=m_projects.end();++iter)
-	{
-		if((*iter)->getName()==name)
-		{
-			(*iter)->setName(target);
-			return ;
-		}
+    if(m_curProject)
+    {
+        return m_curProject->getCurSpriteInfo();
     }
-    assert(0);/* never reached here */
-
 }
 
+void DsData::setCurSprite(const std::string& id)
+{
+    m_curProject->setCurSprite(id);
+}
 
 
 
@@ -113,31 +62,27 @@ void DsData::emitSignal(int type)
 
 	switch(type)
 	{
-		case SG_DATA_PROPERTY_CHANGE:
-			emit signalDataPropertyChange();
-			break;
-
 		case SG_CUR_PROJECT_CHANGE:
 			emit signalCurProjectChange();
+			break;
+        case SG_CUR_SPRITE_CHANGE:
+            emit signalCurSpriteChange();
 			break;
 		case SG_CUR_ANIMATION_CHANGE:
 			emit signalCurAnimationChange();
 			break;
 		case SG_CUR_FRAME_CHANGE:
 			emit signalCurFrameChange();
-			break;
+            break;
+
 		case SG_CUR_FRAME_IMAGE_CHANGE:
 			emit signalCurFrameImageChange();
-			break;
-
+            break;
 
 		case SG_PROJECT_PROPERTY_CHANGE:
 			emit signalProjectPropertyChange();
 			break;
 
-		case SG_SPRITE_PROPERTY_CHANGE:
-			emit signalSpritePropertyChange();
-			break;
 
 		case SG_ANIMATION_PROPERTY_CHANGE:
 			emit signalAnimationPropertyChange();
@@ -155,13 +100,6 @@ void DsData::emitSignal(int type)
 	}
 }
 
-
-DsSprite* DsData::getCurSprite()
-{
-	return m_curProject->getSprite();
-}
-
-
 DsAnimation* DsData::getCurAnimation()
 {
 	if(m_curProject)
@@ -170,13 +108,15 @@ DsAnimation* DsData::getCurAnimation()
 	}
 	return NULL;
 }
-void DsData::setCurAnimation(const std::string& anim)
+
+void DsData::setCurAnimation(const std::string& id)
 {
 	if(m_curProject)
 	{
-		m_curProject->setCurAnimation(anim);
+        m_curProject->setCurAnimation(id);
 	}
 }
+
 void DsData::dropCurAnimation()
 {
 	if(m_curProject)
@@ -194,14 +134,18 @@ DsFrame* DsData::getCurFrame()
 	return NULL;
 }
 
+
+
 int DsData::getCurFrameIndex()
 {
 	if(m_curProject)
-	{
+    {
 		return m_curProject->getCurFrameIndex();
 	}
 	return -1;
 }
+
+
 
 void DsData::setCurFrameIndex(int framenu)
 {
@@ -210,6 +154,7 @@ void DsData::setCurFrameIndex(int framenu)
 		return m_curProject->setCurFrameIndex(framenu);
 	}
 }
+
 
 int DsData::getFrameNu()
 {
@@ -245,11 +190,11 @@ DsFrameImage* DsData::getCurFrameImage()
 	return NULL;
 }
 
-void  DsData::setCurFrameImage(const std::string& name)
+void  DsData::setCurFrameImage(const std::string& id)
 {
 	if(m_curProject)
 	{
-		m_curProject->setCurFrameImage(name);
+        m_curProject->setCurFrameImage(id);
 	}
 }
 

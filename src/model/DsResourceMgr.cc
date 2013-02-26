@@ -17,6 +17,8 @@ DsImage* s_getResource(const std::string& name)
 
 
     QImage* image=new QImage(QString(name.c_str()));
+    //image->convertToFormat(QImage::Format_ARGB32);
+    //image->createAlphaMask();
 
     if(image==NULL)
     {

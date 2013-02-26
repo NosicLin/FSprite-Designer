@@ -20,6 +20,7 @@ DsEditSpace::DsEditSpace(QWidget* parent)
     m_tabbar->setExpanding(false);
     m_tabbar->setCurrentIndex(-1);
     m_tabbar->setMovable(false);
+    //m_tabbar->setDrawBase(true);
 
     m_editView=new DsEditView(this);
     m_animationEdit=new DsAnimationEdit(this);
@@ -35,7 +36,17 @@ DsEditSpace::DsEditSpace(QWidget* parent)
     connect(DsData::shareData(),
             SIGNAL(signalCurProjectChange()),
             this,
-            SLOT(slotCurrentProjectChange()));
+            SLOT(slotResetSprite()));
+
+    connect(DsData::shareData(),
+            SIGNAL(signalProjectPropertyChange()),
+            this,
+            SLOT(slotResetSprite()));
+
+    connect(DsData::shareData(),
+            SIGNAL(signalCurSpriteChange()),
+            this,
+            SLOT(slotResetSprite()));
 
     connect(DsData::shareData(),
             SIGNAL(signalCurAnimationChange()),
@@ -44,6 +55,16 @@ DsEditSpace::DsEditSpace(QWidget* parent)
 
     connect(DsData::shareData(),
             SIGNAL(signalCurFrameChange()),
+            this,
+            SLOT(slotCurFrameChange()));
+
+    connect(DsData::shareData(),
+            SIGNAL(signalCurFrameImageChange()),
+            this,
+            SLOT(slotCurFrameChange()));
+
+    connect(DsData::shareData(),
+            SIGNAL(signalFramePropertyChange()),
             this,
             SLOT(slotCurFrameChange()));
 
@@ -87,14 +108,11 @@ void DsEditSpace::clearTab()
     }
 }
 
-void DsEditSpace::slotCurrentProjectChange()
+void DsEditSpace::slotResetSprite()
 {
-    DsDebug<<"DataPropertyChange"<<endl;
     reTabAnimation();
-
     m_editView->slotCurFrameChange();
     m_editView->update();
-
     m_animationEdit->update();
 
 }
@@ -120,6 +138,10 @@ void DsEditSpace::reTabAnimation()
             }
             m_tabbar->addTab(QString(anim->getName().c_str()));
         }
+    }
+    else
+    {
+        DsDebug<<"Sprite Not Find"<<endl;
     }
 
     m_tabbar->setCurrentIndex(cur_index);
@@ -158,7 +180,7 @@ void DsEditSpace::slotTabbarCurrentChange(int index)
     DsSprite* sprite=DsData::shareData()->getCurSprite();
     DsAnimation* anim=sprite->getAnimation(index);
     assert(sprite&&anim);
-    DsOperator::data.setCurAnimation(anim->getName());
+    DsOperator::data()->setCurAnimation(anim->getID());
 }
 
 
@@ -178,6 +200,7 @@ void DsEditSpace::slotCurAnimationChange()
 
 void DsEditSpace::slotCurFrameChange()
 {
+    DsDebug<<"slot CurFrame Change"<<endl;
     m_editView->slotCurFrameChange();
     m_editView->update();
 

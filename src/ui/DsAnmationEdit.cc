@@ -164,6 +164,7 @@ void DsAnimationEdit::drawKeyFrames(QPainter& painter)
 void DsAnimationEdit::drawCurSelectFrame(QPainter& painter)
 {
     int cur_frame=DsData::shareData()->getCurFrameIndex();
+    DsDebug<<"curFrame:"<<cur_frame<<endl;
     if(cur_frame==-1)
     {
         return;
@@ -197,7 +198,7 @@ void DsAnimationEdit::mousePressEvent(QMouseEvent* event)
         {
             m_mulSelect=false;
         }
-        DsOperator::data.setCurFrameIndex(select_frame);
+        DsOperator::data()->setCurFrameIndex(select_frame);
 
     }
     else if(event->buttons()&Qt::RightButton)
@@ -241,7 +242,7 @@ void DsAnimationEdit::mouseMoveEvent(QMouseEvent* event)
         }
         else
         {
-            DsOperator::data.setCurFrameIndex(select_frame);
+            DsOperator::data()->setCurFrameIndex(select_frame);
         }
 
         if(!( QApplication::queryKeyboardModifiers()& Qt::ShiftModifier ))
@@ -285,13 +286,22 @@ void DsAnimationEdit::showPopupMenu(QMouseEvent* event)
 {
     int x=event->x();
     int select_frame=(m_move+x)/m_ruler_unit;
-    DsOperator::data.setCurFrameIndex(select_frame);
+    DsOperator::data()->setCurFrameIndex(select_frame);
     DsData* data=DsData::shareData();
+    DsAnimation* anim=data->getCurAnimation();
     DsFrame* frame=data->getCurFrame();
     if(frame==NULL)
     {
-        ma_insertKeyFrame->setEnabled(true);
-        ma_insertEmptyKeyFrame->setEnabled(true);
+        if(anim!=NULL)
+        {
+            ma_insertKeyFrame->setEnabled(true);
+            ma_insertEmptyKeyFrame->setEnabled(true);
+        }
+        else
+        {
+            ma_insertKeyFrame->setEnabled(false);
+            ma_insertEmptyKeyFrame->setEnabled(false);
+        }
         ma_removeFrame->setEnabled(false);
         ma_createTween->setEnabled(false);
         ma_removeTween->setEnabled(false);
@@ -373,50 +383,50 @@ void DsAnimationEdit::slotInsertKeyFrame()
     DsData* data=DsData::shareData();
     int curFrameIndex=data->getCurFrameIndex();
     assert(curFrameIndex!=-1);
-    DsOperator::data.insertKeyFrame(curFrameIndex);
+    DsOperator::data()->insertKeyFrame(curFrameIndex);
 }
 void DsAnimationEdit::slotInsertEmptyKeyFrame()
 {
     DsData* data=DsData::shareData();
     int curFrameIndex=data->getCurFrameIndex();
 
-    DsOperator::data.insertEmptyKeyFrame(curFrameIndex);
+    DsOperator::data()->insertEmptyKeyFrame(curFrameIndex);
 
 }
 void DsAnimationEdit::slotRemoveFrame()
 {
     DsData* data=DsData::shareData();
     int curFrameIndex=data->getCurFrameIndex();
-    DsOperator::data.removeKeyFrame(curFrameIndex);
+    DsOperator::data()->removeKeyFrame(curFrameIndex);
 }
 void  DsAnimationEdit::slotCreateTween()
 {
     DsData* data=DsData::shareData();
     int curFrameIndex=data->getCurFrameIndex();
-    DsOperator::data.insertTween(curFrameIndex);
+    DsOperator::data()->insertTween(curFrameIndex);
 }
 void DsAnimationEdit::slotRemoveTween()
 {
     DsData* data=DsData::shareData();
     int curFrameIndex=data->getCurFrameIndex();
-    DsOperator::data.removeTween(curFrameIndex);
+    DsOperator::data()->removeTween(curFrameIndex);
 }
 void DsAnimationEdit::slotTweenToKeyFrame()
 {
     DsData* data=DsData::shareData();
     int curFrameIndex=data->getCurFrameIndex();
-    DsOperator::data.tweenToKeyFrame(curFrameIndex);
+    DsOperator::data()->tweenToKeyFrame(curFrameIndex);
 }
 void DsAnimationEdit::slotRemoveMulSelect()
 {
     assert(m_mulSelect);
     if(m_from<m_to)
     {
-        DsOperator::data.removeRangeFrame(m_from,m_to);
+        DsOperator::data()->removeRangeFrame(m_from,m_to);
     }
     else
     {
-        DsOperator::data.removeRangeFrame(m_to,m_from);
+        DsOperator::data()->removeRangeFrame(m_to,m_from);
     }
 }
 
