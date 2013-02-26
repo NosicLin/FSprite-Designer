@@ -6,7 +6,6 @@ SOURCES += \
     src/ui/DsEditView.cc \
     src/ui/DsEditSpace.cc \
     src/operator/DsDataOperator.cc \
-    src/model/DsSprite.cc \
     src/model/DsResourceMgr.cc \
     src/model/DsProject.cc \
     src/model/DsFrame.cc \
@@ -17,7 +16,13 @@ SOURCES += \
     src/ui/DsEditState.cc \
     src/operator/DsDataOperator.cc \
     src/operator/DsOperator.cc \
-    src/ui/DsAnmationEdit.cc
+    src/ui/DsAnmationEdit.cc \
+    src/operator/DsAnimationOperator.cc \
+    src/util/DsUtil.cc \
+    src/operator/DsIoOperator.cc \
+    src/model/DsSprite.cc \
+    src/util/DsUtilLoader.cc \
+    src/operator/DsAuxOperator.cc
 
 HEADERS += \
     src/ui/DsSpriteDisplay.h \
@@ -30,7 +35,6 @@ HEADERS += \
     src/operator/DsDataOperator.h \
     src/model/DsSprite.h \
     src/model/DsResourceMgr.h \
-    src/model/DsProject.h \
     src/model/DsFrameImage.h \
     src/model/DsFrame.h \
     src/model/DsData.h \
@@ -39,7 +43,14 @@ HEADERS += \
     src/operator/DsOperator.h \
     src/operator/DsDataOperator.h \
     src/ui/DsAnimationEdit.h \
-    src/util/DsDebug.h
+    src/util/DsDebug.h \
+    src/operator/DsAnimationOperator.h \
+    src/util/DsUtil.h \
+    src/operator/DsIoOperator.h \
+    src/model/DsProject.h \
+    src/util/DsUtilLoader.h \
+    src/model/DsModel.h \
+    src/operator/DsAuxOperator.h
 
 INCLUDEPATH +=src/
 
@@ -56,3 +67,4 @@ FORMS += \
     resource/ui/frame.ui
 
 QT+=opengl
+QT+=xml

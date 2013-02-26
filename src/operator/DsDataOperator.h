@@ -11,22 +11,27 @@ class DsDataOperator
 	
 	public:
         /* project */
-        void addProject(DsProject* project);
-        void removeProject(const std::string& name);
-        void renameProject(const std::string& name,const std::string& target);
-        void setCurProject(const std::string& name);
+        void newSprite();
+        void removeSprite(const std::string& id);
+        bool renameSprite(const std::string& id,const std::string& name);
+        void setCurSprite(const std::string& id);
 
         /* sprite */
-        void setCurAnimation(const std::string& anim);
+		void newAnimation();
+        void setCurAnimation(const std::string& id);
         void dropCurAnimation();
-        void renameAnimation(const std::string& proj_name,const std::string& anim_name,const std::string& target_name);
-        void addAnimation(const std::string& anim);
+
+        void renameAnimation(
+				const std::string& anim_name,
+				const std::string& target_name);
+
         void removeAnimation(const std::string& anim);
 
 
         /* animation */
         void setCurFrameIndex(int frame);
         void dropCurFrameIndex();
+
 
         void setAnimationFps(int fps);
         void removeKeyFrame(int index);
@@ -40,14 +45,17 @@ class DsDataOperator
         void removeTween(int index);
 
 		/* frame operator */
-		void upFrameImage(const std::string& name);
-		void downFrameImage(const std::string& name);
-		void frameImageToFront(const std::string& name);
-		void frameImageToTail(const std::string& name);
+        void frameImageMoveUp();
+        void frameImageMoveDown();
+        void frameImageMoveEnd();
+        void frameImageMoveFront();
+
         void duplicateFrameImage(const std::string& src_name,const std::string& dst_name);
 
-        void setCurFrameImage(const std::string& anim);
+        void setCurFrameImage(const std::string& id);
         void addFrameImage(DsFrameImage* image);
+        void removeFrameImage(const std::string& name);
+        void removeCurFrameImage(); /* it will remove current */
         void dropCurFrameImage();
 
 
@@ -55,12 +63,25 @@ class DsDataOperator
         void setCurFrameImagePos(float tx,float ty);
         void setCurFrameImageScale(float sx,float sy);
         void setCurFrameImageAngle(float angle);
-		void setArea(float x0,float y0,float x1,float y1);
+        void setCurFrameImageOffset(float fx,float fy);
+	void setCurFrameImageTextureArea(float x0,float y0,float x1,float y1);
 	private:
 		DsData* m_data;
 
 };
 #endif /*_DS_DATA_OPERATOR_H_*/
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

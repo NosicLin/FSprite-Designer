@@ -51,13 +51,12 @@ class DsKeyFrame:public DsFrame
 		typedef std::vector<DsFrameImage*>::iterator Iterator;
 	public:
         DsKeyFrame(int id);
+        ~DsKeyFrame();
 		virtual int getType()
 		{
 			return FRAME_KEY;
 		}
 	public:
-
-		DsFrameImage* getFrameImage(const std::string& name);
 
         void pushFrameImage(DsFrameImage* image);
         void insertFrameImage(DsFrameImage* image,int pos);
@@ -68,12 +67,14 @@ class DsKeyFrame:public DsFrame
 		void downFrameImage(const std::string& name);
 
 		void frameImageToFront(const std::string& name);
-		void frameImageToTail(const std::string& name);
+        void frameImageToEnd(const std::string& name);
 
 		void duplicateFrameImage(const std::string& src_name,const std::string& dst_name);
 
         int getFrameImageNu(){return m_images.size();}
+        DsFrameImage* getFrameImage(const std::string& id);
         DsFrameImage* getFrameImage(int index);
+        int getFrameImagePos(const std::string& name);
 
         void clearFrameImage(){m_images.clear();}
 

@@ -1,17 +1,18 @@
 
 #include <assert.h>
-
-
+#include "util/DsUtil.h"
 #include "DsAnimation.h"
 #include "DsFrame.h"
 #include "util/DsDebug.h"
-int DsAnimation::m_defaulFps=10;
 
+int DsAnimation::m_defaulFps=30;
 DsAnimation::DsAnimation(const std::string& name)
 {
+    m_id=DsUtil::uniqueStringID();
 	m_name=name;
 	m_fps=m_defaulFps;
 }
+
 DsAnimation* DsAnimation::createWithFirstFrame(const std::string& name)
 {
     DsAnimation* ret=new DsAnimation(name);
@@ -19,6 +20,7 @@ DsAnimation* DsAnimation::createWithFirstFrame(const std::string& name)
     ret->pushFrame(zero);
     return ret;
 }
+
 
 DsAnimation::~DsAnimation()
 {
@@ -225,11 +227,11 @@ void DsAnimation::removeKeyFrame(int index)
 
 void DsAnimation::insertFrameTypeKey(int index,bool empty)
 {
-	int keypos=toKeyFramePos(index);
+    int keypos=toKeyFramePos(index);
 	if(keypos==-1)
 	{
-		DsFrame* insert_frame=new DsKeyFrame(index);
-		rawInsertFrame(insert_frame);
+        DsFrame* insert_frame=new DsKeyFrame(index);
+        rawInsertFrame(insert_frame);
 		return;
 	}
 

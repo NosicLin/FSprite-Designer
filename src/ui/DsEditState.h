@@ -14,7 +14,10 @@ class DsEditState
         {
             DIRECTION_X,
             DIRECTION_Y,
-            DIRECTION_BOTH
+            DIRECTION_BOTH,
+            DIRECTION_A,
+            DIRECTION_B,
+      //      DIRECTION_NONE,
         };
 	public:
 		enum
@@ -154,15 +157,50 @@ private:
     float m_angle;
 };
 
+class DsEditStateMoveOffset:public DsEditState
+{
+    public:
+        DsEditStateMoveOffset();
+    public:
+        virtual void onEnter(DsEditState* prev);
+        virtual void mouseMoveEvent(QMouseEvent* event);
+        virtual void mousePressEvent(QMouseEvent* event);
+        virtual void draw();
+
+    private:
+        float m_movex;
+        float m_movey;
+
+};
+
 
 class DsEditStateSelect :public DsEditState 
 {
 public:
+    DsEditStateSelect();
+public:
     virtual void mousePressEvent(QMouseEvent* event);
     virtual void keyPressEvent(QKeyEvent* event);
     void draw();
-
 };
+
+class DsEditStateTextureArea:public DsEditState
+{
+    public:
+        DsEditStateTextureArea();
+    public:
+        virtual void onEnter(DsEditState* prev);
+        virtual void mouseMoveEvent(QMouseEvent* event);
+        virtual void mousePressEvent(QMouseEvent* event);
+        virtual void keyPressEvent(QKeyEvent* event);
+        virtual void draw();
+    private:
+        float m_movevx0,m_movevy0;
+        float m_movevx1,m_movevy1;
+        int m_direction;
+};
+
+
 
 class DsEditStatePlay:public DsEditState
 {
@@ -178,4 +216,19 @@ public:
 
 
 #endif /*_DS_EDIT_STATE_H_*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

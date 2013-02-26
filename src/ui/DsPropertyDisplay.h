@@ -11,8 +11,10 @@ class DsPropertyDisplay:public QWidget
 
 
 };
-
-
-
 #endif /*_DS_EDIT_VIEW_H_*/
+
+
+
+
+
 

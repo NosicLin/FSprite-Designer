@@ -7,11 +7,12 @@
 #include <QPushButton>
 #include <QFileDialog>
 #include <QMessageBox>
-#include <io.h>
 #include <QDebug>
 #include <QTextCodec>
+#include <QDirModel>
+#include <QModelIndex>
 
-class DsResourceDisplay:public QWidget 
+class DsResourceDisplay:public QWidget
 {
 	Q_OBJECT
 	public:
@@ -26,13 +27,15 @@ class DsResourceDisplay:public QWidget
         void resFileSelect(const std::string& path, const std::string& name);
 
     private:
+        QDirModel *m_model;
         QTreeWidget *m_tree;
         QString m_dir;
         QString GetDirFromItem(QTreeWidgetItem *currentTreeItem);
         QString GetParentDirFromItem(QTreeWidgetItem *currentTreeItem);
-        int AddFileItem(QString strDir, QTreeWidgetItem *currentItem);
-        int StrCmpByWM(const char *szstrT, const char *szstrS);
-        int CmpTypeByWM(const char *filename,const char *type);
+
+        int AddFileItem(QString strDir, QTreeWidgetItem *currentItem); // strDir的末尾最好有'/'
+        void DeleteItem(QTreeWidgetItem *currentTreeItem); // 删除一些列节点
+
 
     private slots:
         void addSomething(void);

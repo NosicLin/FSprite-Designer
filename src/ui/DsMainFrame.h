@@ -42,19 +42,20 @@ class DsMainFrame:public QMainWindow
 		QStatusBar* m_statusBar;
 
 		DsResourceDisplay* m_resDisplay;
-		DsSpriteDisplay* m_spriteDisplay;
-		DsEditSpace* m_editSpace;
-		DsPropertyDisplay* m_propertyDisplay;
+        DsSpriteDisplay* m_spriteDisplay;
+        DsEditSpace* m_editSpace;
+        DsPropertyDisplay* m_propertyDisplay;
 
 		QWidget* m_clientArea;
 
-		public slots:
-			/* file */
-			void onNew(){}
-		void onOpen(){}
-		void onSave(){}
-		void onSaveAs(){}
-		void onClose(){}
+        public slots:
+            /* file */
+        void onNewProject();
+        void onOpenProject();
+        void onSave();
+        void onClose(){}
+        void onNewSprite();
+
 		void onExport(){}
 		void onQuit(){}
 
@@ -65,12 +66,17 @@ class DsMainFrame:public QMainWindow
 		void onRedo(){}
 		void onRotate(){}
 		void onScale(){}
-		void onPosition(){}
+        void onPosition(){}
+
+        void onMoveUp();
+        void onMoveDown();
+        void onMoveFront();
+        void onMoveEnd();
 
 		/* animation */
-		void onPlay(){}
-		void onStop(){}
-		void onAddAnimation(){}
+        void onPlay();
+        void onStop();
+        void onAddAnimation();
 		void onSetFrame(){}
 
 		/* view */
@@ -93,10 +99,12 @@ class DsMainFrame:public QMainWindow
 
 	private:
 		/* file */
-		QAction* ms_new;
-		QAction* ms_open;
-		QAction* ms_save;
-		QAction* ms_save_as;
+        QAction* ms_newProject;
+        QAction* ms_openProject;
+        QAction* ms_newSprite;
+
+        QAction* ms_save;
+
 		QAction* ms_close;
 		QAction* ms_export;
 		QAction* ms_quit;
@@ -109,6 +117,11 @@ class DsMainFrame:public QMainWindow
 		QAction* ms_rotate;
 		QAction* ms_scale;
 		QAction* ms_position;
+        QAction* ms_moveUp;
+        QAction* ms_moveDown;
+        QAction* ms_moveFront;
+        QAction* ms_moveEnd;
+
 		/* view */
         QAction* ms_viewAxis;
         QAction* ms_viewGrid;
@@ -134,6 +147,10 @@ class DsMainFrame:public QMainWindow
 		QAction* tl_save;
 		QAction* tl_undo;
 		QAction* tl_redo;
+		QAction* tl_moveUp;
+		QAction* tl_moveDown;
+		QAction* tl_moveFront;
+		QAction* tl_moveEnd;
 		QAction* tl_play;
 		QAction* tl_stop;
 		QAction* tl_zoom_in;
