@@ -327,7 +327,6 @@ void DsResourceDisplay::debugSomething()
 
 void DsResourceDisplay::addResFolder()
 {
-    QMessageBox::information(this, "Document", "Test OK", QMessageBox::Ok);
     DsData *dsDataTemp = DsData::shareData();
     if (dsDataTemp == NULL)
     {
