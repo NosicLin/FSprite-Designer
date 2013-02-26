@@ -35,6 +35,7 @@ public slots:
     void slotCurAnimationChange();
 
     void slotCurFrameChange();
+    void slotFrameImagePropertyChange();
     void slotAnimationPropertyChange();
 
 

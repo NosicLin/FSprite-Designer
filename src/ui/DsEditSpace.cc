@@ -64,6 +64,11 @@ DsEditSpace::DsEditSpace(QWidget* parent)
             SLOT(slotCurFrameChange()));
 
     connect(DsData::shareData(),
+            SIGNAL(signalFrameImagePropertyChange()),
+            this,
+            SLOT(slotFrameImagePropertyChange()));
+
+    connect(DsData::shareData(),
             SIGNAL(signalFramePropertyChange()),
             this,
             SLOT(slotCurFrameChange()));
@@ -200,10 +205,14 @@ void DsEditSpace::slotCurAnimationChange()
 
 void DsEditSpace::slotCurFrameChange()
 {
-    DsDebug<<"slot CurFrame Change"<<endl;
     m_editView->slotCurFrameChange();
     m_editView->update();
 
+    m_animationEdit->update();
+}
+void DsEditSpace::slotFrameImagePropertyChange()
+{
+    m_editView->update();
     m_animationEdit->update();
 }
 
