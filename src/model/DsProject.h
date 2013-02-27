@@ -68,6 +68,7 @@ class DsProject
 	public:
         /* animation */
         void addSprite(DsSprite* sprite);
+        void removeSprite(const std::string& id);
         bool hasSpriteWithName(const std::string& name);
 
         DsSprite* getCurSprite();

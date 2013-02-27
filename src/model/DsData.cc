@@ -48,6 +48,7 @@ DsProject::DsSpriteInfo* DsData::getCurSpriteInfo()
     {
         return m_curProject->getCurSpriteInfo();
     }
+    return NULL;
 }
 
 void DsData::setCurSprite(const std::string& id)

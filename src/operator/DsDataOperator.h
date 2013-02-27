@@ -21,9 +21,10 @@ class DsDataOperator
         void setCurAnimation(const std::string& id);
         void dropCurAnimation();
 
-        void renameAnimation(
-				const std::string& anim_name,
-				const std::string& target_name);
+        bool renameAnimation(
+                const std::string& sprite_id,
+                const std::string& anim_id,
+                const std::string& name);
 
         void removeAnimation(const std::string& anim);
 

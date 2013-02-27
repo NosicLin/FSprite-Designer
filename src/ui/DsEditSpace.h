@@ -1,7 +1,7 @@
 #ifndef _DS_EDIT_SPACE_H_
 #define _DS_EDIT_SPACE_H_
-#include <QWidget.h>
-#include <QTabBar.H>
+#include <QWidget>
+#include <QTabBar>
 
 #include "DsEditView.h"
 

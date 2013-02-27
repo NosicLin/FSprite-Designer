@@ -1,3 +1,4 @@
+#include <string.h>
 #include <QLabel>
 #include <QVBoxLayout>
 #include "DsQrcMacros.h"
@@ -39,7 +40,7 @@ DsResourceDisplay::DsResourceDisplay(QWidget* p)
 void DsResourceDisplay::addResFolder(const std::string &folder)
 {
     char szdata[1024] = {'\0'};
-    strcpy_s(szdata, 1024, folder.data()); //--// string to char*
+    strncpy(szdata,  folder.data(),1024); //--// string to char*
     QString strpath(szdata);
     if (!strpath.isNull()) // user choiced folder
     {
