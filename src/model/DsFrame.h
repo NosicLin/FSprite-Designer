@@ -1,5 +1,6 @@
 #ifndef _DS_FRAME_H_
 #define _DS_FRAME_H_
+#include <string>
 #include <vector>
 
 class DsFrameImage;

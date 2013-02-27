@@ -6,11 +6,11 @@
 #include <float.h>
 #include <QDebug>
 
-#include "model\DsData.h"
-#include "operator\DsDataOperator.h"
-#include "operator\DsOperator.h"
-#include "model\DsProject.h"
-#include "model\DsFrameImage.h"
+#include "model/DsData.h"
+#include "operator/DsDataOperator.h"
+#include "operator/DsOperator.h"
+#include "model/DsProject.h"
+#include "model/DsFrameImage.h"
 DsPropertyDisplay::DsPropertyDisplay(QWidget* parent)
 	:QWidget(parent)
 {

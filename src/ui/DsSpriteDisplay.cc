@@ -8,12 +8,12 @@
 
 #include <QMainWindow>
 #include <QVBoxLayout>
-#include "operator\DsOperator.h"
+#include "operator/DsOperator.h"
 
-#include "model\DsData.h"
-#include "model\DsProject.h"
-#include "model\DsSprite.h"
-#include "model\DsAnimation.h"
+#include "model/DsData.h"
+#include "model/DsProject.h"
+#include "model/DsSprite.h"
+#include "model/DsAnimation.h"
 
 #include "DsQrcMacros.h"
 
