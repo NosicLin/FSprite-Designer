@@ -58,6 +58,8 @@ class DsSpriteTreeWidget:public QTreeWidget
         //setCurAnimation
         void setCurAnimation(std::string animtionName);
 
+        void setActionTypeToNone(){ m_actionType = MENUS_ACT_NONE;}
+
     private:
         bool m_changedCausedByDsData;
         bool m_changedCausedByView;
@@ -120,13 +122,14 @@ class DsSpriteTreeWidget:public QTreeWidget
         QAction* m_removeAnimation;
         QAction* m_renameAnimation;
 
-        QString originalAnimationName;
-        bool isRename;
+        QString originalName;
+        int m_actionType;
 
         enum
         {
             MENUS_ACT_RENAME_SPRITE = 0,
-            MENUS_ACT_RENAME_ANIMATION
+            MENUS_ACT_RENAME_ANIMATION,
+            MENUS_ACT_NONE
         };
 };
 
