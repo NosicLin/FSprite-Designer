@@ -56,7 +56,7 @@ class DsMainFrame:public QMainWindow
         void onClose(){}
         void onNewSprite();
 
-		void onExport(){}
+        void onExport();
 		void onQuit(){}
 
 		/* edit */

@@ -26,7 +26,7 @@ class DsDataOperator
                 const std::string& anim_id,
                 const std::string& name);
 
-        void removeAnimation(const std::string& anim);
+        void removeAnimation(const std::string& id);
 
 
         /* animation */

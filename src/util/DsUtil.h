@@ -1,6 +1,7 @@
 #ifndef _DS_UTIL_H_
 #define _DS_UTIL_H_
 #include <QString>
+#include <QFile>
 #include <string>
 
 #include "model/DsModel.h"
@@ -19,6 +20,7 @@ class DsUtil
         static bool saveProject(DsProject* proj);
         static bool saveProjectFile(DsProject* proj);
         static bool saveSpriteFile(const std::string& dir_name,const std::string& file_name,DsSprite* sprite);
+        static bool exportSprite(DsSprite* sprite,QFile& file);
 };
 
 #endif /*_DS_UTIL_H_*/

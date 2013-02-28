@@ -12,12 +12,12 @@ class DsFrame
 		enum 
 		{
 			FRAME_KEY,
-			FRAME_TWEEN,
+            FRAME_TWEEN
 		};
 
     public:
 		DsFrame(int frameid){m_frameid=frameid;}
-		virtual ~DsFrame(){};
+        virtual ~DsFrame(){}
 		virtual int getType()=0;
 		int getFrameId(){return m_frameid;}
         void setFrameId(int frame){m_frameid=frame;}
