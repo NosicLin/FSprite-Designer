@@ -160,7 +160,6 @@ bool DsDataOperator::renameAnimation(
             return true;
             m_data->emitSignal(DsData::SG_PROJECT_PROPERTY_CHANGE);
         }
-
     }
     return false;
 
