@@ -129,6 +129,8 @@ class DsSpriteTreeWidget:public QTreeWidget
         {
             MENUS_ACT_RENAME_SPRITE = 0,
             MENUS_ACT_RENAME_ANIMATION,
+            MENUS_ACT_REMOVE_ANIMATION,
+            MENUS_ACT_REMOVE_SPRITE,
             MENUS_ACT_NONE
         };
 };
