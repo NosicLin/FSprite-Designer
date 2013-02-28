@@ -232,8 +232,9 @@ DsFrameImage* DsSpriteLoader::loadFrameImage(QDomNode& node)
 
     url=node.firstChildElement("url").text().toStdString();
 
-    //DsFrameImage* ret=DsFrameImage::create(m_dir+url);
-    DsFrameImage* ret=DsFrameImage::create(url);
+    DsFrameImage* ret=DsFrameImage::create(m_dir+url);
+    //DsFrameImage* ret=DsFrameImage::create(url);
+
     ret->setPos(tx,ty);
     ret->setAngle(angle);
     ret->setScale(sx,sy);

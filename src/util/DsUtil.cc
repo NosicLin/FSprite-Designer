@@ -159,21 +159,33 @@ bool DsUtil::saveSpriteFile(const std::string& dir_name,const std::string& file_
 				DsKeyFrame::Iterator iter=key_frame->begin();
 				for(;iter!=key_frame->end();++iter)
 				{
-					DsFrameImage* image=*iter;
-					writer.writeStartElement("frameimage");
-					writer.writeTextElement("url",image->getImage()->name.c_str());
-					writer.writeTextElement("posx",QString::number(image->getPosX()));
-					writer.writeTextElement("posy",QString::number(image->getPosY()));
-					writer.writeTextElement("scalex",QString::number(image->getScaleX()));
-					writer.writeTextElement("scaley",QString::number(image->getScaleY()));
-					writer.writeTextElement("angle",QString::number(image->getAngle()));
+                    DsFrameImage* image=*iter;
+                    writer.writeStartElement("frameimage");
+                    std::string url=image->getImage()->name;
+                    std::string rel_url;
+                    unsigned int i;
+                    for(i=0;i<url.length();i++)
+                    {
+                        if(url[i]!=dir_name[i])
+                        {
+                            break;
+                        }
+                    }
+                    rel_url=url.c_str()+i;
 
-					float ax0,ay0,ax1,ay1;
-					image->getTextureArea(&ax0,&ay0,&ax1,&ay1);
+                    writer.writeTextElement("url",rel_url.c_str());
+                    writer.writeTextElement("posx",QString::number(image->getPosX()));
+                    writer.writeTextElement("posy",QString::number(image->getPosY()));
+                    writer.writeTextElement("scalex",QString::number(image->getScaleX()));
+                    writer.writeTextElement("scaley",QString::number(image->getScaleY()));
+                    writer.writeTextElement("angle",QString::number(image->getAngle()));
 
-					writer.writeTextElement("areax0",QString::number(ax0));
-					writer.writeTextElement("areay0",QString::number(ay0));
-					writer.writeTextElement("areax1",QString::number(ax1));
+                    float ax0,ay0,ax1,ay1;
+                    image->getTextureArea(&ax0,&ay0,&ax1,&ay1);
+
+                    writer.writeTextElement("areax0",QString::number(ax0));
+                    writer.writeTextElement("areay0",QString::number(ay0));
+                    writer.writeTextElement("areax1",QString::number(ax1));
                     writer.writeTextElement("areay1",QString::number(ay1));
 
                     float fx,fy;
@@ -186,17 +198,17 @@ bool DsUtil::saveSpriteFile(const std::string& dir_name,const std::string& file_
                     float alpha=image->getAlpha();
                     writer.writeTextElement("alpha",QString::number(alpha));
 
-					writer.writeEndElement();
-				}
-			}
-			else 
-			{
-				writer.writeAttribute("type","tween");
-			}
-			writer.writeEndElement();
-		}
-		writer.writeEndElement();
-	}
+                    writer.writeEndElement();
+                }
+            }
+            else
+            {
+                writer.writeAttribute("type","tween");
+            }
+            writer.writeEndElement();
+        }
+        writer.writeEndElement();
+    }
 
     writer.writeEndElement();
 
