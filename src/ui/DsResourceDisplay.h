@@ -14,39 +14,55 @@
 #include <QIcon>
 #include <QSize>
 #include <QPixmap>
+#include <QAction>
+#include <QMenu>
 
 class DsResourceDisplay:public QWidget
 {
 	Q_OBJECT
 	public:
         DsResourceDisplay(QWidget* p);
-    public:
-        void addResFolder(const std::string& folder);
-        void addAcceptFileType(const std::string& ext); // 预留
+
+        //void addResFolder(const std::string& folder);
+        //void addAcceptFileType(const std::string& ext); // 预留
 
     signals:
-        void resFolderDelete(const std::string& folder);
-        void resFolderAdd(const std::string& floader);
         void resFileSelect(const std::string& path, const std::string& name);
+        //void resFolderDelete(const std::string& folder);
+        //void resFolderAdd(const std::string& floader);
 
     //-----------------------------------//
     private:
         QDirModel *m_model;
         QTreeWidget *m_tree;
-        QString m_dir;
+        QMenu *m_menu;
+        QAction *m_flushAction;
+        //QString m_dir;
+
         QString GetDirFromItem(QTreeWidgetItem *currentTreeItem);
         QString GetParentDirFromItem(QTreeWidgetItem *currentTreeItem);
 
-        int AddFileItem(QString strDir, QTreeWidgetItem *currentItem); // strDir的末尾最好有'/'
-        void DeleteItem(QTreeWidgetItem *currentTreeItem); // 删除一些列节点
+        void AddResFolder(QString strPath); // 添加一个根目录
+        int AddFileItem(QString strDir, QTreeWidgetItem *currentItem); // strDir的末尾最好有'/' // 添加一个子目录 // 为当前的 Item （其目录为strDir）创建子目录
+
+        void contextMenuEvent(QContextMenuEvent *event); // 鼠标右键弹出时的事件响应
+
+        void DeleteItem(QTreeWidgetItem *currentTreeItem); // 删除一系列节点，包括本节点
+        void SetChildItemIconNull(QTreeWidgetItem *currentItem); // 设置该节点的子节点的图标为小图标
+        void SetChildItemIconPic(QTreeWidgetItem *currentItem); // 设置节点的子节点的图标为图片 （不添加和删除节点）
+
+        //void DeleteChildItem(QTreeWidgetItem *currentTreeItem);
+        //void AddResFolder(); // 根据当前目录添加文件夹
 
     private slots:
-        void selectSomething(void);
-        void expandSomething(QTreeWidgetItem *treeItem);
-        void openSomething(void);
-        void deleteSomething(void);
-        void debugSomething(void);
-        void addResFolder();
+        void selectSomething(void); // 选择一个图标，返回路径和文件名
+        void expandSomething(QTreeWidgetItem *treeItem); // 展开一个Item
+        void unExpandSomething(QTreeWidgetItem *treeItem); // 收缩一个Item
+        void debugSomething(void); //
+        void flushFolder(); //
+
+        //void openSomething(void); //
+        //void deleteSomething(void); //
 };
 
 

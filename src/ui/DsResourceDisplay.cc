@@ -11,8 +11,12 @@ extern DsData* s_shareData;
 DsResourceDisplay::DsResourceDisplay(QWidget* p)
     :QWidget(p)
 {
+    // 加一个右键菜单
+    m_menu = new QMenu(this);
+    m_flushAction = m_menu->addAction(tr("Flush"));
+    connect(m_flushAction, SIGNAL(triggered()), this, SLOT(flushFolder()));
+
     m_model = new QDirModel;
-    m_dir = QString("E:/"); // default setting. undetermined
     m_tree = new QTreeWidget;
     m_tree->setColumnCount(1);
     m_tree->setHeaderLabel("Path");
@@ -20,11 +24,14 @@ DsResourceDisplay::DsResourceDisplay(QWidget* p)
     m_tree->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     connect(m_tree, SIGNAL(clicked(const QModelIndex &)), this, SLOT(selectSomething()));
     connect(m_tree, SIGNAL(itemExpanded(QTreeWidgetItem *)), this, SLOT(expandSomething(QTreeWidgetItem *)));
+    connect(m_tree, SIGNAL(itemCollapsed (QTreeWidgetItem *)), this, SLOT(unExpandSomething(QTreeWidgetItem *)));
 
     QVBoxLayout *topLayout = new QVBoxLayout;
     topLayout->addWidget(m_tree);
 
     QPushButton *flushButton = new QPushButton("flush", this);
+    connect(flushButton, SIGNAL(clicked()), this, SLOT(flushFolder()));
+
     QHBoxLayout *downLayout = new QHBoxLayout;
     downLayout->addWidget(flushButton, 0, Qt::AlignHCenter);
 
@@ -33,9 +40,26 @@ DsResourceDisplay::DsResourceDisplay(QWidget* p)
     mainLayout->addLayout(downLayout, 1);
     setLayout(mainLayout);
 
-    connect(DsData::shareData(), SIGNAL(signalCurProjectChange()), this, SLOT(addResFolder()));
+    connect(DsData::shareData(), SIGNAL(signalCurProjectChange()), this, SLOT(flushFolder()));
 }
 
+void DsResourceDisplay::AddResFolder(QString strPath)
+{
+    if (!strPath.isNull()) // user choiced folder
+    {
+        if (strPath.right(1) != QString('/'))
+        {
+            strPath += '/';
+        }
+        QTreeWidgetItem *noteTemp = new QTreeWidgetItem();
+        noteTemp->setText(0, strPath);
+        noteTemp->setIcon(0, QIcon(DS_FB_FILE));
+        m_tree->addTopLevelItem(noteTemp);
+        AddFileItem(strPath, noteTemp);
+    }
+}
+
+/*
 void DsResourceDisplay::addResFolder(const std::string &folder)
 {
     char szdata[1024] = {'\0'};
@@ -54,6 +78,7 @@ void DsResourceDisplay::addResFolder(const std::string &folder)
         AddFileItem(strpath, noteTemp);
     }
 }
+*/
 
 void DsResourceDisplay::selectSomething() // 点击图片图标，返回路径和文件名
 {
@@ -85,10 +110,11 @@ void DsResourceDisplay::expandSomething(QTreeWidgetItem *treeItem)
     QTreeWidgetItem *currentTree = treeItem;
     int nchildCount = currentTree->childCount();
 
-    if (nchildCount != 0) // 貌似能展开都不会为0
+    if (nchildCount > 0) // 貌似能展开都不会为0
     {
         QString strfileName;
         // 先遍历这个Item为路径是否有文件夹，若有则添加
+        QString dirCurrent = GetDirFromItem(currentTree);
         for (int i = 0; i < nchildCount; ++i)
         {
             strfileName = currentTree->child(i)->text(0);
@@ -98,7 +124,8 @@ void DsResourceDisplay::expandSomething(QTreeWidgetItem *treeItem)
                     strfileName.right(4).compare(".tag", Qt::CaseInsensitive) == 0 ||
                     strfileName.right(4).compare(".png", Qt::CaseInsensitive) == 0)
             {
-                // 是图片就不管
+                // 是图片就加图片
+                currentTree->child(i)->setIcon(0, QIcon(dirCurrent + strfileName));
             }
             else
             {
@@ -108,12 +135,23 @@ void DsResourceDisplay::expandSomething(QTreeWidgetItem *treeItem)
                     QString dirTemp = GetDirFromItem(currentTree->child(i));
                     AddFileItem(dirTemp, currentTree->child(i));
                 }
+                else if (currentTree->child(i)->childCount() > 0 &&
+                         currentTree->child(i)->isExpanded())
+                {
+                    SetChildItemIconPic(currentTree->child(i));
+                }
             }
         }        
         return;
     }
 }
 
+void DsResourceDisplay::unExpandSomething(QTreeWidgetItem *treeItem)
+{
+    SetChildItemIconNull(treeItem);
+}
+
+/*
 void DsResourceDisplay::openSomething() // add一个文件夹
 {
     QString filename = QFileDialog::getExistingDirectory(this, "Open Dir", m_dir, QFileDialog::ShowDirsOnly);
@@ -135,7 +173,9 @@ void DsResourceDisplay::openSomething() // add一个文件夹
         emit resFolderAdd(path);
     }
 }
+*/
 
+/*
 void DsResourceDisplay::deleteSomething()
 {
     if (m_tree->currentItem() != NULL)
@@ -153,11 +193,11 @@ void DsResourceDisplay::deleteSomething()
             currentItem = NULL;
 
             std::string path(qPrintable(dirTemp));
-
             emit resFolderDelete(path);
         }
     }
 }
+*/
 
 QString DsResourceDisplay::GetDirFromItem(QTreeWidgetItem *currentTreeItem)
 {
@@ -198,6 +238,12 @@ QString DsResourceDisplay::GetParentDirFromItem(QTreeWidgetItem *currentTreeItem
     }
 }
 
+void DsResourceDisplay::contextMenuEvent(QContextMenuEvent *event)
+{
+    m_menu->popup(QCursor::pos());
+}
+
+// 为当前的 Item （其目录为strDir）创建子目录
 int DsResourceDisplay::AddFileItem(QString strDir, QTreeWidgetItem *currentItem)
 {
     if (strDir.right(1) != QString('/'))
@@ -227,11 +273,9 @@ int DsResourceDisplay::AddFileItem(QString strDir, QTreeWidgetItem *currentItem)
         }
         bool bisDir = fileInfo.isDir();
         bool enableAddSign = false;
-        bool isDirSign = false;
         if (bisDir)
         {
             enableAddSign = true;
-            isDirSign = true;
         }
         else if (fileInfo.fileName().right(4).compare(".jpg", Qt::CaseInsensitive) == 0 ||
                  fileInfo.fileName().right(4).compare(".bmp", Qt::CaseInsensitive) == 0 ||
@@ -245,48 +289,7 @@ int DsResourceDisplay::AddFileItem(QString strDir, QTreeWidgetItem *currentItem)
             QTreeWidgetItem *noteTemp = new QTreeWidgetItem();
             noteTemp->setText(0, fileInfo.fileName());
             currentItem->addChild(noteTemp);
-            if (isDirSign)
-            {
-                noteTemp->setIcon(0, QIcon(DS_FB_FILE)); // 待改进
-            }
-            else
-            {
-                //添加图片图标
-                /*
-                QString fileNameTemp = GetDirFromItem(noteTemp);
-                QString fileName = fileNameTemp.left(fileNameTemp.length() - 1);
-
-                QPixmap filePixmap("E:/pictureWM/20101041112279040.jpg");
-                filePixmap.scaled(128, 128);
-                QIcon fileIcon;
-                fileIcon.addPixmap(filePixmap);
-                //fileIcon.addFile("E:/pictureWM/20101041112279040.jpg", QSize(64, 64));
-                noteTemp->setIcon(0, fileIcon);
-                */
-
-                /*
-                QFileIconProvider fileIcon;
-                noteTemp->setIcon(0, fileIcon.icon(fileInfo));
-                //*/
-
-                /*
-                QIcon fileIcon;
-                fileIcon.addFile(fileInfo.absoluteFilePath(), QSize(16, 16));
-                noteTemp->setIcon(0, fileIcon);
-                */
-
-                /*
-                QPixmap *filePixmap = new QPixmap("E:/pictureWM/20101041112279040.jpg");
-                filePixmap->scaled(16, 16);
-                QIcon *fileIcon = new QIcon(*filePixmap);
-                noteTemp->setIcon(0, *fileIcon);
-                //*/
-
-                //noteTemp->setIcon(0, QIcon("E:/pictureWM/20101041112279040.jpg"));
-
-                noteTemp->setIcon(0, QIcon(DS_TL_NEW)); // 待改进
-
-            }
+            noteTemp->setIcon(0, QIcon(DS_FB_FILE)); // 反正生成时看不见，用啥图标都可以，待到展开时有其他函数改图标
         }
         i++;
     }
@@ -319,13 +322,89 @@ void DsResourceDisplay::DeleteItem(QTreeWidgetItem *currentTreeItem)
     }
 }
 
+void DsResourceDisplay::SetChildItemIconNull(QTreeWidgetItem *currentItem)
+{
+    int childCount = currentItem->childCount();
+    for (int i = 0; i < childCount; ++i)
+    {
+        if (currentItem->child(i)->childCount() > 0)
+        {
+            SetChildItemIconNull(currentItem->child(i));
+        }
+        else
+        {
+            currentItem->child(i)->setIcon(0, QIcon(DS_FB_FILE));
+        }
+    }
+}
+
+void DsResourceDisplay::SetChildItemIconPic(QTreeWidgetItem *currentItem)
+{
+    int nchildCount = currentItem->childCount();
+
+    if (nchildCount > 0) // 貌似能展开都不会为0
+    {
+        QString strfileName;
+        // 先遍历这个Item为路径是否有文件夹，若有则添加
+        QString dirCurrent = GetDirFromItem(currentItem);
+        for (int i = 0; i < nchildCount; ++i)
+        {
+            strfileName = currentItem->child(i)->text(0);
+
+            if (strfileName.right(4).compare(".jpg", Qt::CaseInsensitive) == 0 ||
+                    strfileName.right(4).compare(".bmp", Qt::CaseInsensitive) == 0 ||
+                    strfileName.right(4).compare(".tag", Qt::CaseInsensitive) == 0 ||
+                    strfileName.right(4).compare(".png", Qt::CaseInsensitive) == 0)
+            {
+                // 是图片就加图片
+                currentItem->child(i)->setIcon(0, QIcon(dirCurrent + strfileName));
+            }
+            else
+            {
+                // 是文件夹还要看是否已添加过item
+                if (currentItem->child(i)->childCount() > 0 &&
+                        currentItem->child(i)->isExpanded())
+                {
+                    SetChildItemIconPic(currentItem->child(i));
+                }
+            }
+        }
+        return;
+    }
+}
+
+/*
+void DsResourceDisplay::DeleteChildItem(QTreeWidgetItem *currentTreeItem)
+{
+    if (currentTreeItem != NULL)
+    {
+        int childCount = currentTreeItem->childCount();
+        QTreeWidgetItem *childItem = NULL;
+        for (int i = 0; i < childCount; ++i)
+        {
+            childCount = currentTreeItem->child(0);
+            if (childItem->childCount() > 0)
+            {
+                DeleteItem(childItem);
+            }
+            else
+            {
+                delete childItem;
+            }
+            childItem = NULL;
+        }
+    }
+}
+*/
+
 void DsResourceDisplay::debugSomething()
 {
     qDebug() << "Hello world";
     QMessageBox::information(this, "Document", "Hello World!", QMessageBox::Ok);
 }
 
-void DsResourceDisplay::addResFolder()
+/*
+void DsResourceDisplay::AddResFolder()
 {
     DsData *dsDataTemp = DsData::shareData();
     if (dsDataTemp == NULL)
@@ -338,7 +417,95 @@ void DsResourceDisplay::addResFolder()
         if (dsProjectTemp != NULL)
         {
             std::string strRes = dsProjectTemp->getDirName();
-            addResFolder(strRes);
+            strRes += "textures";
+            char szdata[1024] = {'\0'};
+            strcpy_s(szdata, 1024, strRes.data()); //--// string to char*
+            AddResFolder(szdata);
         }
     }
+}
+*/
+
+void DsResourceDisplay::flushFolder()
+{
+    int ntreeCount = m_tree->columnCount();
+    QTreeWidgetItem *currentItem = NULL;
+    for (int i = 0; i < ntreeCount; ntreeCount--)
+    {
+        currentItem = m_tree->topLevelItem(i);
+        m_tree->takeTopLevelItem(i);
+        DeleteItem(currentItem);
+        currentItem = NULL;
+    }
+
+    DsData *dsDataTemp = DsData::shareData();
+    if (dsDataTemp == NULL)
+    {
+        return;
+    }
+    else
+    {
+        DsProject *dsProjectTemp = dsDataTemp->getProject();
+        if (dsProjectTemp != NULL)
+        {
+            std::string strRes = dsProjectTemp->getDirName();
+            strRes += "textures";
+            char szdata[1024] = {'\0'};
+            strcpy_s(szdata, 1024, strRes.data()); //--// string to char*
+            AddResFolder(szdata);
+        }
+    }
+
+    //QMessageBox::information(this, "Document", "Hello World!", QMessageBox::Ok);
+    //QMessageBox::information(this, "Document", "444444444", QMessageBox::Ok);
+    //m_tree->takeTopLevelItem(0);
+    /*
+    QTreeWidgetItem *treeWidgetItemTemp = m_tree->headerItem();
+
+    if (treeWidgetItemTemp != NULL)
+    {
+        DeleteItem(treeWidgetItemTemp);
+        treeWidgetItemTemp = NULL;
+    }
+    */
+
+    //QTreeWidgetItem *currentItem = m_tree->headerItem();
+    /*
+    QTreeWidgetItem *currentItem = m_tree->currentItem();
+    if (currentItem != NULL)
+    {
+        {
+        int nitemIndex = m_tree->indexOfTopLevelItem(currentItem);
+        QMessageBox::information(this, "Document", QString::number(nitemIndex), QMessageBox::Ok);
+        }
+
+        {
+        int nitemIndex = m_tree->indexOfTopLevelItem(m_tree->headerItem());
+        QMessageBox::information(this, "Document", QString::number(nitemIndex), QMessageBox::Ok);
+        }
+        */
+
+        /*
+        if (m_tree->currentItem() == currentItem)
+        {
+               QMessageBox::information(this, "Document", "444444444", QMessageBox::Ok);
+        }
+        delete currentItem;
+        currentItem = NULL;
+        */
+        /*
+        if (currentItem->parent() == NULL)
+        {
+            // 删除一系列节点
+            int nitemIndex = m_tree->indexOfTopLevelItem(currentItem);
+            m_tree->takeTopLevelItem(nitemIndex);
+            DeleteItem(currentItem);
+            currentItem = NULL;
+        }
+        */
+        /*
+    }
+
+    addResFolder();
+    */
 }
