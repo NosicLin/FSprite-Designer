@@ -5,24 +5,23 @@ SOURCES += \
     src/ui/DsMainFrame.cc \
     src/ui/DsEditView.cc \
     src/ui/DsEditSpace.cc \
-    src/operator/DsDataOperator.cc \
+    src/ui/DsEditState.cc \
+    src/ui/DsAnmationEdit.cc \
     src/model/DsResourceMgr.cc \
     src/model/DsProject.cc \
     src/model/DsFrame.cc \
     src/model/DsData.cc \
     src/model/DsAnimation.cc \
-    src/main.cc \
     src/model/DsFrameImage.cc \
-    src/ui/DsEditState.cc \
+    src/model/DsSprite.cc \
     src/operator/DsDataOperator.cc \
     src/operator/DsOperator.cc \
-    src/ui/DsAnmationEdit.cc \
     src/operator/DsAnimationOperator.cc \
-    src/util/DsUtil.cc \
     src/operator/DsIoOperator.cc \
-    src/model/DsSprite.cc \
+    src/operator/DsAuxOperator.cc \
     src/util/DsUtilLoader.cc \
-    src/operator/DsAuxOperator.cc
+    src/util/DsUtil.cc \
+    src/main.cc \
 
 HEADERS += \
     src/ui/DsSpriteDisplay.h \

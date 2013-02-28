@@ -148,8 +148,9 @@ DsSprite* DsSpriteLoader::loadSprite()
 
     QDomNodeList anims=elm_root.elementsByTagName("animation");
     for(int i=0;i<anims.count();i++)
-	{
-		DsAnimation* anim=loadAnimation(anims.item(i));
+    {
+        QDomNode node=anims.item(i);
+        DsAnimation* anim=loadAnimation(node);
 		if(anim!=NULL)
 		{
 			sprite->addAnimation(anim);
@@ -186,8 +187,9 @@ DsFrame* DsSpriteLoader::loadFrame(QDomNode& node)
 		DsKeyFrame* f=new DsKeyFrame(frame_id);
 		QDomNodeList images=element.childNodes();
 		for(int i=0;i<images.count();i++)
-		{
-			DsFrameImage* img=loadFrameImage(images.item(i));
+        {
+            QDomNode node=images.item(i);
+            DsFrameImage* img=loadFrameImage(node);
 			if(img)
 			{
 				f->pushFrameImage(img);
@@ -230,8 +232,9 @@ DsFrameImage* DsSpriteLoader::loadFrameImage(QDomNode& node)
 
     url=node.firstChildElement("url").text().toStdString();
 
-    //DsFrameImage* ret=DsFrameImage::create(m_dir+url);
-    DsFrameImage* ret=DsFrameImage::create(url);
+    DsFrameImage* ret=DsFrameImage::create(m_dir+url);
+    //DsFrameImage* ret=DsFrameImage::create(url);
+
     ret->setPos(tx,ty);
     ret->setAngle(angle);
     ret->setScale(sx,sy);

@@ -24,6 +24,38 @@ void DsDataOperator::newSprite()
         m_data->emitSignal(DsData::SG_PROJECT_PROPERTY_CHANGE);
     }
 }
+void DsDataOperator::removeSprite(const std::string& id)
+{
+    DsProject* project=m_data->getProject();
+    if(project)
+    {
+        project->removeSprite(id);
+        m_data->emitSignal(DsData::SG_PROJECT_PROPERTY_CHANGE);
+    }
+}
+bool DsDataOperator::renameSprite(const std::string& id,const std::string& name)
+{
+    DsProject* project=m_data->getProject();
+    if(project)
+    {
+        DsSprite* sprite=project->getSprite(id);
+        assert(sprite);
+
+        if(sprite->getName()==name)
+        {
+            return true;
+        }
+        if(project->hasSpriteWithName(name))
+        {
+            return false;
+        }
+
+        sprite->setName(name);
+        m_data->emitSignal(DsData::SG_PROJECT_PROPERTY_CHANGE);
+        return true;
+    }
+    return false;
+}
 
 
 
@@ -102,33 +134,38 @@ void DsDataOperator::removeAnimation(const std::string& id)
         m_data->emitSignal(DsData::SG_PROJECT_PROPERTY_CHANGE);
     }
 }
-/*
-void  DsDataOperator::renameAnimation(
-                const std::string& target_name)
+
+bool DsDataOperator::renameAnimation(
+                const std::string& sprite_id,
+                const std::string& animation_id,
+                const std::string& name)
 {
-    DsSprite* sprite=m_data->getCurSprite();
-    if(sprite)
+    DsProject* project= m_data->getProject();
+    if(project)
     {
-        DsAnimation* cur_anim=m_data->getCurAnimation();
-        if(sprite->hasAnimation(target_name))
+        DsSprite* sprite=project->getSprite(sprite_id);
+        assert(sprite);
+        DsAnimation* anim=sprite->getAnimation(animation_id);
+        assert(anim);
+        if(anim->getName()==name)
         {
-            std::string rename_target;
-            int i=0;
-            do
-            {
-                rename_target=target_name+"("+QString::number(i)+")";
-                i++;
-            }while(sprite->hasAnimation(rename_target));
-            cur_anim->setName(rename_target);
+            return true ;
+        }
+        if(sprite->hasAnimationWithName(name))
+        {
+            return false;
         }
         else
         {
-            cur_anim->setName(target_name);
+            anim->setName(name);
+            m_data->emitSignal(DsData::SG_PROJECT_PROPERTY_CHANGE);
+            return true;
+
         }
-        m_data->emitSignal(DsData::SG_ANIMATION_PROPERTY_CHANGE);
     }
+    return false;
+
 }
-*/
 
 
 

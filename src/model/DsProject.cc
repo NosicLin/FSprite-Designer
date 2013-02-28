@@ -150,6 +150,7 @@ DsSprite* DsProject::getCurSprite()
     return NULL;
 }
 
+
 void DsProject::setCurSprite(const std::string& id)
 {
     for(int i=0;i<m_sprites.size();i++)
@@ -263,6 +264,23 @@ DsSprite* DsProject::getSprite(const std::string& id)
     }
     assert(0); /*never reach here */
     return NULL;
+}
+void DsProject::removeSprite(const std::string& id)
+{
+    std::vector<DsSpriteInfo*>::iterator iter;
+    for(iter=m_sprites.begin();iter!=m_sprites.end();++iter)
+    {
+        if((*iter)->m_sprite->getID()==id)
+        {
+            if(m_curSprite==*iter)
+            {
+                m_curSprite=NULL;
+            }
+            m_sprites.erase(iter);
+            return;
+        }
+    }
+    assert(0); /*never reach here */
 }
 
 

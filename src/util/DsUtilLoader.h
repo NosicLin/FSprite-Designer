@@ -6,6 +6,7 @@
 #include <QDomDocument>
 #include <QDomElement>
 #include <QDomAttr>
+#include <QDomNode>
 #include <string>
 
 #include "model/DsModel.h"
