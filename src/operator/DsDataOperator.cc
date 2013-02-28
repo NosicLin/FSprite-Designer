@@ -52,6 +52,7 @@ bool DsDataOperator::renameSprite(const std::string& id,const std::string& name)
 
         sprite->setName(name);
         m_data->emitSignal(DsData::SG_PROJECT_PROPERTY_CHANGE);
+        return true;
     }
     return false;
 }

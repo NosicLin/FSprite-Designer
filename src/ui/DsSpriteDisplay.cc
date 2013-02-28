@@ -80,14 +80,14 @@ DsSpriteDisplay::DsSpriteDisplay(QWidget* parent)
 DsSpriteTreeWidget::DsSpriteTreeWidget(QWidget* parent)
     :QTreeWidget(parent)
 {
-    isRename = false;
+
 
     m_changedCausedByDsData = true;
     m_changedCausedByView = false;
     m_markCurProjectChange = false;
 
-  //  connect(DsData::shareData(),SIGNAL(signalDataPropertyChange()),
-    //        this,SLOT(slotProjectInited()));
+    //init menuAction type
+    setActionTypeToNone();
 
     connect(DsData::shareData(),SIGNAL(signalProjectPropertyChange()),
             this,SLOT(slotProjectInited()));
@@ -176,7 +176,6 @@ void DsSpriteTreeWidget::slotCurSpriteChange()
     std::string curSpriteId = DsData::shareData()->getCurSprite()->getID();
     QList<QTreeWidgetItem* > itemList;
     itemList = this->findItems(s2q(curSpriteId),Qt::MatchEndsWith|Qt::MatchCaseSensitive,1);
-    //itemList = this->findItems("jump",Qt::MatchCaseSensitive);
     if(itemList.empty())
     {
         qDebug()<<"can't get the current sprite ID";
@@ -278,9 +277,6 @@ void DsSpriteTreeWidget::slotCurrentItemChanged ( QTreeWidgetItem * current, QTr
     if(current->parent() == NULL)
     {
         qDebug()<<current->text(0)<<"projectItem has no parent";
-
-      //  m_changedCausedByView = true;
-      //  DsOperator::data.setCurProject(q2s(current->text(0)));
     }
     else
     {
@@ -316,39 +312,7 @@ void DsSpriteTreeWidget::initView()
     {
         this->clear();
     }
-    /*
-    int count = this->topLevelItemCount();
-    qDebug()<<"topLevelItemCount = "<<QString::number(count);
-    if(0==count)
-    {
-        return;
-    }
-    else
-    {
-        QTreeWidgetItem* item;
-        QList<QTreeWidgetItem*> itemList;
-        QList<QTreeWidgetItem*>::iterator iter;
-        for(int j=0;j<count;j++)
-        {
-            item = this->takeTopLevelItem(0);
-            int childNum = item->childCount();
-            qDebug()<<"childNum = "<<QString::number(childNum);
-            if(childNum <=0 )
-            {
-                continue;
-            }
-            itemList = item->takeChildren();
-            qDebug()<<"itemList count = "<<QString::number(itemList.count());
-            for(iter = itemList.begin(); iter != itemList.end();iter++)
-            {
-                qDebug()<<"destroy project"<<item->text(0)<<"'s animation:"<<(*iter)->text(0);
-                delete (*iter);
-            }
 
-            qDebug()<<"destroy project:"<<item->text(0);
-            delete item;
-        }
-    }*/
 }
 
 //When project data get ready, build the Tree Item
@@ -404,7 +368,7 @@ void DsSpriteTreeWidget::createView()
     QTreeWidgetItem* projectItem = new QTreeWidgetItem(this,projectItemList);
     projectItemList.clear();
     projectItem->setFlags(projectItem->flags()|Qt::ItemIsEditable);     //will send itemChanged signal
-    projectItem->setIcon(0,QIcon(DS_MS_TI_SPRITE));         //will send itemChanged signal
+    projectItem->setIcon(0,QIcon(DS_ICON_PRO_PROJECT));         //will send itemChanged signal
     rootList<<projectItem;
     DsSprite* sprite;
     //DsAnimation* animation;
@@ -435,7 +399,7 @@ void DsSpriteTreeWidget::createView()
         spriteItemList<<s2q(spriteName)<<s2q(spriteId);
         spriteItem = new QTreeWidgetItem(projectItem,spriteItemList);
         spriteItemList.clear();
-        spriteItem->setIcon(0,QIcon(DS_MS_TI_SPRITE));
+        spriteItem->setIcon(0,QIcon(DS_ICON_PRO_SPRITE));
         spriteItem->setFlags(spriteItem->flags()|Qt::ItemIsEditable);
         qDebug()<<"spriteItem Flags="<<QString::number(spriteItem->flags());
         projectItem->addChild(spriteItem);
@@ -460,7 +424,7 @@ void DsSpriteTreeWidget::createView()
             animationItemList<<s2q(animationName)<<s2q(animationId);
             animationItem = new QTreeWidgetItem(spriteItem,animationItemList);
             animationItemList.clear();
-            animationItem->setIcon(0,QIcon(DS_MS_TI_ANIMATION));
+            animationItem->setIcon(0,QIcon(DS_ICON_PRO_ANIMATION));
             animationItem->setFlags(Qt::ItemIsEditable|animationItem->flags());
             qDebug()<<"animationItem Flags="<<QString::number(animationItem->flags());
 
@@ -480,7 +444,6 @@ void DsSpriteTreeWidget::createView()
         }//end for
     }//end for
     this->insertTopLevelItems(0,rootList);
-
 }
 
 //updateView
@@ -605,8 +568,6 @@ void DsSpriteTreeWidget::createAnimationMenus()
 
 
 /* Blank menus slots  */
-
-
 void DsSpriteTreeWidget::slotOpenSprite()
 {
     QMessageBox::information(this,tr("slotOpenSprite"),tr("Open sprite"));
@@ -639,7 +600,19 @@ void DsSpriteTreeWidget::slotRemoveSprite()
 
 void DsSpriteTreeWidget::slotRenameSprite()
 {
-    QMessageBox::information(this,tr("Sprite menus"),tr("Rename sprite"));
+   // QMessageBox::information(this,tr("Sprite menus"),tr("Rename sprite"));
+    QTreeWidgetItem *  currentItem = this->currentItem();
+    m_actionType = MENUS_ACT_RENAME_SPRITE;
+    if(currentItem->flags() & (Qt::ItemIsEditable))
+    {
+        originalName = currentItem->text(0);
+        this->editItem(currentItem, 0);
+        qDebug()<<"About to rename sprite:"<<originalName;
+    }
+    else
+    {
+        QMessageBox::information(this,tr("Entry Rename Sprite"),tr("this item can not edit"));
+    }
 }
 
 void DsSpriteTreeWidget::slotExportSprite()
@@ -653,13 +626,13 @@ void DsSpriteTreeWidget::slotRenameAnimation()
 {
   //  QMessageBox::information(this,tr("Entry Rename Animation"),tr("Rename animation"));
     QTreeWidgetItem *  currentItem = this->currentItem();
-
+    m_actionType = MENUS_ACT_RENAME_ANIMATION;
     if(currentItem->flags() & (Qt::ItemIsEditable))
     {
-        originalAnimationName = currentItem->text(0);
-        isRename = true;
+        originalName = currentItem->text(0);
+
         this->editItem(currentItem, 0);
-        qDebug()<<"About to rename animation:"<<originalAnimationName;
+        qDebug()<<"About to rename animation:"<<originalName;
     }
     else
     {
@@ -675,11 +648,12 @@ void DsSpriteTreeWidget::slotRemoveAnimation()
 
 void DsSpriteTreeWidget::slotItemChanged(QTreeWidgetItem * item, int column)
 {
-   /* if(!isRename)
+   if(m_actionType != MENUS_ACT_RENAME_ANIMATION &&
+      m_actionType != MENUS_ACT_RENAME_SPRITE)
     {
         return;
-    }*/
-    isRename = false;
+    }
+    setActionTypeToNone();
     bool bRename;
     if(item->parent() == NULL)
     {
@@ -690,18 +664,45 @@ void DsSpriteTreeWidget::slotItemChanged(QTreeWidgetItem * item, int column)
         if(item->parent()->parent() == NULL)
         {
             //sprite item
-            qDebug()<<"rename sprite "<<item->text(0);
+            qDebug()<<"try to rename sprite: "<<originalName<<" to "<<item->text(0);
+            disconnect(DsData::shareData(),SIGNAL(signalProjectPropertyChange()),
+                    this,SLOT(slotProjectInited()));
+
+            bRename = DsOperator::data()->renameSprite(
+                            q2s(item->text(1)),
+                            q2s(item->text(0))
+                            );
+            connect(DsData::shareData(),SIGNAL(signalProjectPropertyChange()),
+                    this,SLOT(slotProjectInited()));
+            if(!bRename)
+            {
+                qDebug()<<"can not rename sprite";
+
+                disconnect(this,SIGNAL(itemChanged(QTreeWidgetItem*,int)),
+                        this,SLOT(slotItemChanged(QTreeWidgetItem*,int)));
+
+                item->setText(0,originalName);
+
+                connect(this,SIGNAL(itemChanged(QTreeWidgetItem*,int)),
+                        this,SLOT(slotItemChanged(QTreeWidgetItem*,int)));
+            }
+            else
+            {
+                qDebug()<<"rename sprite in project "<<item->parent()->text(0)
+                       <<" from "<<originalName<<" to "<<item->text(0);
+            }
         }
         else
         {
-            std::string str = q2s(item->text(0));
+            //animation item
+            qDebug()<<"try to rename animation: "<<originalName<<" to "<<item->text(0);
             disconnect(DsData::shareData(),SIGNAL(signalProjectPropertyChange()),
                     this,SLOT(slotProjectInited()));
 
             bRename = DsOperator::data()->renameAnimation(
                             q2s(item->parent()->text(1)),
                             q2s(item->text(1)),
-                            str
+                            q2s(item->text(0))
                             );
             connect(DsData::shareData(),SIGNAL(signalProjectPropertyChange()),
                     this,SLOT(slotProjectInited()));
@@ -713,7 +714,7 @@ void DsSpriteTreeWidget::slotItemChanged(QTreeWidgetItem * item, int column)
                 disconnect(this,SIGNAL(itemChanged(QTreeWidgetItem*,int)),
                         this,SLOT(slotItemChanged(QTreeWidgetItem*,int)));
 
-                item->setText(0,originalAnimationName);
+                item->setText(0,originalName);
 
                 connect(this,SIGNAL(itemChanged(QTreeWidgetItem*,int)),
                         this,SLOT(slotItemChanged(QTreeWidgetItem*,int)));
@@ -721,7 +722,7 @@ void DsSpriteTreeWidget::slotItemChanged(QTreeWidgetItem * item, int column)
             else
             {
                 qDebug()<<"rename animation in sprite "<<item->parent()->text(0)
-                       <<" from "<<originalAnimationName<<" to "<<item->text(0);
+                       <<" from "<<originalName<<" to "<<item->text(0);
             }
         }
     }

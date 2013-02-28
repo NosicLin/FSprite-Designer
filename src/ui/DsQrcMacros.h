@@ -60,10 +60,10 @@
 
 #define DS_FB_FILE ":images/IDI_FILE_OPEN.png"
 
-/* SpriteTreeItem pngn */
-#define DS_MS_TI_ANIMATION ":images/IDI_ANIMATION.png"
-#define DS_MS_TI_SPRITE ":images/IDI_SPRITE.png"
-#define DS_MS_TI_PROJECT ":images/IDI_PROJECT.png"
+/* SpriteTreeItem png */
+#define DS_ICON_PRO_ANIMATION ":images/IDI_ANIMATION.png"
+#define DS_ICON_PRO_SPRITE ":images/IDI_SPRITE.png"
+#define DS_ICON_PRO_PROJECT ":images/IDI_PROJECT.png"
 
 #endif /*_DS_QRC_MACROS_H_*/
 
