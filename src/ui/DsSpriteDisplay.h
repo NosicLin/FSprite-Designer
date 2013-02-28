@@ -30,6 +30,7 @@ class DsSpriteDisplay:public QWidget
         QWidget*     m_widget;
 
 
+
 };
 
 
@@ -68,44 +69,65 @@ class DsSpriteTreeWidget:public QTreeWidget
         void  contextMenuEvent(QContextMenuEvent *event);
     protected slots:
         /* respond m_blankMenus request */
-        void slotAddSprite();
         void slotOpenSprite();
+
+        /* respond m_projectMenus request */
+        void slotAddSprite();
+        void slotSaveProject();
+        void slotCloseProject();
 
         /* respond m_spriteMenus request */
         void slotAddAnimation();
-        void slotCloseSprite();
+        void slotRemoveSprite();
         void slotRenameSprite();
+        void slotExportSprite();
 
-        /* respond m_animationMenus request*/
-        void slotDeleteAnimation();
+        /* respond m_animationMenus request */
+        void slotRemoveAnimation();
         void slotRenameAnimation();
+
+        /* deal with item changed signal */
+        void slotItemChanged(QTreeWidgetItem * item, int column);
+        void slotItemDoubleClicked(QTreeWidgetItem * item, int column);
 
 
     private:
         void createMultMenus();
 
         void createBlankMenus();
+        void createProjectMenus();
         void createSpriteMenus();
         void createAnimationMenus();
     private:
         QPoint m_cursorPos;
 
         //QMenu* m_multSelectMenu;
-
         QMenu* m_blankMenus;
-        QAction* m_addSprite;
         QAction* m_openSprite;
+
+        QMenu* m_projectMenus;
+        QAction* m_addSprite;
+        QAction* m_save;
+        QAction* m_close;
 
         QMenu* m_spriteMenus;
         QAction* m_addAnimation;
-        QAction* m_closeSprite;
+        QAction* m_removeSprite;
         QAction* m_renameSprite;
+        QAction* m_exportSprite;
 
         QMenu* m_animationMenus;
-        QMenu* m_animationMenus1;
-        QAction* m_deleteAnimation;
+        QAction* m_removeAnimation;
         QAction* m_renameAnimation;
 
+        QString originalAnimationName;
+        bool isRename;
+
+        enum
+        {
+            MENUS_ACT_RENAME_SPRITE = 0,
+            MENUS_ACT_RENAME_ANIMATION
+        };
 };
 
 class DsFrameTreeWidget:public QTreeWidget

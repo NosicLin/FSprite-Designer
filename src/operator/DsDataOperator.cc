@@ -157,8 +157,9 @@ bool DsDataOperator::renameAnimation(
         else
         {
             anim->setName(name);
-            return true;
             m_data->emitSignal(DsData::SG_PROJECT_PROPERTY_CHANGE);
+            return true;
+
         }
     }
     return false;
