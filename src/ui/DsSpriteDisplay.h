@@ -30,6 +30,7 @@ class DsSpriteDisplay:public QWidget
         QWidget*     m_widget;
 
 
+
 };
 
 
@@ -81,9 +82,13 @@ class DsSpriteTreeWidget:public QTreeWidget
         void slotRenameSprite();
         void slotExportSprite();
 
-        /* respond m_animationMenus request*/
+        /* respond m_animationMenus request */
         void slotRemoveAnimation();
         void slotRenameAnimation();
+
+        /* deal with item changed signal */
+        void slotItemChanged(QTreeWidgetItem * item, int column);
+        void slotItemDoubleClicked(QTreeWidgetItem * item, int column);
 
 
     private:
@@ -115,6 +120,14 @@ class DsSpriteTreeWidget:public QTreeWidget
         QAction* m_removeAnimation;
         QAction* m_renameAnimation;
 
+        QString originalAnimationName;
+        bool isRename;
+
+        enum
+        {
+            MENUS_ACT_RENAME_SPRITE = 0,
+            MENUS_ACT_RENAME_ANIMATION
+        };
 };
 
 class DsFrameTreeWidget:public QTreeWidget
