@@ -540,7 +540,11 @@ void DsSpriteTreeWidget::slotOpenSprite()
 /* Project menus slots  */
 void DsSpriteTreeWidget::slotAddSprite()
 {
-     QMessageBox::information(this,tr("Project menus"),tr("Add sprite"));
+    // QMessageBox::information(this,tr("Project menus"),tr("Add sprite"));
+    QTreeWidgetItem *  currentItem = this->currentItem();
+    assert(currentItem != NULL);
+    qDebug()<<"add sprite to project :"<<currentItem->text(0);
+    DsOperator::data()->newSprite();
 }
 void DsSpriteTreeWidget::slotSaveProject()
 {
@@ -554,13 +558,16 @@ void DsSpriteTreeWidget::slotCloseProject()
 /* Sprite menus slots  */
 void DsSpriteTreeWidget::slotAddAnimation()
 {
-    QMessageBox::information(this,tr("Sprite menus"),tr("Add animation"));
+    //QMessageBox::information(this,tr("Sprite menus"),tr("Add animation"));
+    QTreeWidgetItem *  currentItem = this->currentItem();
+    assert(currentItem != NULL);
+    qDebug()<<"add animation to sprite :"<<currentItem->text(0);
+    DsOperator::data()->newAnimation();
 }
 
 void DsSpriteTreeWidget::slotRemoveSprite()
 {
     //QMessageBox::information(this,tr("Sprite menus"),tr("Remove sprite"));
-    //QMessageBox::information(this,tr("Animation menus"),tr("Remove animation"));
     QTreeWidgetItem *  currentItem = this->currentItem();
     assert(currentItem != NULL);
     m_actionType = MENUS_ACT_REMOVE_SPRITE;
