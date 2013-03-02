@@ -523,7 +523,7 @@ void DsSpriteTreeWidget::slotOpenProject()
 /* Project menus slots  */
 void DsSpriteTreeWidget::slotAddSprite()
 {
-    // QMessageBox::information(this,tr("Project menus"),tr("Add sprite"));
+
     QTreeWidgetItem *  currentItem = this->currentItem();
     assert(currentItem != NULL);
     qDebug()<<"add sprite to project :"<<currentItem->text(0);
@@ -531,13 +531,13 @@ void DsSpriteTreeWidget::slotAddSprite()
 }
 void DsSpriteTreeWidget::slotSaveProject()
 {
-    //QMessageBox::information(this,tr("Project menus"),tr("Save Project"));
+
     m_actionType = MENUS_ACT_SAVE_PROJECT;
     DsOperator::io()->saveProject();
 }
 void DsSpriteTreeWidget::slotCloseProject()
 {
-     QMessageBox::information(this,tr("Project menus"),tr("Close Project"));
+    DsOperator::io()->closeProject();
 
 }
 
@@ -582,7 +582,10 @@ void DsSpriteTreeWidget::slotRenameSprite()
 
 void DsSpriteTreeWidget::slotExportSprite()
 {
-    QMessageBox::information(this,tr("Sprite menus"),tr("Export sprite"));
+    //QMessageBox::information(this,tr("Sprite menus"),tr("Export sprite"));
+    QTreeWidgetItem *  currentItem = this->currentItem();
+    assert(currentItem != NULL);
+    DsOperator::io()->exportFSprite(q2s(currentItem->text(1)));
 }
 
 
