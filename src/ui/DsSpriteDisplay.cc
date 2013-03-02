@@ -605,6 +605,7 @@ void DsSpriteTreeWidget::slotRemoveAnimation()
 
 void DsSpriteTreeWidget::slotItemChanged(QTreeWidgetItem * item, int column)
 {
+    //qDebug()<<"try to rename sprite: "<<originalName<<" to "<<item->text(0);
    if(m_actionType != MENUS_ACT_RENAME_ANIMATION &&
       m_actionType != MENUS_ACT_RENAME_SPRITE)
     {
@@ -678,6 +679,7 @@ void DsSpriteTreeWidget::slotItemChanged(QTreeWidgetItem * item, int column)
 
 void DsSpriteTreeWidget::slotItemDoubleClicked(QTreeWidgetItem * item, int column)
 {
+
     if(item->parent() == NULL)
     {
         qDebug()<<"in slotItemDoubleClicked";
@@ -688,12 +690,24 @@ void DsSpriteTreeWidget::slotItemDoubleClicked(QTreeWidgetItem * item, int colum
         if(item->parent()->parent() == NULL)
         {
             //sprite item
-            m_actionType = MENUS_ACT_REMOVE_SPRITE;
+            m_actionType = MENUS_ACT_RENAME_SPRITE;
+            if(item->flags() & (Qt::ItemIsEditable))
+            {
+                originalName = item->text(0);
+                this->editItem(item, 0);
+                qDebug()<<"in double key About to rename sprite:"<<originalName;
+            }
         }
         else
         {
             //animation item
             m_actionType =MENUS_ACT_RENAME_ANIMATION;
+            if(item->flags() & (Qt::ItemIsEditable))
+            {
+                originalName = item->text(0);
+                this->editItem(item, 0);
+                qDebug()<<"in double key About to rename animation:"<<originalName;
+            }
         }
 
     }
