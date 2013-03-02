@@ -11,7 +11,7 @@
 
 #include <QDesktopWidget>
 
-
+//http://www.faeris.com/dz/forum-74-1.html
 
 int main(int argc, char *argv[])
 {
