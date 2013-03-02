@@ -376,7 +376,7 @@ void DsMainFrame::configToolBar()
 	tl_moveFront->setEnabled(true);
 	tl_moveEnd->setEnabled(true);
 	tl_play->setEnabled(true);
-	tl_stop->setEnabled(false);
+    tl_stop->setEnabled(true);
 	if(project==NULL)
 	{
 		tl_new->setEnabled(false);
@@ -404,6 +404,17 @@ void DsMainFrame::configToolBar()
 		return;
 	}
 
+    DsAnimation* cur_anim=data->getCurAnimation();
+    if(cur_anim==NULL)
+    {
+        tl_play->setEnabled(false);
+        tl_stop->setEnabled(false);
+    }
+    else
+    {
+        tl_play->setEnabled(true);
+        tl_stop->setEnabled(false);
+    }
     DsFrameImage* cur_frame_image=data->getCurFrameImage();
 	if(cur_frame_image==NULL)
 	{
@@ -419,6 +430,27 @@ void DsMainFrame::configToolBar()
 }
 void DsMainFrame::configMenuFile()
 {
+    bool anim_play=DsOperator::animation()->isAnimationPlay();
+    if(anim_play)
+    {
+        ms_newProject->setEnabled(false);
+        ms_openProject->setEnabled(false);
+        ms_newSprite->setEnabled(false);
+        ms_save->setEnabled(false);
+        ms_close->setEnabled(false);
+        ms_export->setEnabled(false);
+        return;
+    }
+    else
+    {
+        ms_newProject->setEnabled(true);
+        ms_openProject->setEnabled(true);
+        ms_newSprite->setEnabled(true);
+        ms_save->setEnabled(true);
+        ms_close->setEnabled(true);
+        ms_export->setEnabled(true);
+    }
+
     DsData* data=DsData::shareData();
     DsProject* proj=data->getProject();
     DsSprite* sprite=data->getCurSprite();

@@ -65,6 +65,7 @@ void DsResourceDisplay::selectSomething() // 点击图片图标，返回路径�
                 fileName.right(4).compare(".tag", Qt::CaseInsensitive) == 0 ||
                 fileName.right(4).compare(".png", Qt::CaseInsensitive) == 0)
         {
+
             dirTemp = getParentDirFromItem(m_tree->currentItem());
             std::string path(qPrintable(dirTemp));
             std::string filename(qPrintable(fileName));
