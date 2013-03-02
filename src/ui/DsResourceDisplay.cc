@@ -14,8 +14,8 @@ DsResourceDisplay::DsResourceDisplay(QWidget* p)
 {
     // 加一个右键菜单
     m_menu = new QMenu(this);
-    m_flushAction = m_menu->addAction(tr("Flush"));
-    connect(m_flushAction, SIGNAL(triggered()), this, SLOT(flushFolder()));
+    m_flushAction = m_menu->addAction(tr("refresh"));
+    connect(m_flushAction, SIGNAL(triggered()), this, SLOT(RefreshFolder()));
 
     m_model = new QDirModel;
     m_tree = new QTreeWidget;
@@ -30,21 +30,21 @@ DsResourceDisplay::DsResourceDisplay(QWidget* p)
     QVBoxLayout *topLayout = new QVBoxLayout;
     topLayout->addWidget(m_tree);
 
-    QPushButton *flushButton = new QPushButton("flush", this);
-    connect(flushButton, SIGNAL(clicked()), this, SLOT(flushFolder()));
+    //QPushButton *flushButton = new QPushButton("flush", this);
+    //connect(flushButton, SIGNAL(clicked()), this, SLOT(flushFolder()));
 
-    QHBoxLayout *downLayout = new QHBoxLayout;
-    downLayout->addWidget(flushButton, 0, Qt::AlignHCenter);
+    //QHBoxLayout *downLayout = new QHBoxLayout;
+    //downLayout->addWidget(flushButton, 0, Qt::AlignHCenter);
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->addLayout(topLayout, 0);
-    mainLayout->addLayout(downLayout, 1);
+    //mainLayout->addLayout(downLayout, 1);
     setLayout(mainLayout);
 
-    connect(DsData::shareData(), SIGNAL(signalCurProjectChange()), this, SLOT(flushFolder()));
+    connect(DsData::shareData(), SIGNAL(signalCurProjectChange()), this, SLOT(RefreshFolder()));
 }
 
-void DsResourceDisplay::AddResFolder(QString strPath)
+void DsResourceDisplay::AddResFolder(QString strPath, QString itemName)
 {
     if (!strPath.isNull()) // user choiced folder
     {
@@ -53,7 +53,7 @@ void DsResourceDisplay::AddResFolder(QString strPath)
             strPath += '/';
         }
         QTreeWidgetItem *noteTemp = new QTreeWidgetItem();
-        noteTemp->setText(0, strPath);
+        noteTemp->setText(0, itemName);
         noteTemp->setIcon(0, QIcon(DS_FB_FILE));
         m_tree->addTopLevelItem(noteTemp);
         AddFileItem(strPath, noteTemp);
@@ -221,7 +221,7 @@ QString DsResourceDisplay::GetDirFromItem(QTreeWidgetItem *currentTreeItem)
             pathTemp += pathPre;
             pathPre = pathTemp;
         }
-        return pathPre;
+        return (m_dir + pathPre);
     }
 }
 
@@ -427,7 +427,7 @@ void DsResourceDisplay::AddResFolder()
 }
 */
 
-void DsResourceDisplay::flushFolder()
+void DsResourceDisplay::RefreshFolder()
 {
     int ntreeCount = m_tree->columnCount();
     QTreeWidgetItem *currentItem = NULL;
@@ -439,6 +439,7 @@ void DsResourceDisplay::flushFolder()
         currentItem = NULL;
     }
 
+    m_dir = QString("");
     DsData *dsDataTemp = DsData::shareData();
     if (dsDataTemp == NULL)
     {
@@ -450,10 +451,10 @@ void DsResourceDisplay::flushFolder()
         if (dsProjectTemp != NULL)
         {
             std::string strRes = dsProjectTemp->getDirName();
-            strRes += "textures";
             char szdata[1024] = {'\0'};
-            strncpy(szdata,  strRes.data(),1024); //--// string to char*
-            AddResFolder(szdata);
+            strncpy(szdata, strRes.data(), 1024); //--// string to char*
+            m_dir = QString(szdata); // szdata末尾带了 /
+            AddResFolder(m_dir + QString("textures"), QString("textures"));
         }
     }
 
