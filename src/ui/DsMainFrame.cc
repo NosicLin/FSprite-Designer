@@ -133,34 +133,6 @@ void DsMainFrame::createMenuBar()
 		mn_edit->addAction(ms_moveEnd);
 		connect(ms_moveEnd,SIGNAL(triggered()),this,SLOT(onMoveEnd()));
 
-
-
-		/* Paste */
-		ms_paste=new QAction(QPixmap(DS_MS_PASTE),"&Paste",this);
-		mn_edit->addAction(ms_paste);
-		connect(ms_paste,SIGNAL(triggered()),this,SLOT(onPaste()));
-
-		/* Copy */
-		ms_copy=new QAction(QPixmap(DS_MS_COPY),"&Copy",this);
-		mn_edit->addAction(ms_copy);
-		connect(ms_copy,SIGNAL(triggered()),this,SLOT(onCopy()));
-
-		/* rotate */
-		ms_rotate=new QAction(QPixmap(DS_MS_ROTATE),"&Rotate",this);
-		mn_edit->addAction(ms_rotate);
-		connect(ms_rotate,SIGNAL(triggered()),this,SLOT(onRotate()));
-
-		/* scale */
-		ms_scale=new QAction(QPixmap(DS_MS_SCALE),"&Scale",this);
-		mn_edit->addAction(ms_scale);
-		connect(ms_scale,SIGNAL(triggered()),this,SLOT(onScale()));
-
-		/* position */
-		ms_position=new QAction(QPixmap(DS_MS_POSITION),"&Position",this);
-		mn_edit->addAction(ms_position);
-		connect(ms_position,SIGNAL(triggered()),this,SLOT(onPosition()));
-
-
 	}
 
 
