@@ -37,12 +37,12 @@ class DsResourceDisplay:public QWidget
         QTreeWidget *m_tree;
         QMenu *m_menu;
         QAction *m_flushAction;
-        //QString m_dir;
+        QString m_dir; // 用于保存根目录
 
         QString GetDirFromItem(QTreeWidgetItem *currentTreeItem);
         QString GetParentDirFromItem(QTreeWidgetItem *currentTreeItem);
 
-        void AddResFolder(QString strPath); // 添加一个根目录
+        void AddResFolder(QString strPath, QString itemName); // 添加一个根目录
         int AddFileItem(QString strDir, QTreeWidgetItem *currentItem); // strDir的末尾最好有'/' // 添加一个子目录 // 为当前的 Item （其目录为strDir）创建子目录
 
         void contextMenuEvent(QContextMenuEvent *event); // 鼠标右键弹出时的事件响应
@@ -59,7 +59,7 @@ class DsResourceDisplay:public QWidget
         void expandSomething(QTreeWidgetItem *treeItem); // 展开一个Item
         void unExpandSomething(QTreeWidgetItem *treeItem); // 收缩一个Item
         void debugSomething(void); //
-        void flushFolder(); //
+        void RefreshFolder(); //
 
         //void openSomething(void); //
         //void deleteSomething(void); //
