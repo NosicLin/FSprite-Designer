@@ -82,7 +82,7 @@ class DsKeyFrame:public DsFrame
 		Iterator begin(){return m_images.begin();}
 		Iterator end(){return m_images.end();}
 
-		DsKeyFrame* clone();
+        DsKeyFrame* clone(int clone_id=false);
 	private:
 		std::vector<DsFrameImage*> m_images;
 };

@@ -99,6 +99,7 @@ void DsDataOperator::addFrameImage(DsFrameImage* image)
     {
         if(frame->getType()==DsFrame::FRAME_KEY)
         {
+            m_data->saveState();
             ((DsKeyFrame*)frame)->insertFrameImage(image,0);
             m_data->emitSignal(DsData::SG_FRAME_PROPERTY_CHANGE);
             return ;
@@ -112,6 +113,8 @@ void DsDataOperator::removeCurFrameImage()
     DsFrameImage* cur=m_data->getCurFrameImage();
     if(cur)
     {
+
+        m_data->saveState();
         DsKeyFrame* frame=(DsKeyFrame*) m_data->getCurFrame();
         frame->removeFrameImage(cur->getID());
         m_data->dropCurFrameImage();
@@ -125,6 +128,7 @@ void DsDataOperator::removeAnimation(const std::string& id)
     DsSprite* sprite=m_data->getCurSprite();
     if(sprite)
     {
+        m_data->saveState();
         DsAnimation* cur_anim=m_data->getCurAnimation();
         if(cur_anim->getID()==id)
         {
@@ -157,6 +161,7 @@ bool DsDataOperator::renameAnimation(
         }
         else
         {
+            m_data->saveState();
             anim->setName(name);
             m_data->emitSignal(DsData::SG_PROJECT_PROPERTY_CHANGE);
             return true;
@@ -185,6 +190,7 @@ void DsDataOperator::insertKeyFrame(int index)
     DsAnimation* anim=m_data->getCurAnimation();
     if(anim)
     {
+        m_data->saveState();
         anim->insertKeyFrame(index);
         m_data->emitSignal(DsData::SG_ANIMATION_PROPERTY_CHANGE);
     }
@@ -195,6 +201,7 @@ void DsDataOperator::insertEmptyKeyFrame(int index)
     DsAnimation* anim=m_data->getCurAnimation();
     if(anim)
     {
+        m_data->saveState();
         anim->insertEmptyKeyFrame(index);
         m_data->emitSignal(DsData::SG_ANIMATION_PROPERTY_CHANGE);
     }
@@ -206,6 +213,7 @@ void DsDataOperator::removeKeyFrame(int index)
     DsAnimation* anim=m_data->getCurAnimation();
     if(anim)
     {
+        m_data->saveState();
         anim->removeKeyFrame(index);
         m_data->emitSignal(DsData::SG_ANIMATION_PROPERTY_CHANGE);
     }
@@ -215,6 +223,7 @@ void DsDataOperator::removeRangeFrame(int from,int to)
     DsAnimation* anim=m_data->getCurAnimation();
     if(anim)
     {
+        m_data->saveState();
         for(int i=from;i<=to;i++)
         {
             DsFrame* frame=anim->getFrame(i);
@@ -240,6 +249,7 @@ void DsDataOperator::insertTween(int index)
     DsAnimation* anim=m_data->getCurAnimation();
     if(anim)
     {
+        m_data->saveState();
         anim->insertTween(index);
         m_data->emitSignal(DsData::SG_ANIMATION_PROPERTY_CHANGE);
     }
@@ -250,6 +260,7 @@ void DsDataOperator::removeTween(int index)
     DsAnimation* anim=m_data->getCurAnimation();
     if(anim)
     {
+        m_data->saveState();
         anim->removeTween(index);
         m_data->emitSignal(DsData::SG_ANIMATION_PROPERTY_CHANGE);
     }
@@ -259,6 +270,7 @@ void DsDataOperator::tweenToKeyFrame(int index)
     DsAnimation* anim=m_data->getCurAnimation();
     if(anim)
     {
+        m_data->saveState();
         DsFrame* frame=anim->getFrame(index);
         assert(frame);
         assert(frame->getType()==DsFrame::FRAME_TWEEN);
@@ -280,6 +292,7 @@ void DsDataOperator::setCurFrameImagePos(float x,float y)
     DsFrameImage* img=m_data->getCurFrameImage();
     if(img)
     {
+        m_data->saveState();
         img->setPos(x,y);
         m_data->emitSignal(DsData::SG_FRAME_IMAGE_PROPERTY_CHANGE);
     }
@@ -290,6 +303,7 @@ void DsDataOperator::setCurFrameImageScale(float x,float y)
     DsFrameImage* img=m_data->getCurFrameImage();
     if(img)
     {
+        m_data->saveState();
         img->setScale(x,y);
         m_data->emitSignal(DsData::SG_FRAME_IMAGE_PROPERTY_CHANGE);
     }
@@ -300,6 +314,7 @@ void DsDataOperator::setCurFrameImageAngle(float angle)
     DsFrameImage* img=m_data->getCurFrameImage();
     if(img)
     {
+        m_data->saveState();
         img->setAngle(angle);
         m_data->emitSignal(DsData::SG_FRAME_IMAGE_PROPERTY_CHANGE);
     }
@@ -309,6 +324,7 @@ void DsDataOperator::setCurFrameImageOffset(float fx,float fy)
     DsFrameImage* img=m_data->getCurFrameImage();
     if(img)
     {
+        m_data->saveState();
         img->setOffset(fx,fy);
         m_data->emitSignal(DsData::SG_FRAME_IMAGE_PROPERTY_CHANGE);
     }
@@ -318,6 +334,7 @@ void DsDataOperator::setCurFrameImageTextureArea(float cx0,float cy0,float cx1,f
     DsFrameImage* img=m_data->getCurFrameImage();
     if(img)
     {
+        m_data->saveState();
         img->setTextureArea(cx0,cy0,cx1,cy1);
         m_data->emitSignal(DsData::SG_FRAME_IMAGE_PROPERTY_CHANGE);
     }
@@ -328,6 +345,7 @@ void DsDataOperator::setCurFrameImageAlpha(float alpha)
     DsFrameImage* img=m_data->getCurFrameImage();
     if(img)
     {
+        m_data->saveState();
         img->setAlpha(alpha);
         m_data->emitSignal(DsData::SG_FRAME_IMAGE_PROPERTY_CHANGE);
     }
@@ -338,6 +356,7 @@ void DsDataOperator::newAnimation()
     DsSprite* sprite=m_data->getCurSprite();
     if(sprite)
     {
+        m_data->saveState();
         int i=0;
         while(true)
         {
@@ -368,6 +387,7 @@ void DsDataOperator::frameImageMoveUp()
         DsDebug<<"Cur Frame Image Not Selected"<<endl;
         return;
     }
+    m_data->saveState();
     DsKeyFrame* frame=(DsKeyFrame*)m_data->getCurFrame();
 
     frame->upFrameImage(cur->getID());
@@ -382,6 +402,7 @@ void DsDataOperator::frameImageMoveDown()
         DsDebug<<"Cur Frame Image Not Selected"<<endl;
         return;
     }
+    m_data->saveState();
     DsKeyFrame* frame=(DsKeyFrame*)m_data->getCurFrame();
 
     frame->downFrameImage(cur->getID());
@@ -396,6 +417,7 @@ void DsDataOperator::frameImageMoveEnd()
         DsDebug<<"Cur Frame Image Not Selected"<<endl;
         return;
     }
+    m_data->saveState();
     DsKeyFrame* frame=(DsKeyFrame*)m_data->getCurFrame();
 
     frame->frameImageToEnd(cur->getID());
@@ -410,6 +432,7 @@ void DsDataOperator::frameImageMoveFront()
         DsDebug<<"Cur Frame Image Not Selected"<<endl;
         return;
     }
+    m_data->saveState();
     DsKeyFrame* frame=(DsKeyFrame*)m_data->getCurFrame();
 
     frame->frameImageToFront(cur->getID());

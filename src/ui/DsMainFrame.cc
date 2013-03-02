@@ -450,6 +450,16 @@ void DsMainFrame::onMoveEnd()
 }
 
 
+void DsMainFrame::onUndo()
+{
+    DsOperator::aux()->undo();
+}
+
+void DsMainFrame::onRedo()
+{
+    DsOperator::aux()->redo();
+}
+
 
 
 

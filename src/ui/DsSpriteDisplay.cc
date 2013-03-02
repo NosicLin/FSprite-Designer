@@ -17,9 +17,6 @@
 
 #include "DsQrcMacros.h"
 
-//Turn off debug output
-//#define QT_NO_DEBUG_OUTPUT
-
 
 #ifdef QT_NO_DEBUG_OUTPUT
 #define qDebug while(false)qDebug
@@ -41,27 +38,7 @@ std::string q2s(const QString &s)
 DsSpriteDisplay::DsSpriteDisplay(QWidget* parent)
     :QWidget(parent)
 {
-/*
-    //add Dock to MainWindow
-    m_Dock = new QDockWidget(tr("SpriteDisplay"),parent);
-    m_Dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-    m_Dock->setFeatures(QDockWidget::NoDockWidgetFeatures);
-    m_Dock->setWindowTitle("");
 
-    //add tabWidget to Dock
-    m_tabWidget = new QTabWidget(m_Dock);
-    m_Dock->setWidget(m_tabWidget);
-
-    //add spriteTreeWidget to tabWidget
-    m_spriteTreeWidget = new DsSpriteTreeWidget(m_tabWidget);
-    m_frameTreeWidget = new DsFrameTreeWidget(m_tabWidget);
-
-    m_tabWidget->addTab(m_spriteTreeWidget,tr("Sprite"));
-    m_tabWidget->addTab(m_frameTreeWidget,tr("Frame"));
-
-    QMainWindow* MainWindow = (QMainWindow*)parent->parent();
-    MainWindow->addDockWidget(Qt::RightDockWidgetArea, m_Dock);
-*/
     m_tabWidget = new QTabWidget;
 
     QVBoxLayout* vLayout = new QVBoxLayout;
@@ -80,9 +57,8 @@ DsSpriteTreeWidget::DsSpriteTreeWidget(QWidget* parent)
 {
 
 
-    m_changedCausedByDsData = true;
+    m_changedCausedByDsData = false;
     m_changedCausedByView = false;
-    m_markCurProjectChange = false;
 
     //init menuAction type
     setActionTypeToNone();
@@ -102,10 +78,9 @@ DsSpriteTreeWidget::DsSpriteTreeWidget(QWidget* parent)
     connect(this,SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem *)),
             this,SLOT(slotCurrentItemChanged ( QTreeWidgetItem * , QTreeWidgetItem * )));
 
-
-
     //just show the first col
-    this->setColumnCount(1);
+    this->setColumnCount(2);
+    this->setColumnHidden(1,true);
     this->setHeaderHidden(true);
 
     //only the DsSpriteTreeWidget had been built ,it's menus can create.
@@ -159,16 +134,18 @@ void DsSpriteTreeWidget::slotCurSpriteChange()
             break ;
         }
     }
+    itemList.clear();
 }
 
 void DsSpriteTreeWidget::slotCurAnimationChange()
 {
+    qDebug()<<"into slotCurAnimationChange";
     if(m_changedCausedByView)
     {
         m_changedCausedByView = false;
         return ;
     }
-
+    qDebug()<<s2q(DsData::shareData()->getCurAnimation()->getName());
     if(DsData::shareData()->getCurAnimation() == NULL)
     {
         return;
@@ -176,14 +153,15 @@ void DsSpriteTreeWidget::slotCurAnimationChange()
 
     std::string curSpriteId = DsData::shareData()->getCurSprite()->getID();
     std::string curAnimationId = DsData::shareData()->getCurAnimation()->getID();
-
     QList<QTreeWidgetItem* > itemList;
-    itemList = this->findItems(s2q(curSpriteId),Qt::MatchEndsWith|Qt::MatchCaseSensitive);
+
+    itemList = this->findItems(s2q(curSpriteId),Qt::MatchRecursive|Qt::MatchFixedString,1);
     if(itemList.empty())
     {
         qDebug()<<"can't get the current sprite ID:"<<s2q(curSpriteId);
         return ;
     }
+
     qDebug()<<"itemList length is "<<QString::number(itemList.length());
     QList<QTreeWidgetItem* >::iterator iter;
     QTreeWidgetItem* spriteItem;
@@ -198,7 +176,7 @@ void DsSpriteTreeWidget::slotCurAnimationChange()
             break;
         }
     }
-
+    itemList.clear();
     //get child item(animation item) by parent item(sprite item)
     int i;
     QTreeWidgetItem* pItem;
@@ -320,7 +298,7 @@ void DsSpriteTreeWidget::createView()
     projectItemList<<s2q(projectName)<<"1";
     QTreeWidgetItem* projectItem = new QTreeWidgetItem(this,projectItemList);
     projectItemList.clear();
-   // projectItem->setFlags(projectItem->flags()|Qt::ItemIsEditable);     //will send itemChanged signal
+
     projectItem->setIcon(0,QIcon(DS_ICON_PRO_PROJECT));         //will send itemChanged signal
     rootList<<projectItem;
     DsSprite* sprite;
@@ -410,13 +388,9 @@ void DsSpriteTreeWidget::contextMenuEvent(QContextMenuEvent *event)
    QTreeWidgetItem* item = this->itemAt(mapFromGlobal(QCursor::pos()));
     if(item == NULL)
     {
+        qDebug()<<"show m_blankMenus";
+        m_blankMenus->popup(QCursor::pos());
 
-       // DsProject* pro = DsData::shareData()->getProject();
-        //if(pro == NULL)
-       // {
-            qDebug()<<"show m_blankMenus";
-            m_blankMenus->popup(QCursor::pos());
-      //  }
     }
     else
     {
@@ -458,7 +432,6 @@ void DsSpriteTreeWidget::createMultMenus()
 
     connect(this,SIGNAL(itemDoubleClicked(QTreeWidgetItem* , int)),
             this,SLOT(slotItemDoubleClicked(QTreeWidgetItem * ,int)));
-
 }
 
 void DsSpriteTreeWidget::createBlankMenus()
@@ -468,7 +441,6 @@ void DsSpriteTreeWidget::createBlankMenus()
     m_openProject = m_blankMenus->addAction(tr("Open project"));
     connect(m_newProject,SIGNAL(triggered()),this,SLOT(slotNewProject()));
     connect(m_openProject,SIGNAL(triggered()),this,SLOT(slotOpenProject()));
-
 }
 
 void DsSpriteTreeWidget::createProjectMenus()
@@ -511,19 +483,16 @@ void DsSpriteTreeWidget::createAnimationMenus()
 /* Blank menus slots  */
 void DsSpriteTreeWidget::slotNewProject()
 {
-    //QMessageBox::information(this,tr("slotNewProject"),tr("New project"));
     DsOperator::io()->newProject();
 }
 void DsSpriteTreeWidget::slotOpenProject()
 {
-    //QMessageBox::information(this,tr("slotOpenProject"),tr("Open project"));
      DsOperator::io()->loadProject();
 }
 
 /* Project menus slots  */
 void DsSpriteTreeWidget::slotAddSprite()
 {
-
     QTreeWidgetItem *  currentItem = this->currentItem();
     assert(currentItem != NULL);
     qDebug()<<"add sprite to project :"<<currentItem->text(0);
@@ -531,20 +500,17 @@ void DsSpriteTreeWidget::slotAddSprite()
 }
 void DsSpriteTreeWidget::slotSaveProject()
 {
-
     m_actionType = MENUS_ACT_SAVE_PROJECT;
     DsOperator::io()->saveProject();
 }
 void DsSpriteTreeWidget::slotCloseProject()
 {
     DsOperator::io()->closeProject();
-
 }
 
 /* Sprite menus slots  */
 void DsSpriteTreeWidget::slotAddAnimation()
 {
-    //QMessageBox::information(this,tr("Sprite menus"),tr("Add animation"));
     QTreeWidgetItem *  currentItem = this->currentItem();
     assert(currentItem != NULL);
     qDebug()<<"add animation to sprite :"<<currentItem->text(0);
@@ -553,18 +519,15 @@ void DsSpriteTreeWidget::slotAddAnimation()
 
 void DsSpriteTreeWidget::slotRemoveSprite()
 {
-    //QMessageBox::information(this,tr("Sprite menus"),tr("Remove sprite"));
     QTreeWidgetItem *  currentItem = this->currentItem();
     assert(currentItem != NULL);
     m_actionType = MENUS_ACT_REMOVE_SPRITE;
     qDebug()<<"remove sprite :"<<currentItem->text(0);
     DsOperator::data()->removeSprite(q2s(currentItem->text(1)));
-
 }
 
 void DsSpriteTreeWidget::slotRenameSprite()
 {
-
     QTreeWidgetItem *  currentItem = this->currentItem();
     assert(currentItem != NULL);
     m_actionType = MENUS_ACT_RENAME_SPRITE;
@@ -574,20 +537,14 @@ void DsSpriteTreeWidget::slotRenameSprite()
         this->editItem(currentItem, 0);
         qDebug()<<"About to rename sprite:"<<originalName;
     }
-    else
-    {
-        QMessageBox::information(this,tr("Entry Rename Sprite"),tr("this item can not edit"));
-    }
 }
 
 void DsSpriteTreeWidget::slotExportSprite()
 {
-    //QMessageBox::information(this,tr("Sprite menus"),tr("Export sprite"));
     QTreeWidgetItem *  currentItem = this->currentItem();
     assert(currentItem != NULL);
     DsOperator::io()->exportFSprite(q2s(currentItem->text(1)));
 }
-
 
 /* Animation menus slots  */
 void DsSpriteTreeWidget::slotRenameAnimation()
@@ -599,7 +556,6 @@ void DsSpriteTreeWidget::slotRenameAnimation()
     if(currentItem->flags() & (Qt::ItemIsEditable))
     {
         originalName = currentItem->text(0);
-
         this->editItem(currentItem, 0);
         qDebug()<<"About to rename animation:"<<originalName;
     }
@@ -607,12 +563,10 @@ void DsSpriteTreeWidget::slotRenameAnimation()
     {
         QMessageBox::information(this,tr("Entry Rename Animation"),tr("this item can not edit"));
     }
-
 }
 
 void DsSpriteTreeWidget::slotRemoveAnimation()
 {
-
     QTreeWidgetItem *  currentItem = this->currentItem();
     assert(currentItem != NULL);
     m_actionType = MENUS_ACT_REMOVE_ANIMATION;
@@ -724,7 +678,6 @@ DsFrameTreeWidget::DsFrameTreeWidget(QWidget* parent)
 {
 
     //sigal from DsData
-
     connect(DsData::shareData(),SIGNAL(signalCurProjectChange()),
             this,SLOT(slotProjectRefresh()));
     connect(DsData::shareData(),SIGNAL(signalCurSpriteChange()),
@@ -749,21 +702,6 @@ DsFrameTreeWidget::DsFrameTreeWidget(QWidget* parent)
     connect(this,SIGNAL(itemClicked(QTreeWidgetItem* ,int )),
             this,SLOT(slotItemClicked(QTreeWidgetItem* ,int )));
 
-
-    /*
-    connect(DsData::shareData(),SIGNAL(signalProjectPropertyChange()),
-            this,SLOT(slotProjectInited()));
-
-    connect(DsData::shareData(),SIGNAL(signalCurProjectChange()),
-            this,SLOT(slotCurProjectChange()));
-
-    connect(DsData::shareData(),SIGNAL(signalCurAnimationChange()),
-            this,SLOT(slotCurAnimationChange()));
-
-    connect(this,SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem *)),
-            this,SLOT(slotCurrentItemChanged ( QTreeWidgetItem * , QTreeWidgetItem * )));
-
-*/
     //just show the first col
     this->setColumnCount(1);
     this->setHeaderHidden(true);
@@ -841,7 +779,6 @@ void DsFrameTreeWidget::createView()
         iamgeItem = new QTreeWidgetItem(this,stringList);
         stringList.clear();
         iamgeItem->setIcon(0,QIcon(s2q(pathName)));
-
     }
     this->insertTopLevelItems(0,itemList);
 }

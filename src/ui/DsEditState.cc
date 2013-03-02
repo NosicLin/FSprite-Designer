@@ -932,7 +932,7 @@ void DsEditStateTextureArea::mouseMoveEvent(QMouseEvent* event)
         m_movevx1+=dx;
         m_movevy1+=-dy;
     }
-    else if(m_direction=DsEditState::DIRECTION_BOTH)
+    else if(m_direction==DsEditState::DIRECTION_BOTH)
     {
         m_movevx0+=dx;
         m_movevy0+=-dy;

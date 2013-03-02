@@ -56,6 +56,7 @@
 #define DS_TL_HELP ":/images/IDI_HELP.png"
 
 #define DS_FB_FILE ":images/IDI_FILE_OPEN.png"
+#define DS_FB_FILE_SMALL ":images/IDI_FILE_OPEN_SMALL.png"
 
 /* SpriteTreeItem png */
 #define DS_ICON_PRO_ANIMATION ":images/IDI_ANIMATION.png"

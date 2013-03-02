@@ -56,11 +56,9 @@ class DsSpriteTreeWidget:public QTreeWidget
     private:
         bool m_changedCausedByDsData;
         bool m_changedCausedByView;
-        bool m_markCurProjectChange;
 
-
-    /*  for MultMenus   */
     protected:
+        /*  for MultMenus   */
         void  contextMenuEvent(QContextMenuEvent *event);
     protected slots:
         /* respond m_blankMenus request */

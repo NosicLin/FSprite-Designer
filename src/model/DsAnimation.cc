@@ -451,6 +451,53 @@ void DsAnimation::insertKeyFrame(int index,DsKeyFrame* frame)
 }
 
 
+DsAnimation* DsAnimation::clone(int clone_id)
+{
+    DsAnimation* anim=new DsAnimation(m_name);
+    if(clone_id)
+    {
+        anim->setID(m_id);
+    }
+
+    for(int i=0;i<m_keyFrames.size();i++)
+    {
+        DsFrame* cur_frame=m_keyFrames[i];
+        DsFrame* clone=NULL;;
+        if(cur_frame->getType()==DsFrame::FRAME_TWEEN)
+        {
+            clone=new DsTweenFrame(NULL,NULL,cur_frame->getFrameId());
+        }
+        else
+        {
+            clone=((DsKeyFrame*)cur_frame)->clone(clone_id);
+        }
+        anim->pushFrame(clone);
+    }
+    return anim;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

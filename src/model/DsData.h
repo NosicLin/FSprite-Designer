@@ -88,6 +88,9 @@ public:
 	void dropCurFrameImage();
     void emitSignal(int type);
 
+    /* save State used for undo/redo */
+    void saveState();
+
 signals:
     void signalCurProjectChange();
     void signalCurSpriteChange();
