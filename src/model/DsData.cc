@@ -94,8 +94,11 @@ void DsData::emitSignal(int type)
 			break;
 		case SG_FRAME_IMAGE_PROPERTY_CHANGE:
 			emit signalFrameImagePropertyChange();
-			break;
+            break;
 
+        case SG_ANIMATION_PLAY_STATE_CHANGE:
+            emit signalAnimationPlayStateChange();
+            break;
 		default:
 			assert(0);
 	}

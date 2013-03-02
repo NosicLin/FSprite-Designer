@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
     main_frame.setWindowIcon(QIcon(DS_MS_WINDOW_ICON));
     main_frame.showMaximized();
 
-
+    DsData::shareData()->emitSignal(DsData::SG_PROJECT_PROPERTY_CHANGE);
     return app.exec();
 }
 

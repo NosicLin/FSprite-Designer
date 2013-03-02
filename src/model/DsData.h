@@ -45,7 +45,9 @@ public:
         SG_PROJECT_PROPERTY_CHANGE,
         SG_ANIMATION_PROPERTY_CHANGE,
         SG_FRAME_PROPERTY_CHANGE,
-        SG_FRAME_IMAGE_PROPERTY_CHANGE
+        SG_FRAME_IMAGE_PROPERTY_CHANGE,
+
+        SG_ANIMATION_PLAY_STATE_CHANGE
     };
 
 public:
@@ -103,6 +105,8 @@ signals:
     void signalFramePropertyChange();
     void signalFrameImagePropertyChange();
 
+
+    void signalAnimationPlayStateChange();
 private:
     DsProject* m_curProject;
 };

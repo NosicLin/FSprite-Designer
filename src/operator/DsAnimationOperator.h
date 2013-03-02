@@ -10,7 +10,8 @@ class DsAnimationOperator :public QObject
     Q_OBJECT
 	public:
 		DsAnimationOperator();
-	public:
+    public:
+        bool isAnimationPlay(){return m_playing;}
 		void animationPlay();
 		void animationStop();
 	public slots:

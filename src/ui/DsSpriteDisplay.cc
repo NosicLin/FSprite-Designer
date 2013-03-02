@@ -384,13 +384,41 @@ void DsSpriteTreeWidget::createView()
 //RightButton clicked contextMenuEvent be called
 void DsSpriteTreeWidget::contextMenuEvent(QContextMenuEvent *event)
 {
+    int anim_play=DsOperator::animation()->isAnimationPlay();
+    if(anim_play)
+    {
+        m_newProject->setDisabled(true);
+        m_openProject->setDisabled(true);
+        m_addSprite->setDisabled(true);
+        m_save->setDisabled(true);
+        m_close->setDisabled(true);
+        m_addAnimation->setDisabled(true);
+        m_removeSprite->setDisabled(true);
+        m_renameSprite->setDisabled(true);
+        m_exportSprite->setDisabled(true);
+        m_removeAnimation->setDisabled(true);
+        m_renameAnimation->setDisabled(true);
+    }
+    else
+    {
+        m_newProject->setEnabled(true);
+        m_openProject->setEnabled(true);
+        m_addSprite->setEnabled(true);
+        m_save->setEnabled(true);
+        m_close->setEnabled(true);
+        m_addAnimation->setEnabled(true);
+        m_removeSprite->setEnabled(true);
+        m_renameSprite->setEnabled(true);
+        m_exportSprite->setEnabled(true);
+        m_removeAnimation->setEnabled(true);
+        m_renameAnimation->setEnabled(true);
+    }
 
    QTreeWidgetItem* item = this->itemAt(mapFromGlobal(QCursor::pos()));
     if(item == NULL)
     {
         qDebug()<<"show m_blankMenus";
         m_blankMenus->popup(QCursor::pos());
-
     }
     else
     {
@@ -429,9 +457,9 @@ void DsSpriteTreeWidget::createMultMenus()
 
     connect(this,SIGNAL(itemChanged(QTreeWidgetItem*,int)),
             this,SLOT(slotItemChanged(QTreeWidgetItem*,int)));
-
     connect(this,SIGNAL(itemDoubleClicked(QTreeWidgetItem* , int)),
             this,SLOT(slotItemDoubleClicked(QTreeWidgetItem * ,int)));
+
 }
 
 void DsSpriteTreeWidget::createBlankMenus()
@@ -479,6 +507,7 @@ void DsSpriteTreeWidget::createAnimationMenus()
     connect(m_removeAnimation,SIGNAL(triggered()),this,SLOT(slotRemoveAnimation()));
 
 }
+
 
 /* Blank menus slots  */
 void DsSpriteTreeWidget::slotNewProject()

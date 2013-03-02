@@ -29,7 +29,10 @@
 	createDialog();
 	initLayout();
 	connect(m_resDisplay,SIGNAL(resFileSelect(const std::string& ,const std::string& )),
-			m_editSpace,SLOT(slotResFileSelect(const std::string&,const std::string& )));
+            m_editSpace,SLOT(slotResFileSelect(const std::string&,const std::string& )));
+
+    connectDataSignal();
+
 }
 
 
@@ -338,10 +341,174 @@ void DsMainFrame::createDialog()
     /* scale dialog */
 }
 
+void DsMainFrame::connectDataSignal()
+{
+    DsData* data=DsData::shareData();
+    connect(data,SIGNAL(signalCurProjectChange()),this,SLOT(slotDataChange()));
+    connect(data,SIGNAL(signalCurSpriteChange()),this,SLOT(slotDataChange()));
+    connect(data,SIGNAL(signalCurAnimationChange()),this,SLOT(slotDataChange()));
+    connect(data,SIGNAL(signalCurFrameChange()),this,SLOT(slotDataChange()));
+    connect(data,SIGNAL(signalCurFrameImageChange()),this,SLOT(slotDataChange()));
+
+    connect(data,SIGNAL(signalProjectPropertyChange()),this,SLOT(slotDataChange()));
+    connect(data,SIGNAL(signalAnimationPropertyChange()),this,SLOT(slotDataChange()));
+    connect(data,SIGNAL(signalFramePropertyChange()),this,SLOT(slotDataChange()));
+    connect(data,SIGNAL(signalFrameImagePropertyChange()),this,SLOT(slotDataChange()));
+    connect(data,SIGNAL(signalAnimationPlayStateChange()),this,SLOT(slotDataChange()));
+
+}
+void DsMainFrame::slotDataChange()
+{
+    configToolBar();
+    configMenuBar();
+}
+
+void DsMainFrame::configToolBar()
+{
+    DsData* data=DsData::shareData();
+    bool anim_play=DsOperator::animation()->isAnimationPlay();
+	DsProject* project=data->getProject();
+	tl_new->setEnabled(true);
+	tl_undo->setEnabled(true);
+	tl_redo->setEnabled(true);
+	tl_moveUp->setEnabled(true);
+	tl_moveDown->setEnabled(true);
+	tl_moveFront->setEnabled(true);
+	tl_moveEnd->setEnabled(true);
+	tl_play->setEnabled(true);
+	tl_stop->setEnabled(false);
+	if(project==NULL)
+	{
+		tl_new->setEnabled(false);
+		tl_undo->setEnabled(false);
+		tl_redo->setEnabled(false);
+		tl_moveUp->setEnabled(false);
+		tl_moveDown->setEnabled(false);
+		tl_moveFront->setEnabled(false);
+		tl_moveEnd->setEnabled(false);
+		tl_play->setEnabled(false);
+		tl_stop->setEnabled(false);
+		return ;
+	}
+	if(anim_play)
+	{
+		tl_new->setEnabled(false);
+		tl_undo->setEnabled(false);
+		tl_redo->setEnabled(false);
+		tl_moveUp->setEnabled(false);
+		tl_moveDown->setEnabled(false);
+		tl_moveFront->setEnabled(false);
+		tl_moveEnd->setEnabled(false);
+		tl_play->setEnabled(false);
+		tl_stop->setEnabled(true);
+		return;
+	}
+
+    DsFrameImage* cur_frame_image=data->getCurFrameImage();
+	if(cur_frame_image==NULL)
+	{
+		tl_moveUp->setEnabled(false);
+		tl_moveDown->setEnabled(false);
+		tl_moveFront->setEnabled(false);
+		tl_moveEnd->setEnabled(false);
+	}
+	bool can_undo=DsOperator::aux()->canUndo();
+	bool can_redo=DsOperator::aux()->canRedo();
+	tl_undo->setEnabled(can_undo);
+	tl_redo->setEnabled(can_redo);
+}
+void DsMainFrame::configMenuFile()
+{
+    DsData* data=DsData::shareData();
+    DsProject* proj=data->getProject();
+    DsSprite* sprite=data->getCurSprite();
+    ms_newSprite->setEnabled(proj!=NULL);
+    ms_close->setEnabled(proj!=NULL);
+    ms_save->setEnabled(proj!=NULL);
+    ms_export->setEnabled(sprite!=NULL);
+}
+
+void DsMainFrame::configMenuView()
+{
+
+}
+
+void DsMainFrame::configMenuAnimation()
+{
+
+    DsData* data=DsData::shareData();
+    DsSprite* sprite=data->getCurSprite();
+    bool anim_play=DsOperator::animation()->isAnimationPlay();
+    if(!sprite)
+    {
+        ms_play->setEnabled(false);
+        ms_stop->setEnabled(false);
+        ms_add_animation->setEnabled(false);
+        ms_set_frame->setEnabled(false);
+        return;
+    }
+    if(anim_play)
+    {
+        ms_play->setEnabled(false);
+        ms_stop->setEnabled(true);
+        ms_add_animation->setEnabled(false);
+        ms_set_frame->setEnabled(false);
+        return;
+    }
+
+    ms_add_animation->setEnabled(true);
+
+    DsAnimation* anim=data->getCurAnimation();
+    ms_set_frame->setEnabled(anim!=NULL);
+
+    ms_play->setEnabled(true);
+    ms_stop->setEnabled(false);
+}
+void DsMainFrame::configMenuEdit()
+{
+    DsData* data=DsData::shareData();
+    bool anim_play=DsOperator::animation()->isAnimationPlay();
+    if(anim_play)
+    {
+        ms_undo->setEnabled(false);
+        ms_redo->setEnabled(false);
+        ms_moveUp->setEnabled(false);
+        ms_moveDown->setEnabled(false);
+        ms_moveFront->setEnabled(false);
+        ms_moveEnd->setEnabled(false);
+        return ;
+    }
+    bool can_undo=DsOperator::aux()->canUndo();
+    bool can_redo=DsOperator::aux()->canRedo();
+    ms_undo->setEnabled(can_undo);
+    ms_redo->setEnabled(can_redo);
+    DsFrameImage* cur_frame_image=data->getCurFrameImage();
+    if(cur_frame_image==NULL)
+    {
+        ms_moveUp->setEnabled(false);
+        ms_moveDown->setEnabled(false);
+        ms_moveFront->setEnabled(false);
+        ms_moveEnd->setEnabled(false);
+    }
+    else
+    {
+        ms_moveUp->setEnabled(true);
+        ms_moveDown->setEnabled(true);
+        ms_moveFront->setEnabled(true);
+        ms_moveEnd->setEnabled(true);
+    }
+}
+void DsMainFrame::configMenuBar()
+{
+    configMenuFile();
+    configMenuEdit();
+    configMenuView();
+    configMenuAnimation();
+}
 void DsMainFrame::onAbout()
 {
 
-	m_aboutDialog->show();
+    m_aboutDialog->show();
 }
 
 
@@ -349,8 +516,7 @@ void DsMainFrame::onStatusAxis()
 {
     if(ms_viewAxis->isChecked())
     {
-        m_editSpace->showAxis(true);
-    }
+        m_editSpace->showAxis(true); }
     else
     {
         m_editSpace->showAxis(false);

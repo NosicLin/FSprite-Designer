@@ -368,6 +368,22 @@ void DsProject::DsSpriteInfo::pushState()
 
 }
 
+bool DsProject::DsSpriteInfo::canRedo()
+{
+    if(m_curStateIndex==m_queue.size()-1)
+    {
+        return false;
+    }
+    return true;
+}
+bool DsProject::DsSpriteInfo::canUndo()
+{
+    if(m_curStateIndex==0)
+    {
+        return false;
+    }
+    return true;
+}
 void DsProject::DsSpriteInfo::redo()
 {
     if(m_curStateIndex<m_queue.size()-1)
