@@ -98,7 +98,7 @@ class DsMainFrame:public QMainWindow
 
 		/* about */
 		void onAbout();
-		void onHelp(){}
+        void onHelp();
 		void onToggleStatusBar(){}
 
 		/* change size */

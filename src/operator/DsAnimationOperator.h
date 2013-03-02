@@ -15,7 +15,8 @@ class DsAnimationOperator :public QObject
 		void animationPlay();
 		void animationStop();
 	public slots:
-		void slotTimerTigger();
+        void slotTimerTigger();
+        void slotSpriteChange();
 
 	protected:
         void scheduledTimer();

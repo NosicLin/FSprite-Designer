@@ -6,8 +6,14 @@ DsAnimationOperator::DsAnimationOperator()
 {
     m_timer=new QTimer;
     m_data=DsData::shareData();
-	m_playing=false;
+    m_playing=false;
     connect(m_timer,SIGNAL(timeout()),this,SLOT(slotTimerTigger()));
+
+    connect(m_data,SIGNAL(signalCurProjectChange()),this,SLOT(slotSpriteChange()));
+    connect(m_data,SIGNAL(signalCurSpriteChange()),this,SLOT(slotSpriteChange()));
+    connect(m_data,SIGNAL(signalCurAnimationChange()),this,SLOT(slotSpriteChange()));
+    connect(m_data,SIGNAL(signalProjectPropertyChange()),this,SLOT(slotSpriteChange()));
+    connect(m_data,SIGNAL(signalAnimationPropertyChange()),this,SLOT(slotSpriteChange()));
 }
 
 void DsAnimationOperator::animationPlay()
@@ -59,6 +65,29 @@ void DsAnimationOperator::slotTimerTigger()
 		scheduledTimer();
 	}
 }
+void DsAnimationOperator::slotSpriteChange()
+{
+    if(!m_playing)
+    {
+        return ;
+    }
+    DsAnimation* anim=m_data->getCurAnimation();
+    if(anim==NULL)
+    {
+        m_playing=false;
+        m_data->emitSignal(DsData::SG_ANIMATION_PLAY_STATE_CHANGE);
+    }
+    else if(anim->getFrameNu()==0)
+    {
+        m_playing=false;
+        m_data->emitSignal(DsData::SG_ANIMATION_PLAY_STATE_CHANGE);
+    }
+}
+
+
+
+
+
 
 
 

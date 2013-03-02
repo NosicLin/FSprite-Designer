@@ -5,6 +5,8 @@
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QSplitter>
+#include <QDesktopServices>
+#include <QUrl>
 
 #include "DsMainFrame.h"
 #include "DsQrcMacros.h"
@@ -539,8 +541,11 @@ void DsMainFrame::configMenuBar()
 }
 void DsMainFrame::onAbout()
 {
-
     m_aboutDialog->show();
+}
+void DsMainFrame::onHelp()
+{
+  QDesktopServices::openUrl(QUrl("http://www.faeris.com/dz/forum-74-1.html"));
 }
 
 
