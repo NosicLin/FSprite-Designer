@@ -10,6 +10,7 @@ class DsIoOperator
         void newProject();
         void saveProject();
         void loadProject();
+        void closeProject();
         void exportFSprite(const std::string& id);
 
 	private:

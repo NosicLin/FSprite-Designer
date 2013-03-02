@@ -20,6 +20,16 @@ void DsAuxOperator::pasteFrameImage()
     {
         return ;
     }
+    DsFrame* frame=sprite_info->getCurFrame();
+    if(frame==NULL)
+    {
+        return ;
+    }
+    if(frame->getType()!=DsFrame::FRAME_KEY)
+    {
+        return ;
+    }
+
     DsFrameImage* copy2=copy->clone();
     DsOperator::data()->addFrameImage(copy2);
 }
@@ -40,8 +50,54 @@ void DsAuxOperator::copyFrameImage()
     sprite_info->setCopyFrameImage(copy);
 }
 
+bool DsAuxOperator::canCopyFrame()
+{
+    DsProject::DsSpriteInfo* sprite_info=m_data->getCurSpriteInfo();
+    if(sprite_info==NULL)
+    {
+        return false;
+    }
+    int frame_index=sprite_info->getCurFrameIndex();
+    if(frame_index==-1)
+    {
+        return false;
+    }
 
-/*
+    DsFrame* frame=sprite_info->getCurFrame();
+    if(frame==NULL)
+    {
+        return false;
+    }
+    return true;
+
+}
+
+bool DsAuxOperator::canPasteFrame()
+{
+    DsProject::DsSpriteInfo* sprite_info=m_data->getCurSpriteInfo();
+    if(sprite_info==NULL)
+    {
+        return false;
+    }
+    DsAnimation* anim=sprite_info->getCurAnimation();
+    if(anim==NULL)
+    {
+        return false;
+    }
+    int frame_index=sprite_info->getCurFrameIndex();
+    if(frame_index==-1)
+    {
+        return false;
+    }
+
+    DsKeyFrame* frame=sprite_info->getCopyFrame();
+    if(frame==NULL)
+    {
+        return false;
+    }
+    return true;
+}
+
 void DsAuxOperator::copyFrame()
 {
     DsProject::DsSpriteInfo* sprite_info=m_data->getCurSpriteInfo();
@@ -56,15 +112,19 @@ void DsAuxOperator::copyFrame()
     }
 
     DsFrame* frame=sprite_info->getCurFrame();
-    DsFrame* copy=NULL;
+    DsKeyFrame* copy=NULL;
 
+    if(frame==NULL)
+    {
+        return;
+    }
     if(frame->getType()==DsFrame::FRAME_TWEEN)
     {
-        copy=((DsFrameTween*)frame)->slerp(frame_index);
+        copy=((DsTweenFrame*)frame)->slerpToKeyFrame(frame_index);
     }
     else
     {
-        copy=((DsFrameKey*)frame)->clone();
+        copy=((DsKeyFrame*)frame)->clone();
     }
     sprite_info->setCopyFrame(copy);
 }
@@ -80,27 +140,22 @@ void DsAuxOperator::pasteFrame()
     {
         return ;
     }
-    int frame_index=sprite_info->getFrameIndex();
+    int frame_index=sprite_info->getCurFrameIndex();
     if(frame_index==-1)
     {
         return ;
     }
 
-    DsFrame* frame=sprite_info->getCopyFrame();
+    DsKeyFrame* frame=sprite_info->getCopyFrame();
     if(frame==NULL)
     {
         return ;
     }
 
-    DsFrame* copy=frame->clone();
-
+    DsKeyFrame* copy=frame->clone();
     anim->insertKeyFrame(frame_index,copy);
     m_data->emitSignal(DsData::SG_ANIMATION_PROPERTY_CHANGE);
 }
-
-*/
-
-
 
 
 

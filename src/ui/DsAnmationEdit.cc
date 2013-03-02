@@ -19,7 +19,8 @@ DsAnimationEdit::DsAnimationEdit(QWidget* parent)
     m_mulSelect=false;
     m_from=0;
     m_to=0;
-	createPopupMenu();
+    createPopupMenu();
+    setFocusPolicy(Qt::StrongFocus);
 }
 
 void DsAnimationEdit::paintEvent(QPaintEvent* event)
@@ -348,7 +349,27 @@ void DsAnimationEdit::showPopupMenu(QMouseEvent* event)
         ma_tweenToKeyFrame->setEnabled(true);
     }
 
+
+    /* copy and paste */
+    if(DsOperator::aux()->canCopyFrame())
+    {
+        ma_copy->setEnabled(true);
+    }
+    else
+    {
+        ma_copy->setEnabled(false);
+    }
+
+    if(DsOperator::aux()->canPasteFrame())
+    {
+        ma_paste->setEnabled(true);
+    }
+    else
+    {
+        ma_paste->setEnabled(false);
+    }
     m_menu->popup(QCursor::pos());
+
 
 }
 
@@ -358,6 +379,8 @@ void DsAnimationEdit::createPopupMenu()
     m_menu=new QMenu(this);
     ma_insertKeyFrame=m_menu->addAction("Insert KeyFrame");
     ma_insertEmptyKeyFrame=m_menu->addAction("Insert Empty KeyFrame");
+    ma_copy=m_menu->addAction("Copy Frame");
+    ma_paste=m_menu->addAction("Paste Frame");
     ma_removeFrame=m_menu->addAction("Remove Frame");
     ma_createTween=m_menu->addAction("Create Tween");
     ma_removeTween=m_menu->addAction("Remove Tween");
@@ -369,6 +392,9 @@ void DsAnimationEdit::createPopupMenu()
     connect(ma_createTween,SIGNAL(triggered()),this,SLOT(slotCreateTween()));
     connect(ma_removeTween,SIGNAL(triggered()),this,SLOT(slotRemoveTween()));
     connect(ma_tweenToKeyFrame,SIGNAL(triggered()),this,SLOT(slotTweenToKeyFrame()));
+
+    connect(ma_copy,SIGNAL(triggered()),this,SLOT(slotCopy()));
+    connect(ma_paste,SIGNAL(triggered()),this,SLOT(slotPaste()));
 
     /* mul select menu */
     m_menuMulSelect=new QMenu(this);
@@ -430,6 +456,33 @@ void DsAnimationEdit::slotRemoveMulSelect()
     }
 }
 
+void DsAnimationEdit::slotCopy()
+{
+    DsOperator::aux()->copyFrame();
+}
+void DsAnimationEdit::slotPaste()
+{
+    DsOperator::aux()->pasteFrame();
+}
+
+
+void DsAnimationEdit::keyPressEvent(QKeyEvent* event)
+{
+    DsDebug<<"KeyPress"<<endl;
+    if(event->modifiers()&Qt::ControlModifier)
+    {
+        DsDebug<<"CtrlPress"<<endl;
+        switch(event->key())
+        {
+        case Qt::Key_C:
+            DsOperator::aux()->copyFrame();
+            break;
+        case Qt::Key_V:
+            DsOperator::aux()->pasteFrame();
+            break;
+        }
+    }
+}
 
 
 

@@ -21,7 +21,9 @@ public:
         image=_image;
         texture=_tex;
     }
+    std::string getPathRelativeToProject(){return "roject";}
 
+    std::string pathRelativeToProject;
     std::string name;
     QImage* image;
     int texture;

@@ -14,6 +14,7 @@ class DsAnimationEdit:public QWidget
 		virtual void mouseMoveEvent(QMouseEvent* event);
         virtual void mousePressEvent(QMouseEvent* event);
         virtual void mouseReleaseEvent(QMouseEvent* event);
+        virtual void keyPressEvent(QKeyEvent* event);
 	protected:
 		void drawRuler(QPainter& painter);
 		void drawFrame(QPainter& painter);
@@ -34,6 +35,8 @@ public slots:
         void slotRemoveTween();
         void slotTweenToKeyFrame();
         void slotRemoveMulSelect();
+        void slotCopy();
+        void slotPaste();
 private:
         QPoint m_lastpos;
         int m_move;
@@ -52,6 +55,8 @@ private:
         QAction* ma_insertKeyFrame;
         QAction* ma_insertEmptyKeyFrame;
         QAction* ma_removeFrame;
+        QAction* ma_copy;
+        QAction* ma_paste;
         QAction* ma_createTween;
         QAction* ma_removeTween;
         QAction* ma_tweenToKeyFrame;

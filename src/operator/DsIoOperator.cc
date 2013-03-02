@@ -61,7 +61,13 @@ void DsIoOperator::saveProject()
     QFile file(fileName);
     DsUtil::saveProject(proj);
 }
+void DsIoOperator::closeProject()
+{
+    DsProject* proj=m_data->getProject();
 
+    m_data->setProject(NULL);
+    m_data->emitSignal(DsData::SG_CUR_PROJECT_CHANGE);
+}
 
 
 void DsIoOperator::loadProject()
@@ -100,6 +106,38 @@ void DsIoOperator::loadProject()
     m_data->emitSignal(DsData::SG_CUR_PROJECT_CHANGE);
 }
 
+void DsIoOperator::exportFSprite(const std::string& id)
+{
+    DsProject* proj=DsData::shareData()->getProject();
+    if(!proj)
+    {
+        return;
+    }
+    DsSprite* sprite=proj->getSprite(id);
+    assert(sprite);
+
+    std::string sprite_name=sprite->getName();
+    std::string export_name=sprite_name+std::string(".fst");
+
+    QString file_name=QFileDialog::getSaveFileName(
+                m_mainWidget,
+                QString("Export FSprite Project"),
+                QString(export_name.c_str()),
+                QString("FSprite2d(*.fst)"));
+
+    DsDebug<<"export_file:"<<file_name<<endl;
+
+    if(file_name.length()==0)
+    {
+        return;
+    }
+    QFile file(file_name);
+    if(!file.open(QFile::WriteOnly|QFile::Text|QFile::Truncate))
+    {
+        QMessageBox::information(NULL,"ExportSprite",QString("Open File:(")+file_name+")Failed",QMessageBox::Yes);
+    }
+    DsUtil::exportSprite(sprite,file);
+}
 
 
 

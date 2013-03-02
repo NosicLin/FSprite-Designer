@@ -430,10 +430,25 @@ void DsMainFrame::onSave()
 {
     DsOperator::io()->saveProject();
 }
+void DsMainFrame::onClose()
+{
+    DsOperator::io()->closeProject();
+}
 
 void DsMainFrame::onNewProject()
 {
     DsOperator::io()->newProject();
+}
+
+void DsMainFrame::onExport()
+{
+    DsDebug<<"Export"<<endl;
+
+    DsSprite* sprite=DsData::shareData()->getCurSprite();
+    if(sprite)
+    {
+        DsOperator::io()->exportFSprite(sprite->getID());
+    }
 }
 
 void DsMainFrame::onAddAnimation()
