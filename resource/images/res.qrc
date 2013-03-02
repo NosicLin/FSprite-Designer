@@ -38,5 +38,6 @@
         <file>IDI_UNDO.png</file>
         <file>IDI_ZOOM_IN.png</file>
         <file>IDI_ZOOM_OUT.png</file>
+        <file>IDI_FILE_OPEN_SMALL.png</file>
     </qresource>
 </RCC>
