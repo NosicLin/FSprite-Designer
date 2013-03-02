@@ -12,7 +12,8 @@ class DsAuxOperator
 		void pasteFrameImage();
 
 		void undo();
-		void redo();
+        void redo();
+
 		bool canUndo();
         bool canRedo();
 
