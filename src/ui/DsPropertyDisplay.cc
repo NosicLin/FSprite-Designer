@@ -15,10 +15,12 @@ DsPropertyDisplay::DsPropertyDisplay(QWidget* parent)
 	:QWidget(parent)
 {
     createLayout();
-
-
     connectDsDataSignal();
+    connectAllSpinBox();
+}
 
+void DsPropertyDisplay::connectAllSpinBox()
+{
     //set FrameImage property
     //position
     connect(m_posXDoubleSpinbox,SIGNAL(valueChanged(double)),
@@ -55,10 +57,46 @@ DsPropertyDisplay::DsPropertyDisplay(QWidget* parent)
     //alpha
     connect(m_alphaDoubleSpinBox,SIGNAL(valueChanged(double)),
             this,SLOT(slotSetAlpha(double)));
-
-
 }
 
+void DsPropertyDisplay::disconnectAllSpinBox()
+{
+    //position
+    disconnect(m_posXDoubleSpinbox,SIGNAL(valueChanged(double)),
+            this,SLOT(slotSetPositon()));
+    disconnect(m_posYDoubleSpinbox,SIGNAL(valueChanged(double)),
+            this,SLOT(slotSetPositon()));
+
+    //angle
+    disconnect(m_angleSpinDoubleBox,SIGNAL(valueChanged(double)),
+            this,SLOT(slotSetAngle(double)));
+
+    //scale
+    disconnect(m_scaleXDoubleSpinBox,SIGNAL(valueChanged(double)),
+            this,SLOT(slotSetScale()));
+    disconnect(m_scaleYDoubleSpinBox,SIGNAL(valueChanged(double)),
+            this,SLOT(slotSetScale()));
+
+    //texture
+    disconnect(m_textureX0DoubleSpinBox,SIGNAL(valueChanged(double)),
+            this,SLOT(slotSetTextureArea()));
+    disconnect(m_textureY0DoubleSpinBox,SIGNAL(valueChanged(double)),
+            this,SLOT(slotSetTextureArea()));
+    disconnect(m_textureX1DoubleSpinBox,SIGNAL(valueChanged(double)),
+            this,SLOT(slotSetTextureArea()));
+    disconnect(m_textureY1DoubleSpinBox,SIGNAL(valueChanged(double)),
+            this,SLOT(slotSetTextureArea()));
+
+    //offset
+    disconnect(m_offsetXDoubleSpinbox,SIGNAL(valueChanged(double)),
+            this,SLOT(slotSetOffset()));
+    disconnect(m_offsetYDoubleSpinbox,SIGNAL(valueChanged(double)),
+            this,SLOT(slotSetOffset()));
+
+    //alpha
+    disconnect(m_alphaDoubleSpinBox,SIGNAL(valueChanged(double)),
+            this,SLOT(slotSetAlpha(double)));
+}
 /* set position */
 void DsPropertyDisplay::slotSetPositon()
 {
@@ -185,6 +223,8 @@ void DsPropertyDisplay::slotFrameImagePropertyChange()
    offx = curFrameImage->getOffsetX();
    offy = curFrameImage->getOffsetY();
 
+
+   connectAllSpinBox();
    //set attribute values to widgets
    m_posXDoubleSpinbox->setValue(tx);
    m_posYDoubleSpinbox->setValue(ty);
@@ -203,6 +243,8 @@ void DsPropertyDisplay::slotFrameImagePropertyChange()
 
    m_offsetXDoubleSpinbox->setValue(offx);
    m_offsetYDoubleSpinbox->setValue(offy);
+   disconnectAllSpinBox();
+
 }
 
 

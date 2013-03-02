@@ -35,6 +35,8 @@ private:
         void createLayout();
         void connectDsDataSignal();
         void disconnectDsDataSignal();
+        void connectAllSpinBox();
+        void disconnectAllSpinBox();
 signals:
 
 
