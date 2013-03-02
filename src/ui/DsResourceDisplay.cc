@@ -452,7 +452,7 @@ void DsResourceDisplay::flushFolder()
             std::string strRes = dsProjectTemp->getDirName();
             strRes += "textures";
             char szdata[1024] = {'\0'};
-            strcpy_s(szdata, 1024, strRes.data()); //--// string to char*
+            strncpy(szdata,  strRes.data(),1024); //--// string to char*
             AddResFolder(szdata);
         }
     }

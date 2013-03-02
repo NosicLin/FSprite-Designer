@@ -6,6 +6,7 @@ class DsSprite;
 class DsAnimation;
 class DsFrameImage;
 class DsFrame;
+class DsKeyFrame;
 
 class DsProject 
 {
@@ -22,7 +23,7 @@ public:
         DsFrameImage* m_copyFrameImage;
 
         /* DsFrame*/
-        DsFrame* m_copyFrame;
+        DsKeyFrame* m_copyFrame;
 
     public:
         void setCurAnimation(const std::string& id);
@@ -45,8 +46,8 @@ public:
         void setCopyFrameImage(DsFrameImage* image);
 
         /* frame */
-        void setCopyFrame(DsFrame* frame);
-        DsFrame* getCopyFrame();
+        void setCopyFrame(DsKeyFrame* frame);
+        DsKeyFrame* getCopyFrame(){return m_copyFrame;}
 
 
         DsSpriteInfo(DsSprite* sprite);

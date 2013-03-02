@@ -292,6 +292,7 @@ bool DsUtil::exportSprite(DsSprite* sprite,QFile& file)
         file.write("},\n");
     }
     file.write("]\n");
+    return true;
 }
 
 

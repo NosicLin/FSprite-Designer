@@ -123,6 +123,14 @@ void DsProject::DsSpriteInfo::setCopyFrameImage(DsFrameImage* image)
     }
     m_copyFrameImage=image;
 }
+void DsProject::DsSpriteInfo::setCopyFrame(DsKeyFrame* frame)
+{
+    if(m_copyFrame)
+    {
+        delete m_copyFrame;
+    }
+    m_copyFrame=frame;
+}
 
 
 

@@ -5,6 +5,7 @@
 #include <vector>
 
 class DsFrame;
+class DsKeyFrame;
 class  DsAnimation
 {
 	public:
@@ -31,8 +32,10 @@ class  DsAnimation
 		/* key frame function */
 		void removeKeyFrame(int index);
         void insertKeyFrame(int index);
-        void insertKeyFrame(int index,DsFrame* frame);
-		void insertEmptyKeyFrame(int index);
+        void insertKeyFrame(int index,DsKeyFrame* frame);
+        void insertEmptyKeyFrame(int index);
+
+
         void insertTween(int index);
         void removeTween(int index);
         int getKeyFrameNu(){return m_keyFrames.size();}
@@ -48,9 +51,7 @@ class  DsAnimation
 		/* if frame id already exist, it will replace orign*/
 		void rawInsertFrame(DsFrame* frame);
 		void rawRemoveFrame(DsFrame* frame);
-
-		/* frame type is key frame */
-        void insertFrameTypeKey(int index,bool empty);
+        void rawInsertKeyFrame(int index,DsKeyFrame* frame);
 
 	private:
 		std::vector<DsFrame*> m_keyFrames;

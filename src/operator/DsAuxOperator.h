@@ -16,10 +16,10 @@ class DsAuxOperator
 		bool canUndo();
         bool canRedo();
 
-        void canCopyFrame();
+        bool canCopyFrame();
         void copyFrame();
 
-        void canPasteFrame();
+        bool canPasteFrame();
         void pasteFrame();
 
 	private:
