@@ -16,7 +16,7 @@ class DsEditState
             DIRECTION_Y,
             DIRECTION_BOTH,
             DIRECTION_A,
-            DIRECTION_B,
+            DIRECTION_B
       //      DIRECTION_NONE,
         };
 	public:

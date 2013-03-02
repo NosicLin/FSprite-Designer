@@ -155,7 +155,6 @@ class DsMainFrame:public QMainWindow
 
 		/* tool bar */
 		QAction* tl_new;
-		QAction* tl_save;
 		QAction* tl_undo;
 		QAction* tl_redo;
 		QAction* tl_moveUp;
