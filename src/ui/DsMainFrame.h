@@ -62,8 +62,8 @@ class DsMainFrame:public QMainWindow
 		/* edit */
 		void onPaste(){}
 		void onCopy(){}
-		void onUndo(){}
-		void onRedo(){}
+        void onUndo();
+        void onRedo();
 		void onRotate(){}
 		void onScale(){}
         void onPosition(){}

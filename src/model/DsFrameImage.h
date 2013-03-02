@@ -14,6 +14,7 @@ class DsFrameImage
 
     public:
         std::string getID(){return m_id;}
+        void setID(const std::string& id){m_id=id;}
         DsImage* getImage(){return m_image;}
 		void setImage(DsImage* img);
 
@@ -29,7 +30,7 @@ class DsFrameImage
 
         bool hit(float x,float y);
         DsFrameImage* slerp(DsFrameImage* to,float t);
-        DsFrameImage* clone();
+        DsFrameImage* clone(int clone_id=false);
 
 
 		void getTextureArea(float* x0,float* y0, float* x1,float* y1)

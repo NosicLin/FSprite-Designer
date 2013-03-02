@@ -66,8 +66,24 @@ bool DsSprite::hasAnimationWithName(const std::string& name)
 DsAnimation* DsSprite::getAnimation(int index)
 {
     assert(index>=0&&index<=m_animations.size());
-	return m_animations[index];
+    return m_animations[index];
 }
+
+DsSprite* DsSprite::clone(int clone_id)
+{
+    DsSprite* sprite=new DsSprite(m_name);
+    if(clone_id)
+    {
+        sprite->setID(m_id);
+    }
+    for(int i=0;i<m_animations.size();++i)
+    {
+        DsAnimation* anim=m_animations[i]->clone(clone_id);
+        sprite->addAnimation(anim);
+    }
+    return sprite;
+}
+
 
 
 

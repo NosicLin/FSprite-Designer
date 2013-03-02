@@ -208,6 +208,39 @@ void DsData::dropCurFrameImage()
 }
 
 
+void DsData::saveState()
+{
+
+
+    DsProject::DsSpriteInfo* sprite_info=getCurSpriteInfo();
+    sprite_info->pushState();
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -91,14 +91,14 @@ void DsKeyFrame::insertFrameImage(DsFrameImage* image,int pos)
 }
 
 
-DsKeyFrame* DsKeyFrame::clone()
+DsKeyFrame* DsKeyFrame::clone(int clone_id)
 {
-    DsKeyFrame* ret=new DsKeyFrame(0);
+    DsKeyFrame* ret=new DsKeyFrame(m_frameid);
 
 	Iterator iter=m_images.begin();
 	for(;iter!=m_images.end();++iter)
 	{
-		DsFrameImage* frameImage=(*iter)->clone();
+        DsFrameImage* frameImage=(*iter)->clone(clone_id);
         ret->m_images.push_back(frameImage);
 	}
 	return ret;

@@ -30,6 +30,7 @@ void DsAuxOperator::pasteFrameImage()
         return ;
     }
 
+    m_data->saveState();
     DsFrameImage* copy2=copy->clone();
     DsOperator::data()->addFrameImage(copy2);
 }
@@ -152,10 +153,44 @@ void DsAuxOperator::pasteFrame()
         return ;
     }
 
+    m_data->saveState();
     DsKeyFrame* copy=frame->clone();
     anim->insertKeyFrame(frame_index,copy);
     m_data->emitSignal(DsData::SG_ANIMATION_PROPERTY_CHANGE);
 }
+
+
+
+void DsAuxOperator::redo()
+{
+    DsProject::DsSpriteInfo* sprite_info=m_data->getCurSpriteInfo();
+    if(sprite_info!=NULL)
+    {
+        sprite_info->redo();
+        m_data->emitSignal(DsData::SG_PROJECT_PROPERTY_CHANGE);
+    }
+
+}
+void DsAuxOperator::undo()
+{
+    DsProject::DsSpriteInfo* sprite_info=m_data->getCurSpriteInfo();
+    if(sprite_info!=NULL)
+    {
+        sprite_info->undo();
+        m_data->emitSignal(DsData::SG_PROJECT_PROPERTY_CHANGE);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -1,6 +1,7 @@
 #ifndef _DS_PROJECT_H_ 
 #define _DS_PROJECT_H_
 #include <vector>
+#include <string>
 
 class DsSprite;
 class DsAnimation;
@@ -8,24 +9,50 @@ class DsFrameImage;
 class DsFrame;
 class DsKeyFrame;
 
+#define DS_DEFAULT_UNDO_SIZE 1024
+
 class DsProject 
 {
 public:
-    class DsSpriteInfo
+    class DsSpriteState
     {
     public:
         DsSprite* m_sprite;
-        int m_curFrameIndex;
         DsAnimation* m_curAnimation;
         DsFrameImage* m_curFrameImage;
+        int m_curFrameIndex;
 
-        /* copy FrameImage */
-        DsFrameImage* m_copyFrameImage;
-
-        /* DsFrame*/
-        DsKeyFrame* m_copyFrame;
 
     public:
+        DsSpriteState(DsSprite* sprite,
+                      DsAnimation* cur_animation,
+                      DsFrameImage* cur_frameimg,
+                      int frame_index);
+        ~DsSpriteState();
+    };
+    class CircleQueue
+    {
+
+    public:
+        CircleQueue();
+        ~CircleQueue();
+        void push(DsSpriteState* state);
+        void pushFrontTail(DsSpriteState* state);
+        DsSpriteState* get(int i);
+        int size();
+        bool full();
+        bool empty();
+        void dropTail(int nu);
+    private:
+        DsSpriteState* m_queue[DS_DEFAULT_UNDO_SIZE];
+        int m_used;
+        int m_begin;
+    };
+
+    class DsSpriteInfo
+    {
+    public:
+        DsSprite* getSprite();
         void setCurAnimation(const std::string& id);
         void setCurFrameIndex(int index);
         void setCurFrameImage(const std::string& id);
@@ -52,6 +79,22 @@ public:
 
         DsSpriteInfo(DsSprite* sprite);
         ~DsSpriteInfo();
+
+        /* extends for undo/redo */
+    public:
+        void pushState();
+        void redo();
+        void undo();
+    protected:
+        void restore(DsSpriteState* state);
+    private:
+        CircleQueue m_queue;
+        int m_curStateIndex;
+
+        /* copy and paste */
+        DsFrameImage* m_copyFrameImage;
+        DsKeyFrame* m_copyFrame;
+
     };
 
 public:

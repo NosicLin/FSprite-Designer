@@ -181,10 +181,14 @@ bool DsFrameImage::hit(float x,float y)
     return false;
 }
 
-DsFrameImage* DsFrameImage::clone()
+DsFrameImage* DsFrameImage::clone(int clone_id)
 {
     DsFrameImage* ret=new DsFrameImage;
     *ret=*this;
+    if(clone_id)
+    {
+        ret->setID(this->m_id);
+    }
     ret->setImage(this->m_image);
     return ret;
 }

@@ -36,7 +36,7 @@ class DsSprite
 
 		Iterator begin(){return m_animations.begin();}
         Iterator end(){return m_animations.end();}
-
+        DsSprite* clone(int clone_id=false);
 	private:
         std::string m_name;
 		std::string m_id;
