@@ -452,7 +452,7 @@ void DsResourceDisplay::RefreshFolder()
         {
             std::string strRes = dsProjectTemp->getDirName();
             char szdata[1024] = {'\0'};
-            strcpy_s(szdata, 1024, strRes.data()); //--// string to char*
+            strncpy(szdata, strRes.data(), 1024); //--// string to char*
             m_dir = QString(szdata); // szdata末尾带了 /
             AddResFolder(m_dir + QString("textures"), QString("textures"));
         }
