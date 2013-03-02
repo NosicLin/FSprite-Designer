@@ -14,17 +14,14 @@
 #define DS_MS_EXPORT ":/images/IDI_EXPORT.png"
 #define DS_MS_QUIT ":/images/IDI_EXIT.png"
 /*edit*/
-#define DS_MS_PASTE ":/images/IDI_PAST.png"
-#define DS_MS_COPY ":/images/IDI_COPY.png"
+
 #define DS_MS_UNDO ":/images/IDI_UNDO.png"
 #define DS_MS_REDO ":/images/IDI_FOWARD.png"
 #define DS_MS_MOVE_UP ":/images/IDI_MOVE_UP.png"
 #define DS_MS_MOVE_DOWN ":/images/IDI_MOVE_DOWN.png"
 #define DS_MS_MOVE_FRONT ":/images/IDI_MOVE_FRONT.png"
 #define DS_MS_MOVE_END ":/images/IDI_MOVE_END.png"
-#define DS_MS_ROTATE ":/images/IDI_ROTATE.png"
-#define DS_MS_SCALE ":/images/IDI_SCALE.png"
-#define DS_MS_POSITION ":/images/IDI_PERSITION.png"
+
 /*Animation*/
 #define DS_MS_PLAY ":/images/IDI_PLAY.png"
 #define DS_MS_STOP ":/images/IDI_STOP.png"
