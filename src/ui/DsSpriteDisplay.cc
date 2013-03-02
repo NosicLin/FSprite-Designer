@@ -57,9 +57,8 @@ DsSpriteTreeWidget::DsSpriteTreeWidget(QWidget* parent)
 {
 
 
-    m_changedCausedByDsData = true;
+    m_changedCausedByDsData = false;
     m_changedCausedByView = false;
-    m_markCurProjectChange = false;
 
     //init menuAction type
     setActionTypeToNone();
@@ -78,8 +77,6 @@ DsSpriteTreeWidget::DsSpriteTreeWidget(QWidget* parent)
 
     connect(this,SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem *)),
             this,SLOT(slotCurrentItemChanged ( QTreeWidgetItem * , QTreeWidgetItem * )));
-
-
 
     //just show the first col
     this->setColumnCount(1);
