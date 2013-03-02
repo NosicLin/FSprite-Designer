@@ -2,7 +2,7 @@
 #define _DS_QRC_MACROS_H_
 
 /* window pngn */
-#define DS_MS_WINDOW_ICON ":/images/IDI_SOFTWARE.png"
+#define DS_MS_WINDOW_ICON ":/images/IDI_SOFTWARE.ico"
 #define DS_MS_FAERIS_LOGO ":/image/FAERIS_LOGO.png"
 /* menu pngn */
 /* file */
