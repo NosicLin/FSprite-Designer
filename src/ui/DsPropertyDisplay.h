@@ -40,48 +40,47 @@ signals:
 
 private:
     //position
-    QLabel* posLabel;
-    QLabel* posXLabel;
-    QLabel* posYLabel;
-    QDoubleSpinBox* posXDoubleSpinbox;
-    QDoubleSpinBox* posYDoubleSpinbox;
+    QLabel* m_posLabel;
+    QLabel* m_posXLabel;
+    QLabel* m_posYLabel;
+    QDoubleSpinBox* m_posXDoubleSpinbox;
+    QDoubleSpinBox* m_posYDoubleSpinbox;
 
     //angle
-    QLabel* angleLabel;
-    QLabel* angLabel;
-    QDoubleSpinBox* angleSpinDoubleBox;
+    QLabel* m_angleLabel;
+    QLabel* m_angLabel;
+    QDoubleSpinBox* m_angleSpinDoubleBox;
 
     //scale
-    QLabel* scaleLabel;
-    QLabel* scaleXLabel;
-    QLabel* scaleYLabel;
-    QDoubleSpinBox*  scaleXDoubleSpinBox;
-    QDoubleSpinBox*  scaleYDoubleSpinBox;
+    QLabel* m_scaleLabel;
+    QLabel* m_scaleXLabel;
+    QLabel* m_scaleYLabel;
+    QDoubleSpinBox*  m_scaleXDoubleSpinBox;
+    QDoubleSpinBox*  m_scaleYDoubleSpinBox;
 
     //texture
-    QLabel* textureLabel;
-    QLabel* textureX0Label;
-    QLabel* textureY0Label;
-    QLabel* textureX1Label;
-    QLabel* textureY1Label;
-    QDoubleSpinBox*  textureX0DoubleSpinBox;
-    QDoubleSpinBox*  textureY0DoubleSpinBox;
-    QDoubleSpinBox*  textureX1DoubleSpinBox;
-    QDoubleSpinBox*  textureY1DoubleSpinBox;
+    QLabel* m_textureLabel;
+    QLabel* m_textureX0Label;
+    QLabel* m_textureY0Label;
+    QLabel* m_textureX1Label;
+    QLabel* m_textureY1Label;
+    QDoubleSpinBox*  m_textureX0DoubleSpinBox;
+    QDoubleSpinBox*  m_textureY0DoubleSpinBox;
+    QDoubleSpinBox*  m_textureX1DoubleSpinBox;
+    QDoubleSpinBox*  m_textureY1DoubleSpinBox;
 
     //offset
-    QLabel* offsetLabel;
-    QLabel* offsetXLabel;
-    QLabel* offsetYLabel;
-    QDoubleSpinBox* offsetXDoubleSpinbox;
-    QDoubleSpinBox* offsetYDoubleSpinbox;
+    QLabel* m_offsetLabel;
+    QLabel* m_offsetXLabel;
+    QLabel* m_offsetYLabel;
+    QDoubleSpinBox* m_offsetXDoubleSpinbox;
+    QDoubleSpinBox* m_offsetYDoubleSpinbox;
 
     //alpha
-    QLabel* alphaLabel;
-    QLabel* alLabel;
-    QDoubleSpinBox* alphaDoubleSpinBox;
-    QSlider* alphaSlider;
-
+    QLabel* m_alphaLabel;
+    QLabel* m_alLabel;
+    QDoubleSpinBox* m_alphaDoubleSpinBox;
+    QSlider* m_alphaSlider;
 
 };
 #endif /*_DS_EDIT_VIEW_H_*/
