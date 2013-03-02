@@ -224,7 +224,7 @@ void DsPropertyDisplay::slotFrameImagePropertyChange()
    offy = curFrameImage->getOffsetY();
 
 
-   connectAllSpinBox();
+   disconnectAllSpinBox();
    //set attribute values to widgets
    m_posXDoubleSpinbox->setValue(tx);
    m_posYDoubleSpinbox->setValue(ty);
@@ -243,8 +243,8 @@ void DsPropertyDisplay::slotFrameImagePropertyChange()
 
    m_offsetXDoubleSpinbox->setValue(offx);
    m_offsetYDoubleSpinbox->setValue(offy);
-   disconnectAllSpinBox();
 
+   connectAllSpinBox();
 }
 
 
