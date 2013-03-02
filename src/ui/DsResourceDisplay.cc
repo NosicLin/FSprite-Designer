@@ -98,6 +98,7 @@ void DsResourceDisplay::selectSomething() // 点击图片图标，返回路径�
         {
             dirTemp = GetParentDirFromItem(m_tree->currentItem());
 
+
             std::string path(qPrintable(dirTemp));
             std::string filename(qPrintable(fileName));
 
