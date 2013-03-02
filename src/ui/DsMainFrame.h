@@ -53,7 +53,7 @@ class DsMainFrame:public QMainWindow
         void onNewProject();
         void onOpenProject();
         void onSave();
-        void onClose(){}
+        void onClose();
         void onNewSprite();
 
         void onExport();

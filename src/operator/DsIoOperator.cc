@@ -61,7 +61,13 @@ void DsIoOperator::saveProject()
     QFile file(fileName);
     DsUtil::saveProject(proj);
 }
+void DsIoOperator::closeProject()
+{
+    DsProject* proj=m_data->getProject();
 
+    m_data->setProject(NULL);
+    m_data->emitSignal(DsData::SG_CUR_PROJECT_CHANGE);
+}
 
 
 void DsIoOperator::loadProject()

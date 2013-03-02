@@ -430,6 +430,10 @@ void DsMainFrame::onSave()
 {
     DsOperator::io()->saveProject();
 }
+void DsMainFrame::onClose()
+{
+    DsOperator::io()->closeProject();
+}
 
 void DsMainFrame::onNewProject()
 {
