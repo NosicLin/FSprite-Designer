@@ -21,7 +21,11 @@ class DsMainFrame:public QMainWindow
 	public:
 		DsMainFrame(QWidget* parenet=0);
 
-	private:
+
+    public slots:
+        void slotDataChange();
+
+    private:
 
 		void createMenuBar();
 		void createStatusBar();
@@ -31,9 +35,17 @@ class DsMainFrame:public QMainWindow
 		void createSpriteDisplay();
 		void createPropertyDisplay();
 		void createDialog();
-		void initLayout();
+        void initLayout();
 
+        void configToolBar();
+        void configMenuBar();
 
+        void configMenuFile();
+        void configMenuEdit();
+        void configMenuView();
+        void configMenuAnimation();
+
+        void connectDataSignal();
 
 	private:
 
@@ -143,7 +155,6 @@ class DsMainFrame:public QMainWindow
 
 		/* tool bar */
 		QAction* tl_new;
-		QAction* tl_open;
 		QAction* tl_save;
 		QAction* tl_undo;
 		QAction* tl_redo;

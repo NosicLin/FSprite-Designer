@@ -285,6 +285,21 @@ void DsAnimationEdit::showMulSelectMenu(QMouseEvent* event)
 }
 void DsAnimationEdit::showPopupMenu(QMouseEvent* event)
 {
+    int anim_play=DsOperator::animation()->isAnimationPlay();
+    if(anim_play)
+    {
+        ma_insertKeyFrame->setEnabled(false);
+        ma_insertEmptyKeyFrame->setEnabled(false);
+        ma_removeFrame->setEnabled(false);
+        ma_copy->setEnabled(false);
+        ma_paste->setEnabled(false);
+        ma_createTween->setEnabled(false);
+        ma_removeTween->setEnabled(false);
+        ma_tweenToKeyFrame->setEnabled(false);
+        m_menuMulSelect->setEnabled(false);
+        ma_mulSelectRemoveAll->setEnabled(false);
+        return ;
+    }
     int x=event->x();
     int select_frame=(m_move+x)/m_ruler_unit;
     DsOperator::data()->setCurFrameIndex(select_frame);

@@ -13,12 +13,14 @@ DsAnimationOperator::DsAnimationOperator()
 void DsAnimationOperator::animationPlay()
 {
 	m_playing=true;
-	scheduledTimer();
+    scheduledTimer();
+    m_data->emitSignal(DsData::SG_ANIMATION_PLAY_STATE_CHANGE);
 }
 
 void DsAnimationOperator::animationStop()
 {
-	m_playing=false;
+    m_playing=false;
+    m_data->emitSignal(DsData::SG_ANIMATION_PLAY_STATE_CHANGE);
 }
 
 void DsAnimationOperator::scheduledTimer()

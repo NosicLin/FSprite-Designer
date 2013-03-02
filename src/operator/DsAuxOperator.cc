@@ -181,6 +181,24 @@ void DsAuxOperator::undo()
     }
 }
 
+bool DsAuxOperator::canRedo()
+{
+    DsProject::DsSpriteInfo* sprite_info=m_data->getCurSpriteInfo();
+    if(sprite_info==NULL)
+    {
+        return  false;
+    }
+    return sprite_info->canRedo();
+}
+bool DsAuxOperator::canUndo()
+{
+    DsProject::DsSpriteInfo* sprite_info=m_data->getCurSpriteInfo();
+    if(sprite_info==NULL)
+    {
+        return  false;
+    }
+    return sprite_info->canUndo();
+}
 
 
 

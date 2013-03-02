@@ -85,6 +85,8 @@ public:
         void pushState();
         void redo();
         void undo();
+        bool canRedo();
+        bool canUndo();
     protected:
         void restore(DsSpriteState* state);
     private:
