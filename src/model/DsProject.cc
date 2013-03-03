@@ -352,18 +352,25 @@ void DsProject::DsSpriteInfo::pushState()
     }
 
     m_queue.pushFrontTail(save);
-    m_curStateIndex++;
+    if(m_curStateIndex<m_queue.size()-1)
+    {
+        m_curStateIndex++;
+    }
+
     if(state->m_curAnimation)
     {
         save->m_curAnimation=save->m_sprite->getAnimation(state->m_curAnimation->getID());
     }
+
     state->m_curFrameIndex=frame_index;
     if(state->m_curFrameImage)
     {
+        DsDebug<<"CurFrameImage"<<endl;
         DsFrame* frame=save->m_curAnimation->getFrame(frame_index);
         assert(frame);
-        save->m_curFrameImage=((DsKeyFrame*)frame)->getFrameImage(
-                    state->m_curFrameImage->getID());
+        DsFrameImage* image= ((DsKeyFrame*)frame)->getFrameImage(state->m_curFrameImage->getID());
+        assert(image);
+        save->m_curFrameImage=image;
     }
 
 }
@@ -440,9 +447,10 @@ void DsProject::CircleQueue::pushFrontTail(DsSpriteState* state)
 {
     if(m_used==DS_DEFAULT_UNDO_SIZE)
     {
-        int insert_pos=(m_begin-1)%DS_DEFAULT_UNDO_SIZE;
-        delete m_queue[m_begin];
-        m_queue[m_begin]=m_queue[insert_pos];
+        int insert_pos=(m_begin+m_used-1)%DS_DEFAULT_UNDO_SIZE;
+        int tail_pos=(m_begin+m_used)%DS_DEFAULT_UNDO_SIZE;
+        delete m_queue[tail_pos];
+        m_queue[tail_pos]=m_queue[insert_pos];
         m_queue[insert_pos]=state;
         m_begin=(m_begin+1)%DS_DEFAULT_UNDO_SIZE;
     }
@@ -464,7 +472,6 @@ void DsProject::CircleQueue::pushFrontTail(DsSpriteState* state)
 
 DsProject::DsSpriteState* DsProject::CircleQueue::get(int i)
 {
-    DsDebug<<"index:"<<i<<endl;
     assert((i>=0)&&(i<m_used));
     int pos=(m_begin+i)%DS_DEFAULT_UNDO_SIZE;
     return m_queue[pos];

@@ -9,7 +9,7 @@ class DsFrameImage;
 class DsFrame;
 class DsKeyFrame;
 
-#define DS_DEFAULT_UNDO_SIZE 1024
+#define DS_DEFAULT_UNDO_SIZE 512
 
 class DsProject 
 {
