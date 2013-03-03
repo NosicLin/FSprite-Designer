@@ -91,6 +91,9 @@ class DsSpriteTreeWidget:public QTreeWidget
         void createProjectMenus();
         void createSpriteMenus();
         void createAnimationMenus();
+
+        void connectDsDataSignal();
+        void disconnectDsDataSignal();
     private:
         QPoint m_cursorPos;
 

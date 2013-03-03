@@ -435,8 +435,6 @@ void DsPropertyDisplay::createLayout()
     textureMainLayout->addItem(new QSpacerItem(0,vLayoutSpace));
     mainLayout->addLayout(textureMainLayout);
 
-
-
     //5 setup offset layout
     QVBoxLayout* offsetMainLayout = new QVBoxLayout;
     QGridLayout* offsetButtonLayout = new QGridLayout;
@@ -458,7 +456,6 @@ void DsPropertyDisplay::createLayout()
     offsetMainLayout->addItem(new QSpacerItem(0,vLayoutSpace));
     mainLayout->addLayout(offsetMainLayout);
 
-
     //6 setup alpha layout
     QVBoxLayout* alphaMainLayout = new QVBoxLayout();
     QHBoxLayout* alphaButtonLayout = new QHBoxLayout();
@@ -476,9 +473,6 @@ void DsPropertyDisplay::createLayout()
 
     mainLayout->addStretch();
     this->setLayout(mainLayout);
-
-
-
 
     connect(m_alphaDoubleSpinBox,SIGNAL(valueChanged(double)),this,SLOT(slotSetSliderValue(double)));
     connect(m_alphaSlider,SIGNAL(valueChanged(int)),this,SLOT(slotSetDoubleSpinBoxValue(int)));

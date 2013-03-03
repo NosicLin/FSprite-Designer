@@ -34,7 +34,6 @@ std::string q2s(const QString &s)
     return s.toStdString();
 }
 
-
 DsSpriteDisplay::DsSpriteDisplay(QWidget* parent)
     :QWidget(parent)
 {
@@ -56,27 +55,10 @@ DsSpriteTreeWidget::DsSpriteTreeWidget(QWidget* parent)
     :QTreeWidget(parent)
 {
 
-
-    m_changedCausedByDsData = false;
-    m_changedCausedByView = false;
-
     //init menuAction type
     setActionTypeToNone();
 
-    connect(DsData::shareData(),SIGNAL(signalProjectPropertyChange()),
-            this,SLOT(slotProjectInited()));
-
-    connect(DsData::shareData(),SIGNAL(signalCurProjectChange()),
-            this,SLOT(slotProjectInited()));
-
-    connect(DsData::shareData(),SIGNAL(signalCurSpriteChange()),
-            this,SLOT(slotCurSpriteChange()));
-
-    connect(DsData::shareData(),SIGNAL(signalCurAnimationChange()),
-            this,SLOT(slotCurAnimationChange()));
-
-    connect(this,SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem *)),
-            this,SLOT(slotCurrentItemChanged ( QTreeWidgetItem * , QTreeWidgetItem * )));
+    connectDsDataSignal();
 
     //just show the first col
     this->setColumnCount(2);
@@ -86,7 +68,32 @@ DsSpriteTreeWidget::DsSpriteTreeWidget(QWidget* parent)
     //only the DsSpriteTreeWidget had been built ,it's menus can create.
     createMultMenus();
 }
-
+void DsSpriteTreeWidget::connectDsDataSignal()
+{
+    connect(DsData::shareData(),SIGNAL(signalProjectPropertyChange()),
+            this,SLOT(slotProjectInited()));
+    connect(DsData::shareData(),SIGNAL(signalCurProjectChange()),
+            this,SLOT(slotProjectInited()));
+    connect(DsData::shareData(),SIGNAL(signalCurSpriteChange()),
+            this,SLOT(slotCurSpriteChange()));
+    connect(DsData::shareData(),SIGNAL(signalCurAnimationChange()),
+            this,SLOT(slotCurAnimationChange()));
+    connect(this,SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem *)),
+            this,SLOT(slotCurrentItemChanged ( QTreeWidgetItem * , QTreeWidgetItem * )));
+}
+void DsSpriteTreeWidget::disconnectDsDataSignal()
+{
+    disconnect(DsData::shareData(),SIGNAL(signalProjectPropertyChange()),
+            this,SLOT(slotProjectInited()));
+    disconnect(DsData::shareData(),SIGNAL(signalCurProjectChange()),
+            this,SLOT(slotProjectInited()));
+    disconnect(DsData::shareData(),SIGNAL(signalCurSpriteChange()),
+            this,SLOT(slotCurSpriteChange()));
+    disconnect(DsData::shareData(),SIGNAL(signalCurAnimationChange()),
+            this,SLOT(slotCurAnimationChange()));
+    disconnect(this,SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem *)),
+            this,SLOT(slotCurrentItemChanged ( QTreeWidgetItem * , QTreeWidgetItem * )));
+}
 //Slot function implement
 void DsSpriteTreeWidget::slotProjectInited()
 {
@@ -101,11 +108,7 @@ void DsSpriteTreeWidget::slotCurProjectChange()
 }
 void DsSpriteTreeWidget::slotCurSpriteChange()
 {
-    if(m_changedCausedByView)
-    {
-        m_changedCausedByView = false;
-        return ;
-    }
+
     if(DsData::shareData()->getCurSprite() == NULL)
     {
         return;
@@ -128,8 +131,6 @@ void DsSpriteTreeWidget::slotCurSpriteChange()
         {
             qDebug()<<"get the current sprite";
             qDebug()<<(*iter)->text(0);
-
-            m_changedCausedByDsData = true;
             this->setCurrentItem(*iter);
             break ;
         }
@@ -140,11 +141,7 @@ void DsSpriteTreeWidget::slotCurSpriteChange()
 void DsSpriteTreeWidget::slotCurAnimationChange()
 {
     qDebug()<<"into slotCurAnimationChange";
-    if(m_changedCausedByView)
-    {
-        m_changedCausedByView = false;
-        return ;
-    }
+
     qDebug()<<s2q(DsData::shareData()->getCurAnimation()->getName());
     if(DsData::shareData()->getCurAnimation() == NULL)
     {
@@ -190,7 +187,6 @@ void DsSpriteTreeWidget::slotCurAnimationChange()
         pItem = spriteItem->child(j);
         if(pItem->text(1) == s2q(curAnimationId))
         {
-            m_changedCausedByDsData = true;
             this->setCurrentItem(pItem);
             qDebug()<<"get the current animation item, Id is"<<s2q(curAnimationId);
             break;
@@ -201,11 +197,7 @@ void DsSpriteTreeWidget::slotCurAnimationChange()
 //When the Current Item of Tree is changed , update the corresponding data
 void DsSpriteTreeWidget::slotCurrentItemChanged ( QTreeWidgetItem * current, QTreeWidgetItem * previous)
 {
-    if(m_changedCausedByDsData)
-    {
-        m_changedCausedByDsData = false;
-        return;
-    }
+
     if(current == NULL)
     {
         return ;
@@ -223,15 +215,11 @@ void DsSpriteTreeWidget::slotCurrentItemChanged ( QTreeWidgetItem * current, QTr
        if(current->parent()->parent() == NULL)
        {
            qDebug()<<"set current sprite :"<<current->text(0);
-
-           m_changedCausedByView = true;
            DsOperator::data()->setCurSprite(q2s(current->text(1)));
        }
        else
        {
-           m_changedCausedByView = true;
            DsOperator::data()->setCurSprite(q2s(current->parent()->text(1)));
-           m_changedCausedByView = true;
            DsOperator::data()->setCurAnimation(q2s(current->text(1)));
            qDebug()<<"set current animation : "<<current->text(0);
        }
@@ -314,6 +302,7 @@ void DsSpriteTreeWidget::createView()
     QStringList animationItemList;
     bool bSetCurrentItem = false;
 
+    disconnectDsDataSignal();          //disconnect signal ,avoid  sending signal again
     for(int i = 0 ; i <spriteNum ;i++)
     {
         sprite = pro->getSprite(i);
@@ -339,7 +328,6 @@ void DsSpriteTreeWidget::createView()
            {
                if(spriteName == curSpriteName)
                {
-                    m_changedCausedByView = true;
                     this->setCurrentItem(spriteItem);
                     this->expandItem(spriteItem);           //expand by default
                     bSetCurrentItem = true;
@@ -364,7 +352,6 @@ void DsSpriteTreeWidget::createView()
                 {
                     if(spriteName == curSpriteName && animationName == curAnimationName)
                     {
-                        m_changedCausedByView = true;
                         this ->setCurrentItem(animationItem);
                         bSetCurrentItem = true;
                     }
@@ -372,11 +359,13 @@ void DsSpriteTreeWidget::createView()
             }
         }//end for
     }//end for
+    connectDsDataSignal();
     if(bSetCurrentItem == false)
     {
         this->expandItem(projectItem);
     }
     this->insertTopLevelItems(0,rootList);
+
 }
 
 //==========================================================================
