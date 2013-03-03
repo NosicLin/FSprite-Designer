@@ -362,7 +362,8 @@ void DsProject::DsSpriteInfo::pushState()
         save->m_curAnimation=save->m_sprite->getAnimation(state->m_curAnimation->getID());
     }
 
-    state->m_curFrameIndex=frame_index;
+    save->m_curFrameIndex=frame_index;
+
     if(state->m_curFrameImage)
     {
         DsDebug<<"CurFrameImage"<<endl;
