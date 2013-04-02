@@ -281,8 +281,8 @@ static void s_writeFrame(QFile& file,DsKeyFrame* frame,std::vector<DsImage*>& re
     char cbuf[1024*10];
 
     int tex_pos;
-    float tx0,ty0,tx1,ty1;
-    float vx0,vy0,vx1,vy1;
+    float tx0,ty0,tx1,ty1,tx2,ty2,tx3,ty3;
+    float vx0,vy0,vx1,vy1,vx2,vy2,vx3,vy3;
     float alpha;
     sprintf(cbuf,"%s[\n",prefix);
     file.write(cbuf);
@@ -292,18 +292,30 @@ static void s_writeFrame(QFile& file,DsKeyFrame* frame,std::vector<DsImage*>& re
         DsFrameImage* image=frame->getFrameImage(i);
         tex_pos=s_getResourcePos(resources,image->getImage());
         assert(tex_pos!=-1);
-        image->getTextureArea(&tx0,&ty0,&tx1,&ty1);
-        image->getVertex(&vx0,&vy0,&vx1,&vy1);
+        image->getTextureArea(&tx0,&ty0,&tx2,&ty2);
+
+        tx1=tx0;ty1=ty2;
+        tx3=tx2;ty3=ty0;
+
+        image->getVertex(&vx0,&vy0,&vx2,&vy2);
+        vx1=vx0;vy1=vy2;
+        vx3=vx2;vy3=vy0;
+
+
+
         image->transformVertexW(&vx0,&vy0);
         image->transformVertexW(&vx1,&vy1);
+        image->transformVertexW(&vx2,&vy2);
+        image->transformVertexW(&vx3,&vy3);
+
         alpha=image->getAlpha();
         sprintf(cbuf,"%s\t{\n",prefix);
         file.write(cbuf);
         sprintf(cbuf,"%s\t\ttexture:%d\n",prefix,tex_pos);
         file.write(cbuf);
-        sprintf(cbuf,"%s\t\ttexcoord:[%f,%f,%f,%f]\n",prefix,tx0,ty0,tx1,ty1);
+        sprintf(cbuf,"%s\t\ttexcoord:[%f,%f,%f,%f,%f,%f,%f,%f]\n",prefix,tx0,ty0,tx1,ty1,tx2,ty2,tx3,ty3);
         file.write(cbuf);
-        sprintf(cbuf,"%s\t\tvertex:[%f,%f,%f,%f]\n",prefix,vx0,vy0,vx1,vy1);
+        sprintf(cbuf,"%s\t\tvertex:[%f,%f,%f,%f,%f,%f,%f,%f]\n",prefix,vx0,vy0,vx1,vy1,vx2,vy2,vx3,vy3);
         file.write(cbuf);
         sprintf(cbuf,"%s\t\talpha:[%f,%f,%f,%f]\n",prefix,alpha,alpha,alpha,alpha);
         file.write(cbuf);
@@ -328,6 +340,9 @@ bool DsUtil::exportSprite(DsSprite* sprite,QFile& file)
     std::vector<DsImage*> resources=s_getResource(sprite);
 
 
+    int resource_nu=resources.size();
+    sprintf(cbuf,"resourceNu:%d\n",resource_nu);
+    file.write(cbuf);
     file.write("resources:[\n");
     for(unsigned int i=0;i<resources.size();i++)
     {

@@ -116,8 +116,10 @@ void DsIoOperator::exportFSprite(const std::string& id)
     DsSprite* sprite=proj->getSprite(id);
     assert(sprite);
 
+    std::string project_dir=proj->getDirName();
+
     std::string sprite_name=sprite->getName();
-    std::string export_name=sprite_name+std::string(".fst");
+    std::string export_name=project_dir+"/"+sprite_name+std::string(".fst");
 
     QString file_name=QFileDialog::getSaveFileName(
                 m_mainWidget,

@@ -6,7 +6,7 @@
 #include <QSpinBox>
 #include <QDoubleSpinBox>
 #include <QSlider>
-#include <QTreeview>
+#include <QTreeView>
 
 #include <QStandardItemModel>
 #include <QAbstractItemView>
@@ -63,7 +63,6 @@ public:
         }
         double getScaleYItemValue()
         {
-            printf("getScaleYItemValue value = \n");
             return m_scaleYValueItem->data(Qt::EditRole).toDouble();
         }
         double getTextureX0ItemValue()
