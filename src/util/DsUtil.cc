@@ -287,19 +287,19 @@ static void s_writeFrame(QFile& file,DsKeyFrame* frame,std::vector<DsImage*>& re
     sprintf(cbuf,"%s[\n",prefix);
     file.write(cbuf);
 
-    for(int i=0;i<frame->getFrameImageNu();i++)
+    for(int i=frame->getFrameImageNu()-1;i>=0;i--)
     {
         DsFrameImage* image=frame->getFrameImage(i);
         tex_pos=s_getResourcePos(resources,image->getImage());
         assert(tex_pos!=-1);
         image->getTextureArea(&tx0,&ty0,&tx2,&ty2);
 
-        tx1=tx0;ty1=ty2;
-        tx3=tx2;ty3=ty0;
+        tx1=tx2;ty1=ty0;
+        tx3=tx0;ty3=ty2;
 
         image->getVertex(&vx0,&vy0,&vx2,&vy2);
-        vx1=vx0;vy1=vy2;
-        vx3=vx2;vy3=vy0;
+        vx1=vx2;vy1=vy0;
+        vx3=vx0;vy3=vy2;
 
 
 
@@ -315,7 +315,7 @@ static void s_writeFrame(QFile& file,DsKeyFrame* frame,std::vector<DsImage*>& re
         file.write(cbuf);
         sprintf(cbuf,"%s\t\ttexcoord:[%f,%f,%f,%f,%f,%f,%f,%f]\n",prefix,tx0,ty0,tx1,ty1,tx2,ty2,tx3,ty3);
         file.write(cbuf);
-        sprintf(cbuf,"%s\t\tvertex:[%f,%f,%f,%f,%f,%f,%f,%f]\n",prefix,vx0,vy0,vx1,vy1,vx2,vy2,vx3,vy3);
+        sprintf(cbuf,"%s\t\tvertex:[%f,%f,%f,%f,%f,%f,%f,%f]\n",prefix,vx3,vy3,vx2,vy2,vx1,vy1,vx0,vy0);
         file.write(cbuf);
         sprintf(cbuf,"%s\t\talpha:[%f,%f,%f,%f]\n",prefix,alpha,alpha,alpha,alpha);
         file.write(cbuf);

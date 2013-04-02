@@ -461,6 +461,7 @@ void DsEditView::rawDrawFrameImage(DsFrameImage* image,float r,float g,float b,f
     glColor4f(r,g,b,a*alpha);
     glBindTexture(GL_TEXTURE_2D,ds_img->texture);
 
+
     float vertex[8]=
     {
         vx0,vy0,
@@ -468,6 +469,7 @@ void DsEditView::rawDrawFrameImage(DsFrameImage* image,float r,float g,float b,f
         vx1,vy1,
         vx0,vy1
     };
+
     float texcoord[8]=
     {
         cx0,cy0,
