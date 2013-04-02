@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <time.h>
 #include <QFile>
 #include <QXmlStreamWriter>
@@ -8,6 +9,8 @@
 #include "DsUtil.h"
 #include "util/DsUtilLoader.h"
 #include "util/DsDebug.h"
+#include "operator/DsOperator.h"
+#include "model/DsData.h"
 
 
 QString DsUtil::stoq(const std::string str)
@@ -55,6 +58,15 @@ bool DsUtil::makeDirExist(const std::string& dir_name)
     QDir dir;
     return dir.mkpath(dir_name.c_str());
 }
+
+std::string DsUtil::toRelativePath(const std::string& file_name)
+{
+    DsProject* proj=DsData::shareData()->getProject();
+    assert(proj);
+    std::string dir_name=proj->getDirName();
+    return file_name.c_str()+dir_name.length();
+}
+
 DsProject* DsUtil::loadProject(const std::string& dir_name,const std::string& file_name,std::string& msg)
 {
     DsProjectLoader loader(dir_name,file_name);
@@ -222,7 +234,8 @@ void s_writeTab(QFile& file,int num)
         file.write("\t");
     }
 }
-int  s_getResourcePos(const std::vector<DsImage*>& resources,DsImage* image)
+
+static int  s_getResourcePos(const std::vector<DsImage*>& resources,DsImage* image)
 {
     for(unsigned int i=0;i<resources.size();i++)
     {
@@ -235,19 +248,10 @@ int  s_getResourcePos(const std::vector<DsImage*>& resources,DsImage* image)
 }
 
 
-bool DsUtil::exportSprite(DsSprite* sprite,QFile& file)
+static std::vector<DsImage*> s_getResource(DsSprite* sprite)
 {
-    std::string buf;
-    QString qbuf;
-    file.write("version:\"v1.0\"\n");
-    file.write("type:\"sprite2d\"\n");
-
-    buf=std::string("name:\"")+sprite->getName()+"\"\n";
-    file.write(buf.c_str());
-
     std::vector<DsImage*> resources;
-
-    for(unsigned int i=0;i<sprite->getAnimationNu();i++)
+    for( int i=0;i<sprite->getAnimationNu();i++)
     {
         DsAnimation* anim=sprite->getAnimation(i);
         DsAnimation::Iterator frame_iter;
@@ -268,30 +272,117 @@ bool DsUtil::exportSprite(DsSprite* sprite,QFile& file)
             }
         }
     }
+    return resources;
+}
+
+
+static void s_writeFrame(QFile& file,DsKeyFrame* frame,std::vector<DsImage*>& resources,const char* prefix)
+{
+    char cbuf[1024*10];
+
+    int tex_pos;
+    float tx0,ty0,tx1,ty1;
+    float vx0,vy0,vx1,vy1;
+    float alpha;
+    sprintf(cbuf,"%s[\n",prefix);
+    file.write(cbuf);
+
+    for(int i=0;i<frame->getFrameImageNu();i++)
+    {
+        DsFrameImage* image=frame->getFrameImage(i);
+        tex_pos=s_getResourcePos(resources,image->getImage());
+        assert(tex_pos!=-1);
+        image->getTextureArea(&tx0,&ty0,&tx1,&ty1);
+        image->getVertex(&vx0,&vy0,&vx1,&vy1);
+        image->transformVertexW(&vx0,&vy0);
+        image->transformVertexW(&vx1,&vy1);
+        alpha=image->getAlpha();
+        sprintf(cbuf,"%s\t{\n",prefix);
+        file.write(cbuf);
+        sprintf(cbuf,"%s\t\ttexture:%d\n",prefix,tex_pos);
+        file.write(cbuf);
+        sprintf(cbuf,"%s\t\ttexcoord:[%f,%f,%f,%f]\n",prefix,tx0,ty0,tx1,ty1);
+        file.write(cbuf);
+        sprintf(cbuf,"%s\t\tvertex:[%f,%f,%f,%f]\n",prefix,vx0,vy0,vx1,vy1);
+        file.write(cbuf);
+        sprintf(cbuf,"%s\t\talpha:[%f,%f,%f,%f]\n",prefix,alpha,alpha,alpha,alpha);
+        file.write(cbuf);
+        sprintf(cbuf,"%s\t}\n",prefix);
+        file.write(cbuf);
+    }
+    sprintf(cbuf,"%s]\n",prefix);
+    file.write(cbuf);
+}
+
+bool DsUtil::exportSprite(DsSprite* sprite,QFile& file)
+{
+    char cbuf[1024*10];
+    std::string buf;
+    QString qbuf;
+    file.write("version:\"v1.0\"\n");
+    file.write("type:\"sprite2d\"\n");
+
+    buf=std::string("name:\"")+sprite->getName()+"\"\n";
+    file.write(buf.c_str());
+
+    std::vector<DsImage*> resources=s_getResource(sprite);
+
 
     file.write("resources:[\n");
     for(unsigned int i=0;i<resources.size();i++)
     {
-        s_writeTab(file,1);
-        file.write("{\n");
         DsImage* image=resources[i];
-        s_writeTab(file,2);
-        file.write("embed:\"false\"\n");
-        /*
-            QSize size=image->size();
-            qbuf=QString("width:")+QString::number(size.width())+QString("\n");
-            file.write(qbuf.toStdString().c_str());
-            qbuf=QString("height:")+QString::number(size.height())+QString("\n");
-            */
-        s_writeTab(file,2);
-        //buf=std::string("url:\"")+image->getPathRelativeToProject()+std::string("\"\n");
-        buf=std::string("url:\"")+image->name+std::string("\"\n");
-        file.write(buf.c_str());
-
         s_writeTab(file,1);
-        file.write("},\n");
+        std::string rel_url=toRelativePath(image->name);
+
+
+        buf=std::string("\"")+rel_url+std::string("\"\n");
+        file.write(buf.c_str());
     }
     file.write("]\n");
+
+    file.write("animations:[\n");
+    for(int i=0;i<sprite->getAnimationNu();i++)
+    {
+        file.write("\t{\n");
+        DsAnimation* anim=sprite->getAnimation(i);
+        int frame_nu=anim->getFrameNu();
+        int fps=anim->getFps();
+        std::string name=anim->getName();
+
+        sprintf(cbuf,"\t\tname:\"%s\"\n",name.c_str());
+        file.write(cbuf);
+
+        sprintf(cbuf,"\t\tfps:%d\n",fps);
+        file.write(cbuf);
+        sprintf(cbuf,"\t\tframeNu:%d\n",frame_nu);
+        file.write(cbuf);
+        file.write("\t\tkeyFrames:[\n");
+
+        for(int j=0;j<anim->getFrameNu();j++)
+        {
+            sprintf(cbuf,"\t\t\t#frame %d\n",j);
+            file.write(cbuf);
+            DsFrame* frame=anim->getFrame(j);
+            if(frame->getType()==DsFrame::FRAME_KEY)
+            {
+                s_writeFrame(file,(DsKeyFrame*)frame,resources,"\t\t\t");
+            }
+            else
+            {
+                DsKeyFrame* rel_frame=((DsTweenFrame*)frame)->slerpToKeyFrame(j);
+                s_writeFrame(file,rel_frame,resources,"\t\t\t");
+                delete rel_frame;
+            }
+
+        }
+
+        file.write("\t\t]\n");
+        file.write("\t}\n");
+    }
+    file.write("]\n");
+
+
     return true;
 }
 

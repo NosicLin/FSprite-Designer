@@ -15,6 +15,7 @@ class DsUtil
         static float clamp(float value,float min,float max);
 		static std::string uniqueStringID();
         static bool makeDirExist(const std::string& dir);
+        static std::string toRelativePath(const std::string& file_name);
     public:
         static DsProject* loadProject(const std::string& dir_name,const std::string& file_name,std::string& msg);
         static bool saveProject(DsProject* proj);

@@ -6,84 +6,151 @@
 #include <QSpinBox>
 #include <QDoubleSpinBox>
 #include <QSlider>
+#include <QTreeview>
+
+#include <QStandardItemModel>
+#include <QAbstractItemView>
+#include <QAbstractItemDelegate>
+#include "DsDelegate.h"
+
 class DsPropertyDisplay:public QWidget
 {
     Q_OBJECT
 public:
+    enum FrameAttr
+    {
+        POSITION_X = 1,
+        POSITION_Y,
+        ROTATE,
+        SCALE_X,
+        SCALE_Y,
+        TEXTURE_X0,
+        TEXTURE_Y0,
+        TEXTURE_X1,
+        TEXTURE_Y1,
+        OFFSET_X,
+        OFFSET_Y,
+        ALPHA,
+        FPS
+    };
+
+public:
 		DsPropertyDisplay(QWidget* parent);
-
-
 private slots:
-        void slotSetDoubleSpinBoxValue(int value);
-        void slotSetSliderValue(double value);
-
-        //deal with FrameImage property change
         void slotFrameImagePropertyChange();
 
-        //set FrameImage property
-        void slotSetPositon();
-        void slotSetAngle(double value);
-        void slotSetScale();
-
-        void slotSetTextureArea();
-
-        void slotSetOffset();
-
-        void slotSetAlpha(double value);
-
-private:
-        void createLayout();
+public:
+        void initProperty();
         void connectDsDataSignal();
         void disconnectDsDataSignal();
-        void connectAllSpinBox();
-        void disconnectAllSpinBox();
-signals:
+public:
+        double getPosXItemValue()
+        {
+            return m_posXValueItem->data(Qt::EditRole).toDouble();
+        }
 
+        double getPosYItemValue()
+        {
+            return m_posYValueItem->data(Qt::EditRole).toDouble();
+        }
+        double getAngleItemValue()
+        {
+            return m_angleValueItem->data(Qt::EditRole).toDouble();
+        }
+        double getScaleXItemValue()
+        {
+            return m_scaleXValueItem->data(Qt::EditRole).toDouble();
+        }
+        double getScaleYItemValue()
+        {
+            printf("getScaleYItemValue value = \n");
+            return m_scaleYValueItem->data(Qt::EditRole).toDouble();
+        }
+        double getTextureX0ItemValue()
+        {
+            return m_textureX0ValueItem->data(Qt::EditRole).toDouble();
+        }
+        double getTextureY0ItemValue()
+        {
 
+            return m_textureY0ValueItem->data(Qt::EditRole).toDouble();
+        }
+        double getTextureX1ItemValue()
+        {
+            return m_textureX1ValueItem->data(Qt::EditRole).toDouble();
+        }
+        double getTextureY1ItemValue()
+        {
+            return m_textureY1ValueItem->data(Qt::EditRole).toDouble();
+        }
+        double getOffetXValue()
+        {
+            return m_offsetXValueItem->data(Qt::EditRole).toDouble();
+        }
+        double getOffetYValue()
+        {
+            return m_offsetYValueItem->data(Qt::EditRole).toDouble();
+        }
+        double getAlphaItemValue()
+        {
+            return m_alphaValueItem->data(Qt::EditRole).toDouble();
+        }
 private:
-    //position
-    QLabel* m_posLabel;
-    QLabel* m_posXLabel;
-    QLabel* m_posYLabel;
-    QDoubleSpinBox* m_posXDoubleSpinbox;
-    QDoubleSpinBox* m_posYDoubleSpinbox;
+    QStandardItem* m_posItem;
+    QStandardItem* m_posEmptyItem;
+    QStandardItem* m_posXItem;
+    QStandardItem* m_posYItem;
+    QStandardItem* m_posXValueItem;
+    QStandardItem* m_posYValueItem;
 
-    //angle
-    QLabel* m_angleLabel;
-    QLabel* m_angLabel;
-    QDoubleSpinBox* m_angleSpinDoubleBox;
+    //rotate
+    QStandardItem* m_rotateItem;
+    QStandardItem* m_rotateEmptyItem;
+    QStandardItem* m_angleItem;
+    QStandardItem* m_angleValueItem;
 
     //scale
-    QLabel* m_scaleLabel;
-    QLabel* m_scaleXLabel;
-    QLabel* m_scaleYLabel;
-    QDoubleSpinBox*  m_scaleXDoubleSpinBox;
-    QDoubleSpinBox*  m_scaleYDoubleSpinBox;
+    QStandardItem* m_scaleItem;
+    QStandardItem* m_scaleEmptyItem;
+    QStandardItem* m_scaleXItem;
+    QStandardItem* m_scaleYItem;
+    QStandardItem*  m_scaleXValueItem;
+    QStandardItem*  m_scaleYValueItem;
 
     //texture
-    QLabel* m_textureLabel;
-    QLabel* m_textureX0Label;
-    QLabel* m_textureY0Label;
-    QLabel* m_textureX1Label;
-    QLabel* m_textureY1Label;
-    QDoubleSpinBox*  m_textureX0DoubleSpinBox;
-    QDoubleSpinBox*  m_textureY0DoubleSpinBox;
-    QDoubleSpinBox*  m_textureX1DoubleSpinBox;
-    QDoubleSpinBox*  m_textureY1DoubleSpinBox;
+    QStandardItem* m_textureItem;
+    QStandardItem* m_textureEmptyItem;
+    QStandardItem* m_textureX0Item;
+    QStandardItem* m_textureY0Item;
+    QStandardItem* m_textureX1Item;
+    QStandardItem* m_textureY1Item;
+    QStandardItem* m_textureX0ValueItem;
+    QStandardItem* m_textureY0ValueItem;
+    QStandardItem* m_textureX1ValueItem;
+    QStandardItem* m_textureY1ValueItem;
 
     //offset
-    QLabel* m_offsetLabel;
-    QLabel* m_offsetXLabel;
-    QLabel* m_offsetYLabel;
-    QDoubleSpinBox* m_offsetXDoubleSpinbox;
-    QDoubleSpinBox* m_offsetYDoubleSpinbox;
+    QStandardItem* m_offsetItem;
+    QStandardItem* m_offsetEmptyItem;
+    QStandardItem* m_offsetXItem;
+    QStandardItem* m_offsetYItem;
+    QStandardItem* m_offsetXValueItem;
+    QStandardItem* m_offsetYValueItem;
 
     //alpha
-    QLabel* m_alphaLabel;
-    QLabel* m_alLabel;
-    QDoubleSpinBox* m_alphaDoubleSpinBox;
-    QSlider* m_alphaSlider;
+    QStandardItem* m_transItem;
+    QStandardItem* m_transEmptyItem;
+    QStandardItem* m_alphaItem;
+    QStandardItem* m_alphaValueItem;
 
+    //fps
+    QStandardItem* m_fpsItem;
+    QStandardItem* m_fpsValueItem;
+
+
+    QStandardItemModel* m_model;
+    DsDelegate* m_delegate;
+    QTreeView* m_view;
 };
 #endif /*_DS_EDIT_VIEW_H_*/
 
