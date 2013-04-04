@@ -158,6 +158,8 @@ bool DsUtil::saveSpriteFile(const std::string& dir_name,const std::string& file_
         DsAnimation* animation=sprite->getAnimation(i);
         writer.writeStartElement("animation");
         writer.writeAttribute("name",animation->getName().c_str());
+        writer.writeAttribute("fps",QString::number(animation->getFps()));
+
         DsAnimation::Iterator iter;
         for(iter=animation->begin();iter!=animation->end();iter++)
         {

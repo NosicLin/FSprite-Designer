@@ -162,10 +162,13 @@ DsSprite* DsSpriteLoader::loadSprite()
 DsAnimation* DsSpriteLoader::loadAnimation(QDomNode& node)
 {
 	QDomElement element=node.toElement();
-	QString anim_name=element.attribute("name");
+    QString anim_name=element.attribute("name");
+    QString anim_fps=element.attribute("fps");
     DsAnimation* anim=new DsAnimation(DsUtil::qtos(anim_name));
 
-	QDomNodeList frames=element.childNodes();
+    anim->setFps(anim_fps.toInt());
+
+    QDomNodeList frames=element.childNodes();
 	for(int i=0;i<frames.count();i++)
 	{
 		QDomNode f=frames.item(i);

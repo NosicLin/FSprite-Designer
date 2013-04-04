@@ -89,7 +89,7 @@ class DsMainFrame:public QMainWindow
         void onPlay();
         void onStop();
         void onAddAnimation();
-		void onSetFrame(){}
+        void onSetFrame();
 
 		/* view */
 		void onStatusAxis();
@@ -107,7 +107,8 @@ class DsMainFrame:public QMainWindow
         void onResetZoomTranslate();
 
 	private:
-		QDialog* m_aboutDialog;
+        QDialog* m_aboutDialog;
+        QDialog* m_fpsDialog;
 
 	private:
 		/* file */

@@ -65,7 +65,8 @@ FORMS += \
     resource/ui/about.ui \
     resource/ui/scale.ui \
     resource/ui/pisition.ui \
-    resource/ui/frame.ui
+    resource/ui/frame.ui \
+    resource/ui/fps.ui
 
 QT+=opengl
 QT+=xml

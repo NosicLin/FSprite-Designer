@@ -15,6 +15,7 @@
 
 /* auto gernert files */
 #include "ui_about.h"
+#include "ui_fps.h"
 
 
 	DsMainFrame::DsMainFrame(QWidget* parent)
@@ -340,7 +341,6 @@ void DsMainFrame::createDialog()
     Ui_AboutDialog ui_about;
     ui_about.setupUi(m_aboutDialog);
 
-    /* scale dialog */
 }
 
 void DsMainFrame::connectDataSignal()
@@ -630,6 +630,26 @@ void DsMainFrame::onAddAnimation()
 {
     DsDebug<<"create Animation"<<endl;
     DsOperator::data()->newAnimation();
+}
+
+void DsMainFrame::onSetFrame()
+{
+    QDialog  fps;
+    Ui_FpsDialog ui_fps;
+    ui_fps.setupUi(&fps);
+    DsAnimation* anim=DsData::shareData()->getCurAnimation();
+    if(!anim) return;
+
+    int old_fps=anim->getFps();
+    ui_fps.m_editValue->setValue(old_fps);
+    ui_fps.m_editValue->setRange(1,10000);
+
+    if(fps.exec()==QDialog::Accepted)
+    {
+        int fps=ui_fps.m_editValue->value();
+        DsOperator::data()->setFps(fps);
+    }
+
 }
 
 void DsMainFrame::onMoveUp()

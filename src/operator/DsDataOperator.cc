@@ -83,6 +83,17 @@ void DsDataOperator::setCurFrameIndex(int frame)
     m_data->emitSignal(DsData::SG_CUR_FRAME_CHANGE);
 }
 
+void DsDataOperator::setFps(int fps)
+{
+    DsAnimation* anim=m_data->getCurAnimation();
+    if(anim==NULL)
+    {
+        return;
+    }
+    m_data->saveState();
+    anim->setFps(fps);
+    m_data->emitSignal(DsData::SG_ANIMATION_PROPERTY_CHANGE);
+}
 
 
 void DsDataOperator::setCurFrameImage(const std::string& id)

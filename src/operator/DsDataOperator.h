@@ -33,6 +33,8 @@ class DsDataOperator
         void setCurFrameIndex(int frame);
         void dropCurFrameIndex();
 
+        void setFps(int fps);
+
 
         void setAnimationFps(int fps);
         void removeKeyFrame(int index);

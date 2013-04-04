@@ -41,7 +41,14 @@ class  DsAnimation
         void removeTween(int index);
         int getKeyFrameNu(){return m_keyFrames.size();}
 
-		void setFps(int fps) {m_fps=fps;}
+        void setFps(int fps)
+        {
+            if(fps<=0)
+            {
+                fps=30;
+            }
+            m_fps=fps;
+        }
 		int getFps(){return m_fps;}
 
         Iterator begin(){return m_keyFrames.begin();}
